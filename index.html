@@ -32,7 +32,6 @@
             overflow-x: hidden;
         }
 
-        /* --- Clean Header --- */
         header {
             display: flex;
             justify-content: center;
@@ -45,17 +44,18 @@
             border-bottom: 1px solid var(--border);
         }
 
-        /* --- Persistent Hamburger --- */
+        /* --- Persistent Hamburger Fix --- */
         .hamburger {
-            position: absolute;
+            position: fixed; /* Changed to fixed so it stays in one spot */
             left: 20px;
+            top: 22px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             width: 30px;
             height: 20px;
             cursor: pointer;
-            z-index: 2000; /* Stays above the sliding menu */
+            z-index: 3000; /* Highest priority to stay visible */
         }
 
         .hamburger span {
@@ -64,11 +64,240 @@
             background-color: var(--neon-blue);
             border-radius: 10px;
             box-shadow: 0 0 5px var(--neon-blue);
-            transition: 0.3s;
         }
         .hamburger span:nth-child(2) { width: 70%; }
         .hamburger span:nth-child(3) { width: 40%; }
 
+        /* --- Search Bar --- */
+        .search-container {
+            width: 65%;
+            max-width: 450px;
+        }
+
+        #search {
+            width: 100%;
+            padding: 12px 20px;
+            background: var(--bg);
+            color: var(--text-main);
+            border: 2px solid transparent;
+            border-radius: 30px;
+            outline: none;
+            animation: rgb-pulse 4s infinite linear;
+        }
+
+        #search:focus {
+            animation: none;
+            border-radius: 10px;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        @keyframes rgb-pulse {
+            0% { border-color: #ff0000; }
+            33% { border-color: #00ff00; }
+            66% { border-color: #0000ff; }
+            100% { border-color: #ff0000; }
+        }
+
+        /* --- Side Menu --- */
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: -350px; /* Pushed further back to hide completely */
+            width: 280px;
+            height: 100%;
+            background: var(--header-bg);
+            border-right: 2px solid var(--neon-blue);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 2500;
+            padding: 80px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .nav-menu.active { left: 0; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .nav-links a:hover { background: var(--neon-blue); color: white; }
+
+        /* --- Theme Switcher In Menu --- */
+        .menu-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .theme-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #555;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px; width: 16px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--neon-blue); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* --- Repos List --- */
+        #repos-list {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .repo-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: 0.3s;
+        }
+        .repo-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-blue);
+            box-shadow: 0 5px 15px rgba(0, 210, 255, 0.2);
+        }
+
+        .btn-modern {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            transition: 0.3s;
+            margin-right: 8px;
+        }
+        .btn-modern:hover { background: var(--neon-blue); color: white; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Search Mi439 GApps Repos...">
+        </div>
+    </header>
+
+    <nav class="nav-menu" id="nav-menu">
+        <div class="nav-links">
+            <a href="https://github.com/sd6387400-lang" target="_blank">🚀 GitHub Profile</a>
+            <a href="#">📂 GApps Configs</a>
+            <a href="#">📱 Device Status</a>
+        </div>
+
+        <div class="menu-footer">
+            <div class="theme-control">
+                <span id="theme-text" style="font-weight:bold;">Dark Theme</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-checkbox">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </nav>
+
+    <main id="repos-list"></main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('nav-menu');
+            const themeCheckbox = document.getElementById('theme-checkbox');
+            const themeText = document.getElementById('theme-text');
+            const reposList = document.getElementById('repos-list');
+            const searchInput = document.getElementById('search');
+
+            // --- Theme Switcher ---
+            const applyTheme = (isLight) => {
+                document.body.classList.toggle('light-mode', isLight);
+                themeText.textContent = isLight ? "Light Theme" : "Dark Theme";
+                themeCheckbox.checked = isLight;
+            };
+
+            themeCheckbox.addEventListener('change', () => {
+                const isLight = themeCheckbox.checked;
+                applyTheme(isLight);
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            });
+
+            if (localStorage.getItem('theme') === 'light') applyTheme(true);
+
+            // --- Navigation ---
+            hamburger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                navMenu.classList.toggle('active');
+            });
+            document.addEventListener('click', () => navMenu.classList.remove('active'));
+
+            // --- GitHub Load ---
+            fetch('https://api.github.com/users/sd6387400-lang/repos?sort=updated')
+                .then(res => res.json())
+                .then(repos => {
+                    function render(data) {
+                        reposList.innerHTML = '';
+                        data.forEach(repo => {
+                            const card = document.createElement('div');
+                            card.className = 'repo-card';
+                            card.innerHTML = `
+                                <h3>${repo.name}</h3>
+                                <p>${repo.description || 'Mi439 GApps Project'}</p>
+                                <a href="${repo.html_url}" class="btn-modern" target="_blank">GitHub</a>
+                                <a href="${repo.html_url}/releases" class="btn-modern" style="border-color:var(--neon-green); color:var(--neon-green)" target="_blank">Releases</a>
+                            `;
+                            reposList.appendChild(card);
+                        });
+                    }
+                    render(repos);
+                    searchInput.addEventListener('input', (e) => {
+                        render(repos.filter(r => r.name.toLowerCase().includes(term = e.target.value.toLowerCase())));
+                    });
+                });
+        });
+    </script>
+</body>
+</html>
         /* --- Search Bar --- */
         .search-container {
             width: 60%;
