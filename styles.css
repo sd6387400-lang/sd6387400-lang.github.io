@@ -1,0 +1,226 @@
+/* Default Light Theme */
+:root {
+    --bg-color: #f5f5f5; /* Slight gray background */
+    --text-color: #333333;
+    --header-bg: #f8f9fa;
+    --nav-bg: #e9ecef;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --blue-color: #007bff;
+    --green-color: #28a745;
+    --sky-blue: #87ceeb;
+    --yellow: #ffff00;
+}
+
+body.dark {
+    --bg-color: #1a1a2e; /* Slight blue background for dark mode */
+    --text-color: #ffffff;
+    --header-bg: #1e1e1e;
+    --nav-bg: #2d2d2d;
+    --card-bg: #1e1e1e;
+    --border-color: #333333;
+    --blue-color: #0056b3;
+    --green-color: #1e7e34;
+    --sky-blue: #5dade2;
+    --yellow: #f4d03f;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--header-bg);
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+    z-index: 1000;
+}
+
+.hamburger {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: var(--text-color);
+    margin: 3px 0;
+    transition: 0.3s;
+}
+
+.search-container {
+    flex: 1;
+    margin: 0 20px;
+}
+
+#search {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.theme-switcher {
+    display: flex;
+    align-items: center;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.nav-menu {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Hidden off-screen to the left */
+    width: 250px;
+    height: 100%;
+    background-color: var(--nav-bg);
+    border-right: 1px solid var(--border-color);
+    transition: left 0.3s ease; /* Animation */
+    z-index: 999;
+}
+
+.nav-menu.active {
+    left: 0; /* Slide in */
+}
+
+.nav-menu ul {
+    list-style: none;
+    padding: 20px;
+    margin: 0;
+}
+
+.nav-menu li {
+    margin: 20px 0;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: var(--text-color);
+    padding: 10px;
+    display: block;
+    transition: background-color 0.3s;
+}
+
+.nav-menu a:hover {
+    background-color: var(--card-bg);
+}
+
+main {
+    padding: 20px;
+    transition: margin-left 0.3s ease; /* For pushing content when menu is open, optional */
+}
+
+.repo-card {
+    background-color: var(--card-bg);
+    border: 2px solid var(--blue-color);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: inset 0 0 10px var(--blue-color); /* Inset blue glow */
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    cursor: pointer;
+}
+
+.repo-card:hover, .repo-card:active {
+    border-color: var(--green-color);
+    box-shadow: inset 0 0 15px var(--green-color); /* Inset green glow on hover/click */
+    transform: scale(1.05); /* Slightly larger */
+}
+
+.repo-card h3 {
+    margin-top: 0;
+}
+
+.repo-card p {
+    margin: 5px 0;
+}
+
+.repo-links {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.repo-links a {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: var(--sky-blue);
+    color: #000;
+    text-decoration: none;
+    border-radius: 4px;
+    box-shadow: inset 0 0 5px var(--sky-blue);
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.repo-links a:hover, .repo-links a:active {
+    background-color: var(--yellow);
+    box-shadow: inset 0 0 10px var(--yellow);
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-container {
+        margin: 10px 0;
+    }
+  }
