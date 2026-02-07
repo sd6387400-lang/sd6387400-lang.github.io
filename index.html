@@ -73,8 +73,24 @@
         .linux-entry-card:hover { border-color: #9c27b0; transform: translateY(-5px); }
         .linux-btn { background: #9c27b0; color: white; padding: 15px 30px; border-radius: 20px; text-decoration: none; font-weight: 800; display: inline-block; margin-top: 20px; transition: 0.3s; }
 
-        .search-container { max-width: 500px; margin: 40px auto; }
-        .search-bar { width: 100%; padding: 18px 25px; border-radius: 35px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 1.1rem; transition: 0.4s; }
+        /* FIXED SEARCH BAR MOBILE ISSUE */
+        .search-container { 
+            max-width: 500px; 
+            margin: 20px auto 40px; 
+            padding: 0 10px; 
+        }
+        .search-bar { 
+            width: 100%; 
+            padding: 18px 25px; 
+            border-radius: 35px; 
+            border: 1px solid var(--border); 
+            background: var(--surface); 
+            color: var(--text); 
+            font-size: 1.1rem; 
+            transition: 0.4s; 
+            box-sizing: border-box; /* Fixed horizontal overflow */
+            display: block;
+        }
         .search-bar:focus { outline: none; border-color: var(--accent-primary); transform: scale(1.02); }
 
         #repos-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
@@ -150,7 +166,7 @@
         </div>
 
         <div class="section-header">
-            <h2 style="font-size:2.2rem; font-weight:800; margin:0;">My <span id="type-creations" style="color:var(--accent-primary)" class="typewriter-cursor"></span></h2>
+            <h2 style="font-size:2.2rem; font-weight:800; margin:0; display: flex; align-items: center; flex-wrap: wrap;">My&nbsp;<span id="type-creations" style="color:var(--accent-primary)" class="typewriter-cursor"></span></h2>
         </div>
         
         <div class="search-container">
