@@ -11,6 +11,7 @@
             --text: #1f2328;
             --accent-primary: #ff8c00;
             --accent-secondary: #f4d03f;
+            --linux-accent: #9c27b0; /* Modern Purple for Linux */
             --border: #d0d7de;
             --m3-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -80,6 +81,7 @@
         }
         .nav-info-box { background: rgba(255, 140, 0, 0.05); border-color: var(--accent-primary); cursor: default; font-size: 0.85rem; line-height: 1.4; }
 
+        /* THEME SWITCHER UI */
         .theme-control { margin-top: auto; padding: 20px; background: var(--bg); border-radius: 24px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
         .emoji-switch { position: relative; width: 64px; height: 34px; cursor: pointer; }
         .emoji-switch input { opacity: 0; width: 0; height: 0; }
@@ -94,6 +96,9 @@
 
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
         
+        .section-header { margin: 60px 0 30px; border-left: 6px solid var(--accent-primary); padding-left: 20px; }
+        .section-header.linux { border-color: var(--linux-accent); }
+
         .about-card {
             background: var(--surface); border-radius: 36px; padding: 40px;
             border: 1px solid var(--border); margin: 30px 0;
@@ -103,35 +108,31 @@
         .info-bit p { margin: 8px 0 0; font-size: 1.1rem; font-weight: 700; }
 
         .typewriter-cursor::after { content: "|"; animation: blink 1s infinite; margin-left: 2px; color: var(--accent-primary); }
+        .type-linux::after { color: var(--linux-accent) !important; }
         @keyframes blink { 50% { opacity: 0; } }
 
         .skills-grid { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 60px; }
         .skill-tag { padding: 10px 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 50px; font-weight: 600; font-size: 0.85rem; }
 
-        #repos-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        #repos-list, .static-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
         .repo-card { background: var(--surface); border-radius: 32px; padding: 30px; border: 1px solid var(--border); transition: 0.4s var(--m3-bounce); display: flex; flex-direction: column; position: relative; overflow: hidden; }
         .repo-card:hover { transform: translateY(-10px); border-color: var(--accent-primary); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        .linux-card:hover { border-color: var(--linux-accent); }
         
-        /* INCREASED CLICK AREA: Covers everything except specific buttons */
-        .card-click-area { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: 5; cursor: pointer; 
-        }
+        .card-click-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; cursor: pointer; }
 
-        .update-tag { font-size: 0.75rem; opacity: 0.6; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; position: relative; z-index: 6; pointer-events: none; }
+        .update-tag { font-size: 0.75rem; opacity: 0.6; margin-bottom: 10px; font-weight: 800; text-transform: uppercase; position: relative; z-index: 6; pointer-events: none; }
         .repo-title { margin: 0 0 10px 0; font-size: 1.3rem; position: relative; z-index: 6; pointer-events: none; }
         .repo-desc { font-size: 0.95rem; opacity: 0.8; flex-grow: 1; position: relative; z-index: 6; pointer-events: none; }
 
-        /* BUTTONS: Higher z-index to stay clickable over the background */
         .button-stack { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 20px; position: relative; z-index: 10; }
         .btn { padding: 14px; border-radius: 18px; text-align: center; font-weight: 800; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 0.9rem; }
         .btn-main { background: var(--accent-primary); color: #fff; }
+        .btn-linux { background: var(--linux-accent); color: #fff !important; }
         body:not(.dark-mode) .btn-main { color: #000; }
         .btn-sub { background: transparent; border: 2px solid var(--accent-secondary); color: var(--text); }
-        .btn-issue { background: rgba(255, 68, 68, 0.05); border: 1.5px solid rgba(255, 68, 68, 0.4); color: #ff4444; }
 
         footer { text-align: center; padding: 50px 20px; opacity: 0.7; font-size: 0.9rem; border-top: 1px solid var(--border); margin-top: 50px;}
-        footer a { color: var(--accent-primary); text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body class="light-mode">
@@ -149,6 +150,7 @@
     <nav class="nav-menu" id="nav-menu">
         <div class="nav-links">
             <div class="nav-info-box">🤝 <b>Support Hub</b><br>Help me improve! Report bugs via the "Report Issue" button.</div>
+            <a href="linux.html" style="color: var(--linux-accent);">🐧 Linux Hub</a>
             <a href="#about-section">👤 About</a>
             <a href="mailto:itsmesinex@gmail.com">✉️ Contact</a>
             <a href="https://github.com/sd6387400-lang" target="_blank">🌍 GitHub</a>
@@ -161,7 +163,6 @@
             </label>
         </div>
     </nav>
-
     <div class="container">
         <div id="about-section">
             <h2 style="text-align:center; opacity:0.5; font-size:0.8rem; letter-spacing:3px;">-------:• <span id="type-profile" class="typewriter-cursor"></span> •:-------</h2>
@@ -180,13 +181,33 @@
             <div class="skill-tag">Shell Scripting</div>
         </div>
 
-        <h2 style="text-align:center; font-size:2.2rem; font-weight:800; margin-bottom:40px;">My <span id="type-creations" style="color:var(--accent-primary)" class="typewriter-cursor"></span></h2>
+        <div class="section-header linux">
+            <h2 style="font-size:2.2rem; font-weight:800; margin:0;">Linux & <span id="type-linux-title" style="color:var(--linux-accent)" class="typewriter-cursor type-linux"></span></h2>
+            <p style="opacity:0.7; margin-top:10px;">Deep dives into system optimization and open source tools.</p>
+        </div>
+        
+        <div class="static-grid" style="margin-bottom: 60px;">
+            <div class="repo-card linux-card">
+                <div class="card-click-area" onclick="window.location.href='linux.html'"></div>
+                <div class="update-tag">System Entry</div>
+                <h3 class="repo-title">Linux Development Hub</h3>
+                <p class="repo-desc">A specialized terminal-style environment for my Linux projects, kernel tweaks, and shell scripts.</p>
+                <div class="button-stack">
+                    <a href="linux.html" class="btn btn-linux">Enter Terminal</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2 style="font-size:2.2rem; font-weight:800; margin:0;">My <span id="type-creations" style="color:var(--accent-primary)" class="typewriter-cursor"></span></h2>
+            <p style="opacity:0.7; margin-top:10px;">Live projects fetched directly from my GitHub repository.</p>
+        </div>
         <main id="repos-list"></main>
     </div>
 
     <footer>
         <p>Built with ❤️ by Pratyush</p>
-        <p>Contact: <a href="mailto:itsmesinex@gmail.com">itsmesinex@gmail.com</a></p>
+        <p>Contact: <a href="mailto:itsmesinex@gmail.com" style="color:var(--accent-primary); text-decoration:none;">itsmesinex@gmail.com</a></p>
     </footer>
 
     <script>
@@ -202,14 +223,16 @@
                 function type() {
                     if (j <= text.length) {
                         el.textContent = text.substring(0, j++);
-                        setTimeout(type, 150);
+                        setTimeout(type, 120);
                     }
                 }
                 type();
             }
 
+            // Start Typewriters
             setupTypewriter('type-profile', 'PROFILE');
             setupTypewriter('type-creations', 'Creations');
+            setupTypewriter('type-linux-title', 'Open Source');
 
             hamburger.onclick = (e) => { e.stopPropagation(); nav.classList.toggle('active'); };
             document.onclick = () => nav.classList.remove('active');
@@ -236,6 +259,7 @@
                 return "Today";
             }
 
+            // Fetch and Filter GitHub Repos
             fetch('https://api.github.com/users/sd6387400-lang/repos?sort=updated')
                 .then(r => r.json())
                 .then(repos => {
@@ -247,6 +271,7 @@
                             const card = document.createElement('div');
                             card.className = 'repo-card';
                             
+                            // Check if repo name matches your custom pages
                             const isGApps = repo.name.toLowerCase().includes('gapps');
                             const isFlasher = repo.name.toLowerCase().includes('flasher');
                             const hubUrl = isGApps ? 'gapps.html' : (isFlasher ? 'flasher.html' : repo.html_url);
@@ -257,14 +282,14 @@
                                 <h3 class="repo-title">${repo.name}</h3>
                                 <p class="repo-desc">${repo.description || 'A custom development project.'}</p>
                                 <div class="button-stack">
-                                    <a href="${repo.html_url}" target="_blank" class="btn btn-main">Open Repository</a>
-                                    <a href="${repo.html_url}/releases" target="_blank" class="btn btn-sub">Check Releases</a>
-                                    <a href="${repo.html_url}/issues" target="_blank" class="btn btn-issue">Report Issue</a>
+                                    <a href="${repo.html_url}" target="_blank" class="btn btn-main">View Code</a>
+                                    <a href="${repo.html_url}/releases" target="_blank" class="btn btn-sub">Get Releases</a>
                                 </div>`;
                             list.appendChild(card);
                         });
                     };
                     render(filtered);
+                    
                     document.getElementById('search').oninput = (e) => {
                         render(filtered.filter(r => r.name.toLowerCase().includes(e.target.value.toLowerCase())));
                     };
