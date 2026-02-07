@@ -112,13 +112,25 @@
             background: rgba(0,0,0,0.1); color: var(--text); box-sizing: border-box;
         }
 
-        /* Search Bar */
-        .search-container { max-width: 600px; margin: 0 auto 40px; }
+        /* FIXED SEARCH BAR FOR MOBILE */
+        .search-container { 
+            max-width: 600px; 
+            margin: 0 auto 40px; 
+            padding: 0 10px; /* Space for edges on mobile */
+        }
         .search-bar {
-            width: 100%; padding: 18px 25px; border-radius: 35px;
-            border: 1px solid var(--border); background: var(--surface);
-            color: var(--text); font-size: 1.1rem; backdrop-filter: blur(10px);
-            transition: 0.4s var(--m3-bounce); outline: none;
+            width: 100%; 
+            padding: 18px 25px; 
+            border-radius: 35px;
+            border: 1px solid var(--border); 
+            background: var(--surface);
+            color: var(--text); 
+            font-size: 1.1rem; 
+            backdrop-filter: blur(10px);
+            transition: 0.4s var(--m3-bounce); 
+            outline: none;
+            box-sizing: border-box; /* Fixed overflow issue */
+            display: block;
         }
         .search-bar:focus { border-color: var(--accent-primary); transform: scale(1.02); }
 
@@ -157,8 +169,10 @@
     </nav>
 
     <header>
-        <h1>OS <span id="type-header" class="typewriter-cursor" style="color:var(--accent-primary)"></span></h1>
-        <p style="opacity:0.7;">Detailed insights by Pratyush.</p>
+        <h1 style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0;">
+            OS <span id="type-header" class="typewriter-cursor" style="color:var(--accent-primary)"></span>
+        </h1>
+        <p style="opacity:0.7; margin-top: 10px;">Detailed insights by Pratyush.</p>
     </header>
 
     <div class="container">
@@ -198,6 +212,7 @@
     </div>
 
     <script>
+        // Rest of the script remains unchanged
         let reviews = JSON.parse(localStorage.getItem('os_reviews')) || [];
         let isOperator = false;
 
