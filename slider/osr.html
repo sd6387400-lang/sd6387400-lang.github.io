@@ -47,10 +47,10 @@
         body.dark-mode header { background: rgba(22,27,34,0.4); }
 
         .hamburger { display: flex; flex-direction: column; gap: 7px; cursor: pointer; z-index: 3001; }
-        .hamburger span { display: block; height: 3.5px; width: 28px; background-color: var(--accent-primary); border-radius: 10px; transition: 0.4s var(--m3-bounce); }
-        .hamburger.active span:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
-        .hamburger.active span:nth-child(2) { opacity: 0; }
-        .hamburger.active span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+        .hamburger span { display: block; height: 3.5px; width: 28px; background-color: var(--accent-primary); border-radius: 10px; transition: 0.4s var(--m3-bounce); transform-origin: left; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; width: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg); }
 
         .nav-menu { 
             position: fixed; top: 90px; left: 25px; width: 290px; 
@@ -59,21 +59,23 @@
             transition: 0.5s var(--m3-ease); z-index: 2500; padding: 25px; 
             box-sizing: border-box; display: flex; flex-direction: column; gap: 15px;
             transform: translateY(-20px) scale(0.9); opacity: 0; visibility: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
         }
         .nav-menu.active { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
         
         .nav-links a { 
             color: var(--text); text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 12px;
-            padding: 16px; background: rgba(0,0,0,0.03); border: 1px solid var(--border); 
-            border-radius: 20px; transition: 0.3s var(--m3-bounce); 
+            padding: 16px; background: var(--bg); border: 1px solid var(--border); 
+            border-radius: 20px; transition: 0.3s var(--m3-bounce); text-align: center; justify-content: center;
         }
         .nav-links a:hover { transform: scale(1.04); border-color: var(--accent-primary); }
 
-        .theme-control { padding: 20px; background: rgba(0,0,0,0.03); border-radius: 25px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .theme-control { padding: 20px; background: var(--bg); border-radius: 25px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
         .emoji-switch { position: relative; width: 64px; height: 34px; cursor: pointer; }
         .emoji-switch input { opacity: 0; width: 0; height: 0; }
         .slider-switch { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: 0.4s; border-radius: 34px; display: flex; align-items: center; padding: 4px; }
         .slider-switch:before { content: "☀️"; height: 26px; width: 26px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.4s var(--m3-bounce); }
+        input:checked + .slider-switch { background-color: var(--accent-primary); }
         input:checked + .slider-switch:before { content: "🌙"; transform: translateX(30px); }
 
         .container { max-width: 1200px; margin: 40px auto; padding: 20px; }
@@ -106,7 +108,6 @@
         
         .btn { padding: 14px; border-radius: 18px; text-align: center; font-weight: 800; cursor: pointer; border: none; transition: 0.3s; width: 100%; margin-top: 10px; }
         .btn-main { background: var(--accent-primary); color: #fff; }
-        body.dark-mode .btn-main { color: #000; }
         .btn-op { font-size: 0.75rem; background: rgba(0,0,0,0.05); border: 1px solid var(--border); color: var(--text); }
         .btn-danger { background: rgba(255, 0, 0, 0.1); color: #ff4444; border: 1px solid rgba(255, 0, 0, 0.2); }
 
@@ -120,14 +121,14 @@
     <div class="m3-blob"></div>
 
     <header>
-        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        <div class="hamburger" id="hamburger"><span></span><span style="width:22px"></span><span style="width:14px"></span></div>
         <div style="font-weight: 900; color: var(--accent-primary); font-size: 1.5rem;">🖥️ OS Reviews</div>
         <button onclick="toggleGear()" style="background:none; border:none; cursor:pointer; font-size:1.6rem;">⚙️</button>
     </header>
 
     <nav class="nav-menu" id="nav-menu">
         <div class="nav-links">
-            <a href="index.html">🏠 <span>Home</span></a>
+            <a href="../index.html">🏠 <span>Home</span></a>
             <a href="content.html">📚 <span>Library</span></a>
         </div>
         <div class="theme-control">
