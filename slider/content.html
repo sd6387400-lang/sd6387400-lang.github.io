@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Content | Pratyush</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        :root {
+            --bg: #fdf8f5; --surface: #ffffff; --text: #1f2328;
+            --accent-primary: #ff8c00; --accent-secondary: #f4d03f;
+            --user-accent: #007bff; --border: #d0d7de; 
+            --m3-ease: cubic-bezier(0.05, 0.7, 0.1, 1);
+            --m3-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        body.dark-mode {
+            --bg: #0d1117; --surface: #161b22; --text: #e6edf3;
+            --accent-primary: #00d2ff; --accent-secondary: #34e89e; 
+            --user-accent: #3d8bff; --border: #30363d;
+        }
+        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; margin: 0; transition: 0.5s; overflow-x: hidden; }
+        
+        .m3-blob {
+            position: fixed; width: 500px; height: 500px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            filter: blur(90px); opacity: 0.15; z-index: -1;
+            animation: morph 20s infinite alternate ease-in-out;
+        }
+        @keyframes morph { 0% { border-radius: 30% 70% 70% 30%; transform: translate(-10%, -10%); } 100% { border-radius: 60% 40% 30% 70%; transform: translate(50vw, 30vh); } }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); }
+        body.dark-mode header { background: rgba(22,27,34,0.7); }
+
+        /* INDEX-STYLE HAMBURGER */
+        .hamburger { display: flex; flex-direction: column; gap: 6px; cursor: pointer; z-index: 3001; }
+        .hamburger span { display: block; height: 3.5px; background-color: var(--accent-primary); border-radius: 10px; transition: 0.4s var(--m3-bounce); transform-origin: left; }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; width: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg); }
+        
+        /* INDEX-STYLE SHORTER MENU */
+        .nav-menu { 
+            position: fixed; top: 80px; left: 20px; width: 280px; 
+            background: var(--surface); backdrop-filter: blur(25px);
+            border: 1px solid var(--border); border-radius: 32px; 
+            transition: 0.6s var(--m3-ease); z-index: 2500; padding: 25px; 
+            box-sizing: border-box; display: flex; flex-direction: column; gap: 10px;
+            transform: translateX(-150%) scale(0.9); opacity: 0;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+        .nav-menu.active { transform: translateX(0) scale(1); opacity: 1; }
+        .nav-links a { 
+            color: var(--text); text-decoration: none; font-weight: 600; 
+            display: block; padding: 16px; background: var(--bg); 
+            border: 1px solid var(--border); border-radius: 20px; text-align: center; 
+            transition: 0.3s var(--m3-bounce);
+        }
+        .nav-links a:hover { transform: scale(1.05); border-color: var(--accent-primary); background: var(--surface); }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        
+        .filter-bar { display: flex; gap: 10px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+        .filter-btn { padding: 10px 22px; border-radius: 25px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; font-weight: 600; white-space: nowrap; transition: 0.3s var(--m3-ease); }
+        .filter-btn.active { background: var(--accent-primary); color: white; border-color: var(--accent-primary); box-shadow: 0 5px 15px rgba(255,140,0,0.3); }
+
+        .content-card { 
+            background: var(--surface); border-radius: 28px; padding: 25px; 
+            border: 1px solid var(--border); position: relative; cursor: pointer;
+            transition: transform 0.4s var(--m3-bounce), box-shadow 0.4s var(--m3-ease), border 0.3s ease;
+            margin-bottom: 20px; overflow: hidden;
+        }
+        .content-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: var(--accent-primary); }
+        .content-card.user:hover { border-color: var(--user-accent); }
+        .content-card.operator { border-left: 8px solid var(--accent-primary); }
+        .content-card.user { border-left: 8px solid var(--user-accent); }
+        
+        .pin-icon { position: absolute; top: 20px; right: 20px; font-size: 1.2rem; display: none; }
+        .content-card.pinned .pin-icon { display: block; color: var(--accent-primary); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        
+        .user-badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 4px 10px; border-radius: 10px; margin-bottom: 10px; display: inline-block; }
+        .operator .user-badge { background: rgba(255,140,0,0.1); color: var(--accent-primary); }
+        .user .user-badge { background: rgba(0,123,255,0.1); color: var(--user-accent); }
+
+        .dashboard { background: var(--surface); border-radius: 32px; padding: 30px; margin-bottom: 40px; border: 2px dashed var(--border); display: none; animation: slideDown 0.5s var(--m3-bounce); }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .admin-input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 18px; border: 1px solid var(--border); background: var(--bg); color: var(--text); box-sizing: border-box; font-family: inherit; }
+        .action-btn { padding: 14px 28px; border-radius: 18px; border: none; cursor: pointer; font-weight: bold; background: var(--accent-primary); color: white; transition: 0.3s var(--m3-bounce); }
+        .action-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 5000; display: none; overflow-y: auto; padding: 20px; box-sizing: border-box; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-nav { max-width: 800px; margin: 0 auto 20px; display: flex; align-items: center; position: sticky; top: 0; background: var(--bg); padding: 10px 0; z-index: 10; }
+        .back-link { cursor: pointer; font-weight: 800; color: var(--accent-primary); font-size: 1.1rem; transition: 0.3s; padding: 10px 20px; background: var(--surface); border-radius: 15px; border: 1px solid var(--border); }
+        .back-link:hover { transform: translateX(-5px); background: var(--accent-primary); color: white; }
+
+        .markdown-body { 
+            max-width: 800px; margin: 0 auto;
+            background: var(--surface); padding: 40px; border-radius: 32px; 
+            border: 1px solid var(--border); color: var(--text);
+            line-height: 1.6; word-wrap: break-word; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        .markdown-body h1 { font-size: 2.25em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; margin-top: 0; color: var(--accent-primary); }
+        .markdown-body h2 { font-size: 1.5em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; margin-top: 24px; }
+        .markdown-body pre { background: #161b22; color: #e6edf3; padding: 16px; border-radius: 18px; overflow: auto; border: 1px solid #30363d; }
+        .markdown-body blockquote { border-left: 4px solid var(--accent-primary); padding-left: 16px; color: #6e7681; font-style: italic; }
+
+        .theme-control { margin-top: auto; padding: 20px; background: var(--bg); border-radius: 24px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .emoji-switch { position: relative; width: 64px; height: 34px; cursor: pointer; }
+        .emoji-switch input { opacity: 0; width: 0; height: 0; }
+        .slider-switch { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: 0.4s; border-radius: 34px; display: flex; align-items: center; padding: 4px; }
+        .slider-switch:before { content: "☀️"; height: 26px; width: 26px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.4s; }
+        input:checked + .slider-switch { background-color: var(--accent-primary); }
+        input:checked + .slider-switch:before { content: "🌙"; transform: translateX(30px); }
+    </style>
+</head>
+<body class="light-mode">
+    <div class="m3-blob"></div>
+
+    <header>
+        <div class="hamburger" id="hamburger"><span></span><span style="width:22px"></span><span style="width:14px"></span></div>
+        <div style="font-weight: 800; color: var(--accent-primary);">Content Home</div>
+        <button onclick="toggleDashboard('user')" class="action-btn" style="background:var(--user-accent); font-size: 0.8rem; padding: 10px 20px;">+ Create Draft</button>
+    </header>
+
+    <nav class="nav-menu" id="nav-menu">
+        <div class="nav-links">
+            <a href="../index.html">🏠 Home</a>
+            <a href="#" onclick="unlockAdmin()">🛠️ Operator Login</a>
+        </div>
+        <div class="theme-control">
+            <span style="font-weight:bold" id="theme-label">Light Theme</span>
+            <label class="emoji-switch">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider-switch"></span>
+            </label>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="setFilter('all', this)">All Content</button>
+            <button class="filter-btn" onclick="setFilter('operator', this)">Operator Only</button>
+            <button class="filter-btn" onclick="setFilter('user', this)">User Drafts</button>
+        </div>
+
+        <div id="dashboard" class="dashboard">
+            <h3 id="dash-title">Create Content</h3>
+            <input type="text" id="post-title" class="admin-input" placeholder="Document Title">
+            <input type="text" id="post-desc" class="admin-input" placeholder="Brief Summary">
+            <textarea id="post-readme" class="admin-input" rows="8" placeholder="Type Markdown (# Header, * List)" oninput="updatePreview()"></textarea>
+            
+            <div id="live-preview-box" style="margin-bottom:20px; display:none;">
+                <small style="opacity:0.5; display:block; margin-bottom:10px; font-weight:bold;">LIVE PREVIEW</small>
+                <div id="preview-render" class="markdown-body" style="padding:20px; border-radius:20px; font-size:0.9rem; border: 1px solid var(--border);"></div>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button class="action-btn" id="post-submit-btn" onclick="publishPost()">Publish</button>
+                <button class="action-btn" style="background:#666" onclick="toggleDashboard()">Discard</button>
+            </div>
+        </div>
+
+        <div id="content-list"></div>
+    </div>
+
+    <div id="readme-modal" class="modal">
+        <div class="modal-nav"><div class="back-link" onclick="closeReadme()">← Back to Library</div></div>
+        <div id="modal-body" class="markdown-body"></div>
+    </div>
+
+    <script>
+        let currentRole = 'guest';
+        let currentFilter = 'all';
+
+        function applyTheme(theme) {
+            const isDark = theme === 'dark';
+            document.body.classList.toggle('dark-mode', isDark);
+            document.body.classList.toggle('light-mode', !isDark);
+            document.getElementById('theme-toggle').checked = isDark;
+            document.getElementById('theme-label').textContent = isDark ? "Dark Theme" : "Light Theme";
+        }
+
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('mega_posts') || '[]');
+            const list = document.getElementById('content-list');
+            list.innerHTML = '';
+            posts.sort((a, b) => (b.pinned || false) - (a.pinned || false));
+
+            posts.forEach((post, index) => {
+                if (currentFilter !== 'all' && post.role !== currentFilter) return;
+                const card = document.createElement('div');
+                card.className = `content-card ${post.role} ${post.pinned ? 'pinned' : ''}`;
+                card.onclick = () => openReadme(post);
+                card.innerHTML = `
+                    <span class="pin-icon">📌</span>
+                    <span class="user-badge">${post.role === 'operator' ? 'Verified Operator' : 'User Contributor'}</span>
+                    <h3 style="margin:5px 0;">${post.title}</h3>
+                    <p style="opacity:0.7; font-size:0.9rem;">${post.desc}</p>
+                    ${currentRole === 'operator' ? `
+                        <div style="margin-top:15px; display:flex; gap:8px;">
+                            <button onclick="event.stopPropagation(); togglePin(${index})" class="action-btn" style="padding:8px 15px; font-size:0.7rem;">${post.pinned ? 'Unpin' : 'Pin'}</button>
+                            <button onclick="event.stopPropagation(); deletePost(${index})" class="action-btn" style="padding:8px 15px; font-size:0.7rem; background:#ff4444;">Delete</button>
+                        </div>
+                    ` : ''}
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function toggleDashboard(role) {
+            const dash = document.getElementById('dashboard');
+            if (role) {
+                currentRole = role === 'admin' ? 'operator' : 'user';
+                document.getElementById('dash-title').innerText = role === 'admin' ? "Operator Mode" : "User Draft";
+                document.getElementById('post-submit-btn').style.background = role === 'admin' ? 'var(--accent-primary)' : 'var(--user-accent)';
+                dash.style.display = 'block';
+                document.getElementById('live-preview-box').style.display = 'block';
+            } else {
+                dash.style.display = 'none';
+            }
+        }
+
+        function updatePreview() {
+            const text = document.getElementById('post-readme').value;
+            document.getElementById('preview-render').innerHTML = marked.parse(text);
+        }
+
+        function openReadme(p) { 
+            const fullMarkdown = `# ${p.title}\n\n${p.readme}`;
+            document.getElementById('modal-body').innerHTML = marked.parse(fullMarkdown);
+            document.getElementById('readme-modal').style.display = 'block'; 
+            document.body.style.overflow = 'hidden';
+        }
+
+        function publishPost() {
+            const title = document.getElementById('post-title').value;
+            const desc = document.getElementById('post-desc').value;
+            const readme = document.getElementById('post-readme').value;
+            if(!title || !readme) return alert("Fill required fields!");
+
+            const posts = JSON.parse(localStorage.getItem('mega_posts') || '[]');
+            posts.unshift({ title, desc: desc || "No description.", readme, role: currentRole, pinned: false });
+            localStorage.setItem('mega_posts', JSON.stringify(posts));
+            
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-desc').value = '';
+            document.getElementById('post-readme').value = '';
+            toggleDashboard();
+            loadPosts();
+        }
+
+        function unlockAdmin() {
+            if(prompt("Operator Key:") === "pratyush-qwerty-admin-2009") {
+                currentRole = 'operator';
+                toggleDashboard('admin');
+                loadPosts();
+            }
+        }
+
+        function closeReadme() { 
+            document.getElementById('readme-modal').style.display = 'none'; 
+            document.body.style.overflow = 'auto';
+        }
+
+        function deletePost(i) {
+            const p = JSON.parse(localStorage.getItem('mega_posts'));
+            p.splice(i, 1);
+            localStorage.setItem('mega_posts', JSON.stringify(p));
+            loadPosts();
+        }
+
+        function togglePin(i) {
+            const p = JSON.parse(localStorage.getItem('mega_posts'));
+            p[i].pinned = !p[i].pinned;
+            localStorage.setItem('mega_posts', JSON.stringify(p));
+            loadPosts();
+        }
+
+        function setFilter(f, btn) {
+            currentFilter = f;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadPosts();
+        }
+
+        document.getElementById('theme-toggle').onchange = (e) => {
+            const t = e.target.checked ? 'dark' : 'light';
+            applyTheme(t);
+            localStorage.setItem('theme', t);
+        };
+
+        const nav = document.getElementById('nav-menu');
+        const burger = document.getElementById('hamburger');
+        
+        burger.onclick = (e) => { 
+            e.stopPropagation(); 
+            nav.classList.toggle('active'); 
+            burger.classList.toggle('active');
+        };
+        
+        document.onclick = () => {
+            nav.classList.remove('active');
+            burger.classList.remove('active');
+        };
+        nav.onclick = (e) => e.stopPropagation();
+
+        applyTheme(localStorage.getItem('theme') || 'light');
+        loadPosts();
+    </script>
+</body>
+</html>

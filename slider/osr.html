@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Reviews | Pratyush</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: rgba(22, 27, 34, 0.7);
+            --text: #e6edf3;
+            --accent-primary: #00d2ff;
+            --accent-secondary: #34e89e;
+            --border: rgba(255, 255, 255, 0.1);
+            --m3-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Theme Sync for Light Mode */
+        body.light-mode {
+            --bg: #fdf8f5; 
+            --surface: rgba(255, 255, 255, 0.8); 
+            --text: #1f2328;
+            --border: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Blob */
+        .m3-blob {
+            position: fixed;
+            width: 500px; height: 500px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            filter: blur(100px); opacity: 0.15; z-index: -1;
+            animation: morph 20s infinite alternate ease-in-out;
+        }
+        @keyframes morph {
+            0% { border-radius: 30% 70% 70% 30%; transform: translate(-10%, -10%); }
+            100% { border-radius: 60% 40% 30% 70%; transform: translate(50vw, 30vh); }
+        }
+
+        /* Glassmorphism Header */
+        header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Glassmorphism Hamburger */
+        .hamburger {
+            position: fixed; top: 20px; left: 20px; z-index: 1000;
+            width: 50px; height: 50px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(15px);
+            border-radius: 15px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .hamburger span {
+            display: block; height: 3px; width: 25px;
+            background: var(--accent-primary); border-radius: 2px;
+            transition: 0.3s var(--m3-bounce);
+        }
+        .hamburger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+        /* Glassmorphism Side Menu */
+        .nav-menu {
+            position: fixed; top: 85px; left: 20px; width: 260px;
+            background: var(--surface);
+            backdrop-filter: blur(25px) saturate(160%);
+            border: 1px solid var(--border);
+            border-radius: 24px; padding: 15px;
+            transform: translateX(-150%); transition: 0.5s var(--m3-bounce);
+            z-index: 999; box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .nav-menu.active { transform: translateX(0); }
+        
+        .nav-menu a, .op-btn {
+            box-sizing: border-box; width: 100%;
+            color: var(--text); text-decoration: none;
+            padding: 12px 15px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05); cursor: pointer; border: none;
+            transition: 0.3s; font-size: 1rem; font-weight: 500;
+        }
+        .nav-menu a:hover, .op-btn:hover { background: var(--accent-primary); color: #000; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+
+        /* Operator Admin Panel */
+        #adminPanel {
+            display: none; background: var(--surface);
+            border: 1px solid var(--accent-primary); border-radius: 25px;
+            padding: 25px; margin-bottom: 30px; backdrop-filter: blur(15px);
+        }
+        .form-group { margin-bottom: 12px; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border);
+            background: rgba(0,0,0,0.1); color: var(--text); box-sizing: border-box;
+        }
+
+        /* Search Bar */
+        .search-container { max-width: 600px; margin: 0 auto 40px; }
+        .search-bar {
+            width: 100%; padding: 18px 25px; border-radius: 35px;
+            border: 1px solid var(--border); background: var(--surface);
+            color: var(--text); font-size: 1.1rem; backdrop-filter: blur(10px);
+            transition: 0.4s var(--m3-bounce); outline: none;
+        }
+        .search-bar:focus { border-color: var(--accent-primary); transform: scale(1.02); }
+
+        /* Review Grid & Cards */
+        .review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+        .review-card {
+            background: var(--surface); backdrop-filter: blur(15px);
+            border: 1px solid var(--border); border-radius: 28px; padding: 25px;
+            transition: 0.4s var(--m3-bounce); position: relative;
+        }
+        .review-card.pinned { border: 2px solid var(--accent-primary); }
+        .no-results { grid-column: 1/-1; text-align: center; padding: 50px; color: var(--accent-primary); font-weight: bold; font-size: 1.5rem; }
+
+        .readme-content {
+            display: none; margin-top: 15px; padding: 12px;
+            background: rgba(0,0,0,0.1); border-radius: 12px; font-size: 0.85rem; border-left: 4px solid var(--accent-primary);
+        }
+
+        .typewriter-cursor::after { content: "|"; animation: blink 1s infinite; color: var(--accent-primary); }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .btn-action { margin-top: 10px; padding: 8px 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 0.85rem; transition: 0.3s; }
+        .btn-action:hover { border-color: var(--accent-primary); }
+        .delete-btn { border-color: #ff4444; color: #ff4444; }
+        .delete-btn:hover { background: #ff4444; color: white; }
+    </style>
+</head>
+<body>
+    <div class="m3-blob"></div>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+
+    <nav class="nav-menu" id="nav-menu">
+        <a href="../index.html">🏠 Home</a>
+        <a href="content.html">📚 Library</a>
+        <button class="op-btn" onclick="promptLogin()">🔑 Operator Login</button>
+    </nav>
+
+    <header>
+        <h1>OS <span id="type-header" class="typewriter-cursor" style="color:var(--accent-primary)"></span></h1>
+        <p style="opacity:0.7;">Detailed insights by Pratyush.</p>
+    </header>
+
+    <div class="container">
+        <div id="adminPanel">
+            <h3 style="margin-top:0">Create Review</h3>
+            <div class="form-group"><input type="text" id="osTitle" placeholder="OS/Distro Name"></div>
+            <div class="form-group">
+                <select id="osType">
+                    <option value="Distro">Distro</option>
+                    <option value="OS">OS</option>
+                    <option value="Mobile">Mobile</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select id="osRating">
+                    <option value="5">5 Stars ⭐⭐⭐⭐⭐</option>
+                    <option value="4">4 Stars ⭐⭐⭐⭐</option>
+                    <option value="3">3 Stars ⭐⭐⭐</option>
+                    <option value="2">2 Stars ⭐⭐</option>
+                    <option value="1">1 Star ⭐</option>
+                </select>
+            </div>
+            <div class="form-group"><textarea id="osDesc" placeholder="Brief Summary..."></textarea></div>
+            <div class="form-group"><textarea id="osReadme" placeholder="Full Details/Notes (Shown on click)..."></textarea></div>
+            <div style="display:flex; gap:10px;">
+                <button class="op-btn" style="background:var(--accent-primary); color:#000; flex:2" onclick="addReview()">Publish Review</button>
+                <button class="op-btn" style="flex:1; text-align:center" onclick="logout()">Close</button>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="osSearch" class="search-bar" placeholder="Filter by name or type...">
+        </div>
+
+        <div class="review-grid" id="osGrid">
+            </div>
+    </div>
+
+    <script>
+        let reviews = JSON.parse(localStorage.getItem('os_reviews')) || [];
+        let isOperator = false;
+
+        function promptLogin() {
+            const pass = prompt("Enter Operator Password:");
+            if (pass === "1234") {
+                isOperator = true;
+                document.getElementById('adminPanel').style.display = 'block';
+                renderReviews();
+            } else { alert("Incorrect Password"); }
+        }
+
+        function logout() {
+            isOperator = false;
+            document.getElementById('adminPanel').style.display = 'none';
+            renderReviews();
+        }
+
+        function addReview() {
+            const title = document.getElementById('osTitle').value;
+            const desc = document.getElementById('osDesc').value;
+            if(!title || !desc) return alert("Title and Summary are required!");
+
+            reviews.unshift({
+                id: Date.now(),
+                title: title,
+                type: document.getElementById('osType').value,
+                rating: parseInt(document.getElementById('osRating').value),
+                desc: desc,
+                readme: document.getElementById('osReadme').value,
+                pinned: false
+            });
+            saveAndRender();
+            // Clear fields
+            document.getElementById('osTitle').value = '';
+            document.getElementById('osDesc').value = '';
+            document.getElementById('osReadme').value = '';
+        }
+
+        function deleteReview(id) {
+            if(confirm("Delete this review?")) {
+                reviews = reviews.filter(r => r.id !== id);
+                saveAndRender();
+            }
+        }
+        
+        function togglePin(id) {
+            const idx = reviews.findIndex(r => r.id === id);
+            reviews[idx].pinned = !reviews[idx].pinned;
+            reviews.sort((a,b) => b.pinned - a.pinned);
+            saveAndRender();
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('os_reviews', JSON.stringify(reviews));
+            renderReviews();
+        }
+
+        function renderReviews(data = reviews) {
+            const grid = document.getElementById('osGrid');
+            if (data.length === 0) {
+                grid.innerHTML = `<div class="no-results">NOTHING FOUND</div>`;
+                return;
+            }
+            grid.innerHTML = data.map(r => `
+                <div class="review-card ${r.pinned ? 'pinned' : ''}">
+                    ${r.pinned ? '<span style="position:absolute; top:15px; right:15px">📌</span>' : ''}
+                    <span style="font-size:0.7rem; color:var(--accent-primary); font-weight:bold;">${r.type.toUpperCase()}</span>
+                    <h3 style="margin:5px 0;">${r.title}</h3>
+                    <div style="color:#f4d03f; margin-bottom:10px;">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                    <p style="font-size:0.9rem; opacity:0.8; line-height:1.5;">${r.desc}</p>
+                    
+                    ${r.readme ? `<button class="btn-action" onclick="this.nextElementSibling.style.display='block'; this.remove()">View Full Notes</button>` : ''}
+                    <div class="readme-content">${r.readme}</div>
+
+                    ${isOperator ? `
+                    <div style="margin-top:15px; display:flex; gap:10px; border-top:1px solid var(--border); padding-top:10px;">
+                        <button class="btn-action" onclick="togglePin(${r.id})">${r.pinned ? 'Unpin' : 'Pin'}</button>
+                        <button class="btn-action delete-btn" onclick="deleteReview(${r.id})">Delete</button>
+                    </div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Search & Theme Initialization
+        document.getElementById('osSearch').oninput = (e) => {
+            const val = e.target.value.toLowerCase();
+            renderReviews(reviews.filter(r => 
+                r.title.toLowerCase().includes(val) || 
+                r.type.toLowerCase().includes(val)
+            ));
+        };
+
+        window.onload = () => {
+            if(localStorage.getItem('theme') === 'light') document.body.classList.add('light-mode');
+            const el = document.getElementById('type-header');
+            let text = "Reviews", j = 0;
+            function type() { if(j <= text.length) { el.textContent = text.substring(0, j++); setTimeout(type, 150); } }
+            type();
+            renderReviews();
+        };
+
+        const burger = document.getElementById('hamburger');
+        const menu = document.getElementById('nav-menu');
+        burger.onclick = () => { 
+            burger.classList.toggle('active'); 
+            menu.classList.toggle('active'); 
+        };
+    </script>
+</body>
+</html>
