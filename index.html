@@ -6,38 +6,77 @@
     <title>Project Home | Pratyush</title>
     <style>
         :root {
-            --bg: #fdf8f5; --surface: #ffffff; --text: #1f2328;
-            --accent-primary: #ff8c00; --accent-secondary: #f4d03f;
-            --border: #d0d7de; 
+            --bg: #fdf8f5; 
+            --surface: rgba(255, 255, 255, 0.4); 
+            --text: #1f2328;
+            --accent-primary: #ff8c00; 
+            --accent-secondary: #f4d03f;
+            --border: rgba(0, 0, 0, 0.1); 
             --m3-ease: cubic-bezier(0.2, 0, 0, 1);
             --m3-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --buttery: cubic-bezier(0.16, 1, 0.3, 1);
         }
         body.dark-mode {
-            --bg: #0d1117; --surface: #161b22; --text: #e6edf3;
-            --accent-primary: #00d2ff; --accent-secondary: #34e89e; --border: #30363d;
+            --bg: #0d1117; 
+            --surface: rgba(22, 27, 34, 0.4); 
+            --text: #e6edf3;
+            --accent-primary: #00d2ff; 
+            --accent-secondary: #34e89e; 
+            --border: rgba(255, 255, 255, 0.1);
         }
-        body { background-color: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; transition: background-color 0.6s var(--m3-ease); overflow-x: hidden; }
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            margin: 0; 
+            transition: background-color 0.8s var(--buttery); 
+            overflow-x: hidden; 
+        }
         
+        /* Butter-Smooth Animations */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in {
+            animation: slideUpFade 1.2s var(--buttery) both;
+        }
+
         /* Animated Background */
         .m3-blob {
-            position: fixed; width: 600px; height: 600px;
+            position: fixed; 
+            width: 700px; 
+            height: 700px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            filter: blur(100px); opacity: 0.12; z-index: -1;
+            filter: blur(120px); 
+            opacity: 0.2; 
+            z-index: -1;
             animation: morph 25s infinite alternate ease-in-out;
             pointer-events: none;
         }
         @keyframes morph { 
             0% { border-radius: 40% 60% 60% 40%; transform: translate(-15%, -15%) rotate(0deg); } 
-            50% { border-radius: 70% 30% 50% 50%; transform: translate(30vw, 15vh) rotate(90deg); }
-            100% { border-radius: 30% 70% 30% 70%; transform: translate(60vw, -10vh) rotate(180deg); } 
+            50% { border-radius: 70% 30% 50% 50%; transform: translate(35vw, 20vh) rotate(90deg); }
+            100% { border-radius: 30% 70% 30% 70%; transform: translate(65vw, -15vh) rotate(180deg); } 
         }
 
         header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 18px 25px; background: rgba(255,255,255,0.6); 
-            backdrop-filter: blur(25px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 18px 25px; 
+            background: rgba(255,255,255,0.2); 
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px);
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-bottom: 1px solid var(--border);
+            animation: slideDown 0.8s var(--buttery);
         }
-        body.dark-mode header { background: rgba(22,27,34,0.6); }
+        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+        body.dark-mode header { background: rgba(22,27,34,0.2); }
 
         .hamburger { display: flex; flex-direction: column; gap: 7px; cursor: pointer; z-index: 3001; padding: 5px; }
         .hamburger span { 
@@ -49,63 +88,123 @@
         .hamburger.active span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
 
         .nav-menu { 
-            position: fixed; top: 90px; left: 25px; width: 290px; 
-            background: var(--surface); backdrop-filter: blur(30px);
-            border: 1px solid var(--border); border-radius: 35px; 
-            transition: 0.5s var(--m3-ease); z-index: 2500; padding: 25px; 
-            box-sizing: border-box; display: flex; flex-direction: column; gap: 12px;
-            transform: translateY(-20px) scale(0.9); opacity: 0; visibility: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+            position: fixed; top: 90px; left: 25px; width: 310px; 
+            background: var(--surface); 
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid var(--border); 
+            border-radius: 35px; 
+            transition: 0.6s var(--buttery); 
+            z-index: 2500; 
+            padding: 30px; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px;
+            transform: translateX(-120%) scale(0.9); 
+            opacity: 0; 
+            visibility: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
         }
-        .nav-menu.active { transform: translateY(0) scale(1); opacity: 1; visibility: visible; }
-        .nav-links a { color: var(--text); text-decoration: none; font-weight: 600; display: block; padding: 15px; background: var(--bg); border: 1px solid var(--border); border-radius: 20px; text-align: center; transition: 0.3s var(--m3-bounce); }
-        .nav-links a:hover { transform: scale(1.04); border-color: var(--accent-primary); }
+        .nav-menu.active { transform: translateX(0) scale(1); opacity: 1; visibility: visible; }
+        
+        .nav-links { display: flex; flex-direction: column; gap: 14px; }
+        .nav-links a { 
+            color: var(--text); 
+            text-decoration: none; 
+            font-weight: 600; 
+            display: block; 
+            padding: 18px; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid var(--border); 
+            border-radius: 22px; 
+            text-align: center; 
+            transition: 0.4s var(--buttery); 
+        }
+        .nav-links a:hover { transform: scale(1.05); border-color: var(--accent-primary); background: rgba(255,255,255,0.1); }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-        .about-card { background: var(--surface); border-radius: 36px; padding: 40px; border: 1px solid var(--border); margin: 30px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; text-align: center; }
+        
+        .glass-card {
+            background: var(--surface);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--border);
+            border-radius: 36px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            transition: 0.5s var(--buttery);
+        }
+
+        .about-card { 
+            padding: 40px; 
+            margin: 30px 0; 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 40px; 
+            text-align: center; 
+        }
+        .about-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
+        
         .info-bit h4 { color: var(--accent-primary); margin: 0; font-size: 0.8rem; letter-spacing: 2px; }
         .info-bit p { margin: 8px 0 0; font-size: 1.1rem; font-weight: 700; }
         
-        .section-header { border-left: 6px solid var(--accent-primary); padding-left: 20px; margin: 60px 0 30px; }
+        .section-header { border-left: 6px solid var(--accent-primary); padding-left: 20px; margin: 60px 0 30px; transition: 0.5s; }
         .section-header.linux { border-color: #9c27b0; }
 
-        .linux-entry-card { background: var(--surface); border-radius: 36px; padding: 35px; border: 1px solid var(--border); transition: 0.4s var(--m3-bounce); }
-        .linux-entry-card:hover { border-color: #9c27b0; transform: translateY(-5px); }
-        .linux-btn { background: #9c27b0; color: white; padding: 15px 30px; border-radius: 20px; text-decoration: none; font-weight: 800; display: inline-block; margin-top: 20px; transition: 0.3s; }
+        .linux-entry-card { padding: 35px; }
+        .linux-entry-card:hover { border-color: #9c27b0; transform: translateY(-8px); }
+        .linux-btn { background: #9c27b0; color: white; padding: 15px 30px; border-radius: 20px; text-decoration: none; font-weight: 800; display: inline-block; margin-top: 20px; transition: 0.4s var(--buttery); box-shadow: 0 10px 20px rgba(156, 39, 176, 0.2); }
+        .linux-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
 
-        /* FIXED SEARCH BAR MOBILE ISSUE */
-        .search-container { 
-            max-width: 500px; 
-            margin: 20px auto 40px; 
-            padding: 0 10px; 
-        }
+        .search-container { max-width: 500px; margin: 40px auto; }
         .search-bar { 
             width: 100%; 
             padding: 18px 25px; 
             border-radius: 35px; 
             border: 1px solid var(--border); 
             background: var(--surface); 
+            backdrop-filter: blur(15px);
             color: var(--text); 
             font-size: 1.1rem; 
-            transition: 0.4s; 
-            box-sizing: border-box; /* Fixed horizontal overflow */
-            display: block;
+            transition: 0.4s var(--buttery); 
         }
-        .search-bar:focus { outline: none; border-color: var(--accent-primary); transform: scale(1.02); }
+        .search-bar:focus { outline: none; border-color: var(--accent-primary); transform: scale(1.05); }
 
         #repos-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        .repo-card { background: var(--surface); border-radius: 32px; padding: 30px; border: 1px solid var(--border); transition: 0.4s var(--m3-bounce); position: relative; display: flex; flex-direction: column; overflow: hidden; }
-        .repo-card:hover { transform: translateY(-10px); border-color: var(--accent-primary); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+        
+        .repo-card { 
+            padding: 30px; 
+            position: relative; 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
+        }
+        .repo-card:hover { 
+            transform: translateY(-12px) scale(1.02); 
+            border-color: var(--accent-primary); 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12); 
+        }
 
         .card-click-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; cursor: pointer; }
         .button-stack { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 20px; position: relative; z-index: 10; }
-        .btn { padding: 14px; border-radius: 18px; text-align: center; font-weight: 800; text-decoration: none; transition: 0.3s; cursor: pointer; border: none; font-size: 0.9rem; }
+        .btn { padding: 14px; border-radius: 18px; text-align: center; font-weight: 800; text-decoration: none; transition: 0.4s var(--buttery); cursor: pointer; border: none; font-size: 0.9rem; }
         .btn-main { background: var(--accent-primary); color: #fff; }
         body:not(.dark-mode) .btn-main { color: #000; }
         .btn-sub { background: transparent; border: 2px solid var(--accent-secondary); color: var(--text); }
         .btn-issue { background: rgba(255, 68, 68, 0.05); border: 1.5px solid rgba(255, 68, 68, 0.4); color: #ff4444; }
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
 
-        .theme-control { margin-top: 15px; padding: 20px; background: var(--bg); border-radius: 25px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .theme-control { 
+            margin-top: 10px; 
+            padding: 20px; 
+            background: rgba(0,0,0,0.05); 
+            border-radius: 25px; 
+            border: 1px solid var(--border); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
         .emoji-switch { position: relative; width: 64px; height: 34px; cursor: pointer; }
         .emoji-switch input { opacity: 0; width: 0; height: 0; }
         .slider-switch { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: 0.4s; border-radius: 34px; display: flex; align-items: center; padding: 4px; }
@@ -113,7 +212,6 @@
         input:checked + .slider-switch { background-color: var(--accent-primary); }
         input:checked + .slider-switch:before { content: "🌙"; transform: translateX(30px); }
 
-        /* Typewriter Cursor Styles */
         .typewriter-cursor::after { content: "|"; animation: blink 1s infinite; color: var(--accent-primary); margin-left: 2px; }
         @keyframes blink { 50% { opacity: 0; } }
     </style>
@@ -123,17 +221,18 @@
 
     <header>
         <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-        <div style="font-weight: 900; color: var(--accent-primary); font-size: 1.4rem;">Pratyush Web Home</div>
+        <div style="font-weight: 900; color: var(--accent-primary); font-size: 1.4rem; letter-spacing: -0.5px;">Pratyush Hub</div>
         <div style="width:38px"></div>
     </header>
 
     <nav class="nav-menu" id="nav-menu">
         <div class="nav-links">
-            <a href="#about-section">👤 About</a>
+            <a href="#about-section">👤 About Me</a>
             <a href="slider/osr.html">🖥️ OS Reviews</a>
             <a href="slider/content.html">📚 Library</a>
+            <a href="gapps.html">📦 GApps Hub</a>
             <a href="https://github.com/sd6387400-lang" target="_blank">🌍 GitHub</a>
-            <a href="mailto:itsmesinex@gmail.com">✉️ Contact</a>
+            <a href="mailto:itsmesinex@gmail.com">✉️ Contact Me</a>
         </div>
         <div class="theme-control">
             <span style="font-weight:bold; font-size: 0.9rem;" id="theme-label">Light Mode</span>
@@ -145,9 +244,9 @@
     </nav>
 
     <div class="container">
-        <div id="about-section">
+        <div id="about-section" class="animate-in" style="animation-delay: 0.2s;">
             <h2 style="text-align:center; opacity:0.5; font-size:0.8rem; letter-spacing:3px;">-------:• <span id="type-profile" class="typewriter-cursor"></span> •:-------</h2>
-            <div class="about-card">
+            <div class="about-card glass-card">
                 <div class="info-bit"><h4>NAME</h4><p>Pratyush</p></div>
                 <div class="info-bit"><h4>PROFESSION</h4><p>Student</p></div>
                 <div class="info-bit"><h4>AGE</h4><p>16</p></div>
@@ -155,25 +254,25 @@
             </div>
         </div>
 
-        <div class="section-header linux">
+        <div class="section-header linux animate-in" style="animation-delay: 0.4s;">
             <h2 style="font-size:2.2rem; font-weight:800; margin:0;">Linux & <span id="type-linux" style="color:#9c27b0" class="typewriter-cursor"></span></h2>
             <p style="opacity:0.7; margin-top:10px;">Deep dives into system optimization and open source tools.</p>
         </div>
-        <div class="linux-entry-card">
+        <div class="linux-entry-card glass-card animate-in" style="animation-delay: 0.5s;">
             <h3 style="margin:0; font-size:1.5rem;">Linux Development Hub</h3>
             <p style="opacity:0.8; line-height:1.6; margin-top:15px;">Terminal-style environment for my Linux projects and kernel tweaks.</p>
             <a href="linux.html" class="linux-btn">Enter Terminal</a>
         </div>
 
-        <div class="section-header">
-            <h2 style="font-size:2.2rem; font-weight:800; margin:0; display: flex; align-items: center; flex-wrap: wrap;">My&nbsp;<span id="type-creations" style="color:var(--accent-primary)" class="typewriter-cursor"></span></h2>
+        <div class="section-header animate-in" style="animation-delay: 0.6s;">
+            <h2 style="font-size:2.2rem; font-weight:800; margin:0;">My <span id="type-creations" style="color:var(--accent-primary)" class="typewriter-cursor"></span></h2>
         </div>
         
-        <div class="search-container">
+        <div class="search-container animate-in" style="animation-delay: 0.7s;">
             <input type="text" class="search-bar" id="search" placeholder="Search my creations...">
         </div>
 
-        <main id="repos-list"></main>
+        <main id="repos-list" class="animate-in" style="animation-delay: 0.8s;"></main>
     </div>
 
     <script>
@@ -192,7 +291,6 @@
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         };
 
-        // RESTORED TYPEWRITER LOGIC
         function setupTypewriter(id, text) {
             const el = document.getElementById(id);
             if (!el) return;
@@ -200,7 +298,7 @@
             function type() {
                 if (j <= text.length) {
                     el.textContent = text.substring(0, j++);
-                    setTimeout(type, 150);
+                    setTimeout(type, 120);
                 }
             }
             type();
@@ -210,7 +308,6 @@
         setupTypewriter('type-linux', 'Open Source|');
         setupTypewriter('type-creations', 'Creations');
 
-        // GITHUB REPO FETCHING
         fetch('https://api.github.com/users/sd6387400-lang/repos?sort=updated')
             .then(r => r.json())
             .then(repos => {
@@ -218,9 +315,10 @@
                 const render = (data) => {
                     const list = document.getElementById('repos-list');
                     list.innerHTML = '';
-                    data.forEach(repo => {
+                    data.forEach((repo, index) => {
                         const card = document.createElement('div');
-                        card.className = 'repo-card';
+                        card.className = 'repo-card glass-card animate-in';
+                        card.style.animationDelay = `${0.1 * index}s`; // Staggered entrance
                         
                         const isGApps = repo.name.toLowerCase().includes('gapps');
                         const isFlasher = repo.name.toLowerCase().includes('flasher');
