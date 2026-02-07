@@ -31,12 +31,26 @@
         }
         .back-link:hover { border-color: var(--accent); }
 
-        header { text-align: left; border-left: 6px solid var(--accent); padding-left: 20px; margin-bottom: 50px; }
-        h1 { font-size: 2.5rem; margin: 0; font-weight: 800; }
+        /* FIXED: Text Wrapping for Mobile */
+        header { 
+            text-align: left; 
+            border-left: 6px solid var(--accent); 
+            padding-left: 20px; 
+            margin-bottom: 50px;
+            overflow-wrap: break-word; /* Allows long words to wrap */
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        h1 { 
+            font-size: 2.5rem; 
+            margin: 0; 
+            font-weight: 800; 
+            line-height: 1.2;
+        }
+        
         .type-cursor::after { content: "|"; animation: blink 1s infinite; color: var(--accent); }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* GRID SYSTEM */
         .linux-grid {
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -51,7 +65,7 @@
         .linux-card:hover { border-color: var(--accent); transform: translateY(-8px); }
         .linux-card h3 { color: var(--accent); margin-top: 0; font-size: 1.4rem; }
 
-        /* Make the 3rd box (Open Source) cover the full width */
+        /* FIXED: Full Width for Open Source Box */
         .linux-card.full-width {
             grid-column: 1 / -1;
         }
@@ -61,6 +75,7 @@
             margin-top: 40px; border: 1px solid var(--border);
             font-family: 'Consolas', 'Courier New', monospace;
             color: var(--terminal-text); box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow-x: auto; /* Scroll if neofetch is too wide */
         }
         .terminal-header { display: flex; gap: 8px; margin-bottom: 15px; opacity: 0.5; }
         .dot { width: 12px; height: 12px; border-radius: 50%; background: #ff5f56; }
@@ -149,11 +164,12 @@
         async function fetchLinuxRepos() {
             const list = document.getElementById('linux-repos-list');
             try {
+                // Fetching from your new account
                 const response = await fetch('https://api.github.com/users/pratyushqwerty7/repos?sort=updated');
                 const repos = await response.json();
                 
                 list.innerHTML = '';
-                // Hide 'config' or 'nik-gapps' specifically if they appear
+                // Hiding config and nik-gapps as requested
                 const filtered = repos.filter(repo => !['config', 'nik-gapps'].includes(repo.name.toLowerCase()));
 
                 filtered.forEach(repo => {
@@ -162,13 +178,13 @@
                     card.innerHTML = `
                         <div class="update-tag">GitHub Project</div>
                         <h3>${repo.name}</h3>
-                        <p style="font-size:0.9rem; opacity:0.8; flex-grow:1;">${repo.description || 'Linux-based system tool or configuration.'}</p>
+                        <p style="font-size:0.9rem; opacity:0.8; flex-grow:1;">${repo.description || 'Custom Linux project or configuration.'}</p>
                         <a href="${repo.html_url}" target="_blank" class="repo-btn">Source Code</a>
                     `;
                     list.appendChild(card);
                 });
             } catch (e) {
-                list.innerHTML = "<p>Failed to initialize repository grid.</p>";
+                list.innerHTML = "<p>Connect to the grid to see repositories.</p>";
             }
         }
 
