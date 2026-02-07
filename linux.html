@@ -22,6 +22,7 @@
             flex-direction: column; align-items: center; min-height: 100vh;
         }
         .container { width: 90%; max-width: 850px; margin: 40px 0; }
+        
         .back-nav { margin-bottom: 30px; }
         .back-link { 
             color: var(--text); text-decoration: none; font-weight: bold; 
@@ -35,16 +36,25 @@
         .type-cursor::after { content: "|"; animation: blink 1s infinite; color: var(--accent); }
         @keyframes blink { 50% { opacity: 0; } }
 
+        /* GRID SYSTEM */
         .linux-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px; margin-top: 30px;
         }
+
         .linux-card {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 28px; padding: 25px; transition: 0.4s var(--m3-bounce);
+            display: flex; flex-direction: column;
         }
         .linux-card:hover { border-color: var(--accent); transform: translateY(-8px); }
         .linux-card h3 { color: var(--accent); margin-top: 0; font-size: 1.4rem; }
+
+        /* Make the 3rd box (Open Source) cover the full width */
+        .linux-card.full-width {
+            grid-column: 1 / -1;
+        }
 
         .terminal-window {
             background: var(--terminal-bg); border-radius: 20px; padding: 25px;
@@ -57,7 +67,16 @@
         .dot:nth-child(2) { background: #ffbd2e; }
         .dot:nth-child(3) { background: #27c93f; }
 
-        footer { margin-top: auto; padding: 50px; opacity: 0.6; font-size: 0.9rem; text-align: center; }
+        .section-title { margin-top: 60px; border-left: 6px solid var(--accent); padding-left: 20px; font-size: 1.8rem; font-weight: 800; }
+        .update-tag { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; margin-bottom: 8px; opacity: 0.6; }
+
+        .repo-btn {
+            margin-top: 20px; padding: 12px; border-radius: 15px;
+            background: var(--accent); color: white; text-decoration: none;
+            text-align: center; font-weight: bold; font-size: 0.9rem;
+        }
+
+        footer { margin-top: 60px; padding: 50px; opacity: 0.6; font-size: 0.9rem; text-align: center; border-top: 1px solid var(--border); width: 100%; box-sizing: border-box; }
     </style>
 </head>
 <body class="light-mode">
@@ -78,11 +97,11 @@
             </div>
             <div class="linux-card">
                 <h3>Kernel Tweaks</h3>
-                <p>Optimizing CPU governors and I/O schedulers for performance.</p>
+                <p>Optimizing CPU governors and I/O schedulers for Mi439 performance.</p>
             </div>
-            <div class="linux-card">
+            <div class="linux-card full-width">
                 <h3>Open Source</h3>
-                <p>Curated tools and contributions for the privacy-focused community.</p>
+                <p>Curated tools, configurations, and contributions for the privacy-focused community. Exploring the boundaries of open-source software and system freedom.</p>
             </div>
         </div>
 
@@ -99,20 +118,22 @@
             </div>
         </div>
 
+        <h2 class="section-title">Open Source Repositories</h2>
+        <div id="linux-repos-list" class="linux-grid">
+            </div>
+
         <footer>
             © 2026 Built by Pratyush | sudo stay_creative
         </footer>
     </div>
 
     <script>
-        // --- ADAPTIVE THEME SYNC ---
         function syncTheme() {
             const isDark = localStorage.getItem('theme') === 'dark';
             document.body.classList.toggle('dark-mode', isDark);
             document.body.classList.toggle('light-mode', !isDark);
         }
 
-        // --- TYPEWRITER ---
         function setupTypewriter(id, text) {
             const el = document.getElementById(id);
             let j = 0;
@@ -125,11 +146,38 @@
             type();
         }
 
-        // Initialize
-        syncTheme();
-        setupTypewriter('type-sub', 'root@pratyush: Setting up system environment...');
-        
-        // Listen for storage changes if user switches theme in another tab
+        async function fetchLinuxRepos() {
+            const list = document.getElementById('linux-repos-list');
+            try {
+                const response = await fetch('https://api.github.com/users/pratyushqwerty7/repos?sort=updated');
+                const repos = await response.json();
+                
+                list.innerHTML = '';
+                // Hide 'config' or 'nik-gapps' specifically if they appear
+                const filtered = repos.filter(repo => !['config', 'nik-gapps'].includes(repo.name.toLowerCase()));
+
+                filtered.forEach(repo => {
+                    const card = document.createElement('div');
+                    card.className = 'linux-card';
+                    card.innerHTML = `
+                        <div class="update-tag">GitHub Project</div>
+                        <h3>${repo.name}</h3>
+                        <p style="font-size:0.9rem; opacity:0.8; flex-grow:1;">${repo.description || 'Linux-based system tool or configuration.'}</p>
+                        <a href="${repo.html_url}" target="_blank" class="repo-btn">Source Code</a>
+                    `;
+                    list.appendChild(card);
+                });
+            } catch (e) {
+                list.innerHTML = "<p>Failed to initialize repository grid.</p>";
+            }
+        }
+
+        window.onload = () => {
+            syncTheme();
+            setupTypewriter('type-sub', 'root@pratyush: Setting up system environment...');
+            fetchLinuxRepos();
+        };
+
         window.addEventListener('storage', syncTheme);
     </script>
 </body>
