@@ -2,352 +2,297 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Home | Pratyush</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pratyush | Developer Portfolio</title>
     <style>
         :root {
-            --bg: #fdf8f5; 
-            --surface: rgba(255, 255, 255, 0.4); 
-            --text: #1f2328;
-            --accent-primary: #ff8c00; 
-            --accent-secondary: #f4d03f;
-            --border: rgba(0, 0, 0, 0.1); 
-            --m3-ease: cubic-bezier(0.2, 0, 0, 1);
-            --m3-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --buttery: cubic-bezier(0.16, 1, 0.3, 1);
+            --bg: #fcfcfd;
+            --text: #1d1d1f;
+            --accent: #0066ff;
+            --card-bg: #ffffff;
+            --border: rgba(0,0,0,0.08);
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --orbit-line: rgba(0,0,0,0.1);
+            --sun-glow: rgba(0, 102, 255, 0.3);
+            --selection: #ccff00; 
         }
-        body.dark-mode {
-            --bg: #0d1117; 
-            --surface: rgba(22, 27, 34, 0.4); 
-            --text: #e6edf3;
-            --accent-primary: #00d2ff; 
-            --accent-secondary: #34e89e; 
-            --border: rgba(255, 255, 255, 0.1);
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0d1117;
+                --text: #f0f6fc;
+                --accent: #58a6ff;
+                --card-bg: #161b22;
+                --border: rgba(255,255,255,0.08);
+                --shadow: 0 20px 40px rgba(0,0,0,0.3);
+                --orbit-line: rgba(255,255,255,0.12);
+                --sun-glow: rgba(88, 166, 255, 0.4);
+            }
         }
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            margin: 0; 
-            transition: background-color 0.8s var(--buttery); 
-            overflow-x: hidden; 
+
+        ::selection { background: var(--selection); color: #000; }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        
+        /* Fixed: Removed the menu-open overflow hidden which caused the jumping */
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; overflow-x: hidden; height: 100%; }
+
+        body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+
+        /* When menu is open, we disable interaction with sections to "fake" a lock without breaking scroll-snap */
+        body.menu-open section { pointer-events: none; user-select: none; }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        header {
+            position: fixed; top: 0; width: 100%; height: 65px;
+            display: flex; flex-direction: row-reverse; justify-content: space-between; align-items: center;
+            padding: 0 5%; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px);
+            z-index: 2000; border-bottom: 1px solid var(--border);
+        }
+        @media (prefers-color-scheme: dark) { header { background: rgba(13, 17, 23, 0.7); } }
+        
+        .logo { font-weight: 800; font-size: 1.2rem; color: var(--accent); letter-spacing: -0.5px; }
+        .menu-btn { cursor: pointer; font-size: 1.5rem; color: var(--text); padding: 5px; z-index: 2005; }
+
+        #menu-toggle { display: none; }
+        .sidebar {
+            position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+            background: var(--card-bg); z-index: 2002; 
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 30px 20px; border-right: 1px solid var(--border);
+            display: flex; flex-direction: column;
+        }
+        #menu-toggle:checked ~ .sidebar { transform: translateX(280px); }
+        
+        .sidebar-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease; z-index: 2001; backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+        #menu-toggle:checked ~ .sidebar-overlay { opacity: 1; visibility: visible; }
+
+        .sidebar h2 { font-size: 1.1rem; color: var(--accent); font-weight: 800; }
+        .sidebar p.subtitle { font-size: 0.6rem; opacity: 0.5; text-transform: uppercase; margin-bottom: 25px; }
+
+        .sidebar a { 
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px; 
+            text-decoration: none; color: var(--text); border-radius: 12px;
+            font-size: 0.95rem; font-weight: 600; transition: 0.3s;
+            margin-bottom: 4px;
+        }
+        .sidebar a:hover, .sidebar a.active { background: var(--accent); color: white !important; }
+
+        section {
+            height: 100vh; width: 100vw; scroll-snap-align: start; scroll-snap-stop: always;
+            display: flex; align-items: center; justify-content: center; position: relative; padding: 20px;
+        }
+
+        .container { display: flex; align-items: center; justify-content: space-around; width: 100%; max-width: 1200px; gap: 40px; }
+        .card { 
+            background: var(--card-bg); padding: 40px; border-radius: 30px; 
+            border: 1px solid var(--border); box-shadow: var(--shadow); 
+            flex: 1; max-width: 580px; z-index: 10; backdrop-filter: blur(10px);
         }
         
-        /* Butter-Smooth Animations */
-        @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .badge { background: var(--accent); color: white; padding: 5px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; margin-bottom: 15px; display: inline-block; }
+        h1, h2 { font-size: 3rem; line-height: 1.1; margin-bottom: 15px; letter-spacing: -1px; }
+        h1 span, h2 span { color: var(--accent); }
+        p { line-height: 1.6; opacity: 0.8; margin-bottom: 20px; font-size: 1rem; }
 
-        .animate-in {
-            animation: slideUpFade 1.2s var(--buttery) both;
-        }
+        .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
+        .info-item { background: var(--bg); padding: 15px; border-radius: 15px; border: 1px solid var(--border); text-align: center; }
+        .info-item span { display: block; font-size: 10px; opacity: 0.5; text-transform: uppercase; }
 
-        /* Animated Background */
-        .m3-blob {
-            position: fixed; 
-            width: 700px; 
-            height: 700px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            filter: blur(120px); 
-            opacity: 0.2; 
-            z-index: -1;
-            animation: morph 25s infinite alternate ease-in-out;
-            pointer-events: none;
-        }
-        @keyframes morph { 
-            0% { border-radius: 40% 60% 60% 40%; transform: translate(-15%, -15%) rotate(0deg); } 
-            50% { border-radius: 70% 30% 50% 50%; transform: translate(35vw, 20vh) rotate(90deg); }
-            100% { border-radius: 30% 70% 30% 70%; transform: translate(65vw, -15vh) rotate(180deg); } 
-        }
+        .orbit-system { position: relative; width: 450px; height: 450px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        .sun { width: 85px; height: 85px; background: var(--card-bg); border: 2px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; color: var(--accent); box-shadow: 0 0 25px var(--sun-glow); z-index: 5; }
+        .ring { position: absolute; border: 1.5px dashed var(--orbit-line); border-radius: 50%; }
+        .r1 { width: 280px; height: 280px; animation: rot 20s linear infinite; }
+        .r2 { width: 460px; height: 460px; animation: rot 30s linear infinite reverse; }
+        .planet { position: absolute; padding: 8px 18px; border-radius: 50px; color: white; font-weight: 700; font-size: 11px; animation: crot 20s linear infinite; white-space: nowrap; }
+        .r2 .planet { animation: crot 30s linear infinite reverse; }
+        @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes crot { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
-        header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 18px 25px; 
-            background: rgba(255,255,255,0.2); 
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px);
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-            border-bottom: 1px solid var(--border);
-            animation: slideDown 0.8s var(--buttery);
-        }
-        @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
-        body.dark-mode header { background: rgba(22,27,34,0.2); }
+        .marquee { display: none; position: absolute; bottom: 30px; width: 100%; overflow: hidden; }
+        .m-track { display: flex; width: max-content; gap: 15px; animation: scrollMarquee 20s linear infinite; }
+        .m-tag { padding: 12px 25px; border-radius: 15px; color: white; font-weight: 700; font-size: 13px; }
+        @keyframes scrollMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-        .hamburger { display: flex; flex-direction: column; gap: 7px; cursor: pointer; z-index: 3001; padding: 5px; }
-        .hamburger span { 
-            display: block; height: 3.5px; width: 28px; background-color: var(--accent-primary); 
-            border-radius: 10px; transition: 0.4s var(--m3-bounce); transform-origin: center;
-        }
-        .hamburger.active span:nth-child(1) { transform: translateY(10.5px) rotate(45deg); }
-        .hamburger.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-        .hamburger.active span:nth-child(3) { transform: translateY(-10.5px) rotate(-45deg); }
+        .btn-main { background:var(--accent); color:white; padding:18px; border-radius:14px; text-decoration:none; font-weight:800; display:block; text-align:center; transition: 0.3s; box-shadow: 0 10px 20px var(--sun-glow); }
 
-        .nav-menu { 
-            position: fixed; top: 90px; left: 25px; width: 310px; 
-            background: var(--surface); 
-            backdrop-filter: blur(35px);
-            -webkit-backdrop-filter: blur(35px);
-            border: 1px solid var(--border); 
-            border-radius: 35px; 
-            transition: 0.6s var(--buttery); 
-            z-index: 2500; 
-            padding: 30px; 
-            box-sizing: border-box; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 16px;
-            transform: translateX(-120%) scale(0.9); 
-            opacity: 0; 
-            visibility: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
-        }
-        .nav-menu.active { transform: translateX(0) scale(1); opacity: 1; visibility: visible; }
-        
-        .nav-links { display: flex; flex-direction: column; gap: 14px; }
-        .nav-links a { 
-            color: var(--text); 
-            text-decoration: none; 
-            font-weight: 600; 
-            display: block; 
-            padding: 18px; 
-            background: rgba(255, 255, 255, 0.05); 
-            border: 1px solid var(--border); 
-            border-radius: 22px; 
-            text-align: center; 
-            transition: 0.4s var(--buttery); 
-        }
-        .nav-links a:hover { transform: scale(1.05); border-color: var(--accent-primary); background: rgba(255,255,255,0.1); }
+        .bg-blobs { position: absolute; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: hidden; }
+        .blob { position: absolute; border-radius: 50%; background: var(--accent); opacity: 0.08; animation: float 15s infinite alternate ease-in-out; filter: blur(40px); }
+        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(100px, -100px); } }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-        
-        .glass-card {
-            background: var(--surface);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
-            border-radius: 36px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-            transition: 0.5s var(--buttery);
+        @media (max-width: 1024px) {
+            .orbit-system { display: none; }
+            .marquee { display: block; }
+            section { padding-top: 80px; }
+            .container { flex-direction: column; text-align: center; }
+            .card { padding: 35px 25px; width: 95%; background: var(--card-bg); border: 1px solid var(--border); }
+            h1, h2 { font-size: 2.2rem; }
+            .info-grid { grid-template-columns: 1fr; }
+            .info-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
         }
-
-        .about-card { 
-            padding: 40px; 
-            margin: 30px 0; 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            gap: 40px; 
-            text-align: center; 
-        }
-        .about-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(0,0,0,0.1); }
-        
-        .info-bit h4 { color: var(--accent-primary); margin: 0; font-size: 0.8rem; letter-spacing: 2px; }
-        .info-bit p { margin: 8px 0 0; font-size: 1.1rem; font-weight: 700; }
-        
-        .section-header { border-left: 6px solid var(--accent-primary); padding-left: 20px; margin: 60px 0 30px; transition: 0.5s; }
-        .section-header.linux { border-color: #9c27b0; }
-
-        .linux-entry-card { padding: 35px; }
-        .linux-entry-card:hover { border-color: #9c27b0; transform: translateY(-8px); }
-        .linux-btn { background: #9c27b0; color: white; padding: 15px 30px; border-radius: 20px; text-decoration: none; font-weight: 800; display: inline-block; margin-top: 20px; transition: 0.4s var(--buttery); box-shadow: 0 10px 20px rgba(156, 39, 176, 0.2); }
-        .linux-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
-
-        .search-container { max-width: 500px; margin: 40px auto; }
-        .search-bar { 
-            width: 100%; 
-            padding: 18px 25px; 
-            border-radius: 35px; 
-            border: 1px solid var(--border); 
-            background: var(--surface); 
-            backdrop-filter: blur(15px);
-            color: var(--text); 
-            font-size: 1.1rem; 
-            transition: 0.4s var(--buttery); 
-        }
-        .search-bar:focus { outline: none; border-color: var(--accent-primary); transform: scale(1.05); }
-
-        #repos-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
-        
-        .repo-card { 
-            padding: 30px; 
-            position: relative; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-        }
-        .repo-card:hover { 
-            transform: translateY(-12px) scale(1.02); 
-            border-color: var(--accent-primary); 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.12); 
-        }
-
-        .card-click-area { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; cursor: pointer; }
-        .button-stack { display: flex; flex-direction: column; gap: 10px; margin-top: auto; padding-top: 20px; position: relative; z-index: 10; }
-        .btn { padding: 14px; border-radius: 18px; text-align: center; font-weight: 800; text-decoration: none; transition: 0.4s var(--buttery); cursor: pointer; border: none; font-size: 0.9rem; }
-        .btn-main { background: var(--accent-primary); color: #fff; }
-        body:not(.dark-mode) .btn-main { color: #000; }
-        .btn-sub { background: transparent; border: 2px solid var(--accent-secondary); color: var(--text); }
-        .btn-issue { background: rgba(255, 68, 68, 0.05); border: 1.5px solid rgba(255, 68, 68, 0.4); color: #ff4444; }
-        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
-
-        .theme-control { 
-            margin-top: 10px; 
-            padding: 20px; 
-            background: rgba(0,0,0,0.05); 
-            border-radius: 25px; 
-            border: 1px solid var(--border); 
-            display: flex; 
-            align-items: center; 
-            justify-content: space-between; 
-        }
-        .emoji-switch { position: relative; width: 64px; height: 34px; cursor: pointer; }
-        .emoji-switch input { opacity: 0; width: 0; height: 0; }
-        .slider-switch { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border); transition: 0.4s; border-radius: 34px; display: flex; align-items: center; padding: 4px; }
-        .slider-switch:before { content: "☀️"; height: 26px; width: 26px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.4s var(--m3-bounce); }
-        input:checked + .slider-switch { background-color: var(--accent-primary); }
-        input:checked + .slider-switch:before { content: "🌙"; transform: translateX(30px); }
-
-        .typewriter-cursor::after { content: "|"; animation: blink 1s infinite; color: var(--accent-primary); margin-left: 2px; }
-        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
-<body class="light-mode">
-    <div class="m3-blob"></div>
+<body>
 
     <header>
-        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
-        <div style="font-weight: 900; color: var(--accent-primary); font-size: 1.4rem; letter-spacing: -0.5px;">Pratyush Hub</div>
-        <div style="width:38px"></div>
+        <div class="logo">PRATYUSH.</div>
+        <label for="menu-toggle" class="menu-btn" onclick="openMenu()">☰</label>
     </header>
 
-    <nav class="nav-menu" id="nav-menu">
-        <div class="nav-links">
-            <a href="#about-section">👤 About Me</a>
-            <a href="slider/osr.html">🖥️ OS Reviews</a>
-            <a href="slider/content.html">📚 Library</a>
-            <a href="gapps.html">📦 GApps Hub</a>
-            <a href="https://github.com/sd6387400-lang" target="_blank">🌍 GitHub</a>
-            <a href="mailto:itsmesinex@gmail.com">✉️ Contact Me</a>
+    <input type="checkbox" id="menu-toggle">
+    <div class="sidebar-overlay" onclick="closeMenu()"></div>
+    
+    <div class="sidebar">
+        <div style="padding-left: 10px;">
+            <h2>PRATYUSH</h2>
+            <p class="subtitle">Developer Console</p>
         </div>
-        <div class="theme-control">
-            <span style="font-weight:bold; font-size: 0.9rem;" id="theme-label">Light Mode</span>
-            <label class="emoji-switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider-switch"></span>
-            </label>
+        <a href="#page1" class="active" onclick="setActive(this)"><span>🏠</span> Home</a>
+        <a href="#page2" onclick="setActive(this)"><span>👤</span> About Me</a>
+        <a href="#page3" onclick="setActive(this)"><span>🚀</span> Get Started</a>
+        <a href="creations.html"><span>🎨</span> My Creations</a>
+        <div style="margin-top: auto; border-top: 1px solid var(--border); padding-top: 20px;">
+            <a href="https://github.com/Pratyush" target="_blank"><span>🐙</span> GitHub</a>
         </div>
-    </nav>
-
-    <div class="container">
-        <div id="about-section" class="animate-in" style="animation-delay: 0.2s;">
-            <h2 style="text-align:center; opacity:0.5; font-size:0.8rem; letter-spacing:3px;">-------:• <span id="type-profile" class="typewriter-cursor"></span> •:-------</h2>
-            <div class="about-card glass-card">
-                <div class="info-bit"><h4>NAME</h4><p>Pratyush</p></div>
-                <div class="info-bit"><h4>PROFESSION</h4><p>Student</p></div>
-                <div class="info-bit"><h4>AGE</h4><p>16</p></div>
-                <div class="info-bit"><h4>HOBBY</h4><p>Building Things</p></div>
-            </div>
-        </div>
-
-        <div class="section-header linux animate-in" style="animation-delay: 0.4s;">
-            <h2 style="font-size:2.2rem; font-weight:800; margin:0;">Linux & <span id="type-linux" style="color:#9c27b0" class="typewriter-cursor"></span></h2>
-            <p style="opacity:0.7; margin-top:10px;">Deep dives into system optimization and open source tools.</p>
-        </div>
-        <div class="linux-entry-card glass-card animate-in" style="animation-delay: 0.5s;">
-            <h3 style="margin:0; font-size:1.5rem;">Linux Development Hub</h3>
-            <p style="opacity:0.8; line-height:1.6; margin-top:15px;">Terminal-style environment for my Linux projects and kernel tweaks.</p>
-            <a href="linux.html" class="linux-btn">Enter Terminal</a>
-        </div>
-
-        <div class="section-header animate-in" style="animation-delay: 0.6s;">
-            <h2 style="font-size:2.2rem; font-weight:800; margin:0;">My <span id="type-creations" style="color:var(--accent-primary)" class="typewriter-cursor"></span></h2>
-        </div>
-        
-        <div class="search-container animate-in" style="animation-delay: 0.7s;">
-            <input type="text" class="search-bar" id="search" placeholder="Search my creations...">
-        </div>
-
-        <main id="repos-list" class="animate-in" style="animation-delay: 0.8s;"></main>
     </div>
 
+    <section id="page1">
+        <div class="container reveal">
+            <div class="card">
+                <span class="badge">Available for Projects</span>
+                <h1>Building logic into <span>Digital Reality.</span></h1>
+                <p>I'm a 16-year-old developer specializing in high-performance web solutions.</p>
+                <div class="info-grid">
+                    <div class="info-item"><span>Age</span><b>16 Years</b></div>
+                    <div class="info-item"><span>Role</span><b>Full Stack</b></div>
+                    <div class="info-item"><span>Focus</span><b>Performance</b></div>
+                </div>
+                <a href="#page3" class="btn-main">Launch Project -></a>
+            </div>
+
+            <div class="orbit-system">
+                <div class="sun">SKILLS</div>
+                <div class="ring r1">
+                    <div class="planet" style="background:#e34f26; top:-15px; left:50%; margin-left:-35px;">HTML5</div>
+                    <div class="planet" style="background:#1572b6; bottom:-15px; left:50%; margin-left:-35px;">CSS3</div>
+                </div>
+                <div class="ring r2">
+                    <div class="planet" style="background:#f7df1e; color:black; left:-40px; top:50%;">JavaScript</div>
+                    <div class="planet" style="background:#3776ab; right:-40px; top:50%;">Python</div>
+                    <div class="planet" style="background:#00599c; top:10%; right:10%;">C++</div>
+                </div>
+            </div>
+        </div>
+        <div class="marquee">
+            <div class="m-track">
+                <div class="m-tag" style="background:#e34f26">HTML5</div><div class="m-tag" style="background:#1572b6">CSS3</div><div class="m-tag" style="background:#f7df1e; color:black">JS</div><div class="m-tag" style="background:#3776ab">Python</div><div class="m-tag" style="background:#00599c">C++</div>
+                <div class="m-tag" style="background:#e34f26">HTML5</div><div class="m-tag" style="background:#1572b6">CSS3</div><div class="m-tag" style="background:#f7df1e; color:black">JS</div><div class="m-tag" style="background:#3776ab">Python</div><div class="m-tag" style="background:#00599c">C++</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="page2">
+        <div class="container reveal" style="flex-direction: row-reverse;">
+            <div class="card">
+                <h2>The <span>Developer</span> Journey</h2>
+                <p>My journey is about architecture. I focus on building systems that don't just work, but work efficiently.</p>
+                <div class="info-item" style="border-left: 4px solid var(--accent); text-align: left; background: transparent; padding-left: 20px;">
+                    <b style="font-size: 1rem; opacity: 0.9;">"The best way to predict the future is to create it."</b>
+                </div>
+            </div>
+            <div class="orbit-system">
+                <div class="sun">PASSIONS</div>
+                <div class="ring r1">
+                    <div class="planet" style="background:#ff4757; top:-15px; left:50%; margin-left:-45px;">Designing</div>
+                    <div class="planet" style="background:#2ed573; bottom:-15px; left:50%; margin-left:-55px;">Helping Others</div>
+                </div>
+                <div class="ring r2">
+                    <div class="planet" style="background:#ffa502; left:-45px; top:50%;">Logic Building</div>
+                </div>
+            </div>
+        </div>
+        <div class="marquee">
+            <div class="m-track" style="animation-direction: reverse;">
+                <div class="m-tag" style="background:#ff4757">Designing</div><div class="m-tag" style="background:#2ed573">Support</div><div class="m-tag" style="background:#ffa502">Logic Building</div>
+                <div class="m-tag" style="background:#ff4757">Designing</div><div class="m-tag" style="background:#2ed573">Support</div><div class="m-tag" style="background:#ffa502">Logic Building</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="page3">
+        <div class="bg-blobs"> 
+            <div class="blob" style="width: 300px; height: 300px; top: 10%; left: 5%;"></div>
+            <div class="blob" style="width: 400px; height: 400px; bottom: 10%; right: 5%; animation-delay: -5s;"></div>
+        </div>
+        <div class="container reveal">
+            <div class="card" style="text-align: center; max-width: 750px;">
+                <h2>Let's build something <span>incredible.</span></h2>
+                <p>Ready to start your next project? I'm here to help turn your vision into digital reality.</p>
+                <br>
+                <a href="get-started.html" class="btn-main" style="display:inline-block; padding: 20px 60px;">Get Started Now</a>
+            </div>
+        </div>
+    </section>
+
     <script>
-        const nav = document.getElementById('nav-menu');
-        const burger = document.getElementById('hamburger');
-        const toggle = document.getElementById('theme-toggle');
+        const toggle = document.getElementById('menu-toggle');
 
-        burger.onclick = (e) => { e.stopPropagation(); burger.classList.toggle('active'); nav.classList.toggle('active'); };
-        document.onclick = () => { burger.classList.remove('active'); nav.classList.remove('active'); };
-        nav.onclick = (e) => e.stopPropagation();
+        function openMenu() {
+            // Simply mark the body as open. No overflow hidden = No jump.
+            document.body.classList.add('menu-open');
+        }
 
-        toggle.onchange = () => {
-            const isDark = toggle.checked;
-            document.body.classList.toggle('dark-mode', isDark);
-            document.getElementById('theme-label').textContent = isDark ? "Dark Mode" : "Light Mode";
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        };
+        function closeMenu() {
+            document.body.classList.remove('menu-open');
+            toggle.checked = false;
+        }
 
-        function setupTypewriter(id, text) {
-            const el = document.getElementById(id);
-            if (!el) return;
-            let j = 0;
-            function type() {
-                if (j <= text.length) {
-                    el.textContent = text.substring(0, j++);
-                    setTimeout(type, 120);
+        function setActive(el) {
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+            el.classList.add('active');
+            closeMenu();
+        }
+
+        // Standard reveal logic
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 150) {
+                    reveals[i].classList.add("active");
                 }
             }
-            type();
         }
 
-        setupTypewriter('type-profile', 'PROFILE');
-        setupTypewriter('type-linux', 'Open Source|');
-        setupTypewriter('type-creations', 'Creations');
+        window.addEventListener("scroll", reveal);
+        reveal();
 
-        fetch('https://api.github.com/users/sd6387400-lang/repos?sort=updated')
-            .then(r => r.json())
-            .then(repos => {
-                const filtered = repos.filter(repo => !['sd6387400-lang.github.io', 'config'].includes(repo.name));
-                const render = (data) => {
-                    const list = document.getElementById('repos-list');
-                    list.innerHTML = '';
-                    data.forEach((repo, index) => {
-                        const card = document.createElement('div');
-                        card.className = 'repo-card glass-card animate-in';
-                        card.style.animationDelay = `${0.1 * index}s`; // Staggered entrance
-                        
-                        const isGApps = repo.name.toLowerCase().includes('gapps');
-                        const isFlasher = repo.name.toLowerCase().includes('flasher');
-                        const hubUrl = isGApps ? 'gapps.html' : (isFlasher ? 'flasher.html' : repo.html_url);
-
-                        card.innerHTML = `
-                            <div class="card-click-area" onclick="window.location.href='${hubUrl}'"></div>
-                            <h3 style="color:var(--accent-primary); margin:0 0 10px 0;">${repo.name}</h3>
-                            <p style="opacity:0.8; font-size:0.9rem; flex-grow:1;">${repo.description || 'A custom development project.'}</p>
-                            <div class="button-stack">
-                                <a href="${repo.html_url}" target="_blank" class="btn btn-main">Open Repository</a>
-                                <a href="${repo.html_url}/releases" target="_blank" class="btn btn-sub">Check Releases</a>
-                                <a href="${repo.html_url}/issues" target="_blank" class="btn btn-issue">Report Issue</a>
-                            </div>
-                        `;
-                        list.appendChild(card);
-                    });
-                };
-                render(filtered);
-                document.getElementById('search').oninput = (e) => {
-                    render(filtered.filter(r => r.name.toLowerCase().includes(e.target.value.toLowerCase())));
-                };
+        // High precision active link tracker
+        window.addEventListener('scroll', () => {
+            let current = "";
+            const sections = document.querySelectorAll("section");
+            sections.forEach(s => {
+                const sectionTop = s.offsetTop;
+                if (pageYOffset >= sectionTop - 60) {
+                    current = s.getAttribute("id");
+                }
             });
 
-        if(localStorage.getItem('theme') === 'dark') {
-            toggle.checked = true;
-            document.body.classList.add('dark-mode');
-            document.getElementById('theme-label').textContent = "Dark Mode";
-        }
+            document.querySelectorAll(".sidebar a").forEach(link => {
+                link.classList.remove("active");
+                if (link.getAttribute("href") === "#" + current) {
+                    link.classList.add("active");
+                }
+            });
+        }, { passive: true });
     </script>
 </body>
 </html>
