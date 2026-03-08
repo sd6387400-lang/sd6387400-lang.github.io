@@ -34,12 +34,10 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
         
-        /* Fixed: Removed the menu-open overflow hidden which caused the jumping */
         html { scroll-snap-type: y mandatory; scroll-behavior: smooth; overflow-x: hidden; height: 100%; }
-
         body { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
 
-        /* When menu is open, we disable interaction with sections to "fake" a lock without breaking scroll-snap */
+        /* Navigation Fix: Prevents interaction when sidebar is open without jumping scroll */
         body.menu-open section { pointer-events: none; user-select: none; }
 
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
@@ -106,6 +104,7 @@
         .info-item { background: var(--bg); padding: 15px; border-radius: 15px; border: 1px solid var(--border); text-align: center; }
         .info-item span { display: block; font-size: 10px; opacity: 0.5; text-transform: uppercase; }
 
+        /* Orbit System */
         .orbit-system { position: relative; width: 450px; height: 450px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .sun { width: 85px; height: 85px; background: var(--card-bg); border: 2px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; color: var(--accent); box-shadow: 0 0 25px var(--sun-glow); z-index: 5; }
         .ring { position: absolute; border: 1.5px dashed var(--orbit-line); border-radius: 50%; }
@@ -116,6 +115,7 @@
         @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes crot { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
+        /* Marquee Bar */
         .marquee { display: none; position: absolute; bottom: 30px; width: 100%; overflow: hidden; }
         .m-track { display: flex; width: max-content; gap: 15px; animation: scrollMarquee 20s linear infinite; }
         .m-tag { padding: 12px 25px; border-radius: 15px; color: white; font-weight: 700; font-size: 13px; }
@@ -129,20 +129,25 @@
 
         @media (max-width: 1024px) {
             .orbit-system { display: none; }
-            .marquee { display: block; }
-            section { padding-top: 80px; }
-            .container { flex-direction: column; text-align: center; }
-            .card { padding: 35px 25px; width: 95%; background: var(--card-bg); border: 1px solid var(--border); }
-            h1, h2 { font-size: 2.2rem; }
-            .info-grid { grid-template-columns: 1fr; }
-            .info-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; }
+            section { 
+                padding: 80px 15px 20px 15px; 
+                display: flex; 
+                flex-direction: column; 
+                justify-content: space-between; 
+            }
+            .container { flex-direction: column; text-align: center; flex: 1; justify-content: center; }
+            .card { padding: 25px 20px; width: 100%; max-width: 400px; }
+            h1, h2 { font-size: 1.8rem; }
+            .info-grid { grid-template-columns: 1fr; margin-bottom: 15px; }
+            .info-item { padding: 10px; }
+            .marquee { display: block; position: relative; bottom: 0; margin-top: 20px; width: 100vw; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">PRATYUSH.</div>
+        <div class="logo">sd6387400-lang</div>
         <label for="menu-toggle" class="menu-btn" onclick="openMenu()">☰</label>
     </header>
 
@@ -151,15 +156,15 @@
     
     <div class="sidebar">
         <div style="padding-left: 10px;">
-            <h2>PRATYUSH</h2>
-            <p class="subtitle">Developer Console</p>
+            <h2>PROJECTS</h2>
+            <p class="subtitle">Discover New Things Lovely</p>
         </div>
         <a href="#page1" class="active" onclick="setActive(this)"><span>🏠</span> Home</a>
-        <a href="#page2" onclick="setActive(this)"><span>👤</span> About Me</a>
-        <a href="#page3" onclick="setActive(this)"><span>🚀</span> Get Started</a>
+        <a href="#page2" onclick="setActive(this)"><span>🔆</span> About Me</a>
+        <a href="#page3" onclick="setActive(this)"><span>⚡</span> Get Started</a>
         <a href="creations.html"><span>🎨</span> My Creations</a>
         <div style="margin-top: auto; border-top: 1px solid var(--border); padding-top: 20px;">
-            <a href="https://github.com/Pratyush" target="_blank"><span>🐙</span> GitHub</a>
+            <a href="https://github.com/Pratyush" target="_blank"><span>🪷</span> GitHub</a>
         </div>
     </div>
 
@@ -171,10 +176,10 @@
                 <p>I'm a 16-year-old developer specializing in high-performance web solutions.</p>
                 <div class="info-grid">
                     <div class="info-item"><span>Age</span><b>16 Years</b></div>
-                    <div class="info-item"><span>Role</span><b>Full Stack</b></div>
+                    <div class="info-item"><span>Role</span><b>Helper</b></div>
                     <div class="info-item"><span>Focus</span><b>Performance</b></div>
                 </div>
-                <a href="#page3" class="btn-main">Launch Project -></a>
+                <a href="#page3" class="btn-main">Change Your Imagination To reality</a>
             </div>
 
             <div class="orbit-system">
@@ -202,7 +207,11 @@
         <div class="container reveal" style="flex-direction: row-reverse;">
             <div class="card">
                 <h2>The <span>Developer</span> Journey</h2>
-                <p>My journey is about architecture. I focus on building systems that don't just work, but work efficiently.</p>
+                <p>My journey is about architecture. I focus on building systems that don't just work, but work efficiently.
+                    
+                </p>
+                <p>So, Hello My Name is Pratyush, I am a regular School Student and A passionate coder of few laguages</p>
+                
                 <div class="info-item" style="border-left: 4px solid var(--accent); text-align: left; background: transparent; padding-left: 20px;">
                     <b style="font-size: 1rem; opacity: 0.9;">"The best way to predict the future is to create it."</b>
                 </div>
@@ -234,9 +243,14 @@
         <div class="container reveal">
             <div class="card" style="text-align: center; max-width: 750px;">
                 <h2>Let's build something <span>incredible.</span></h2>
-                <p>Ready to start your next project? I'm here to help turn your vision into digital reality.</p>
+                <p>Ever wondered can we do everything...</p>
+                <p>Ever Wondered does this power have any limit or not...</p>
+                <p>Ever wondered How people are able to do incredible Things..</p>
+                <p>Then why can't we, We will revolutionize this...</p>
+                <p>View My digital library and always do something new, Be Incredible..</p>
+                <p>Ready to start your next project? Lets Convert This Dream into a digital Reallity..</p>
                 <br>
-                <a href="get-started.html" class="btn-main" style="display:inline-block; padding: 20px 60px;">Get Started Now</a>
+                <a href="get-started.html" class="btn-main" style="display:inline-block; padding: 20px 60px;">Get Start Now</a>
             </div>
         </div>
     </section>
@@ -245,7 +259,6 @@
         const toggle = document.getElementById('menu-toggle');
 
         function openMenu() {
-            // Simply mark the body as open. No overflow hidden = No jump.
             document.body.classList.add('menu-open');
         }
 
@@ -260,7 +273,6 @@
             closeMenu();
         }
 
-        // Standard reveal logic
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -275,13 +287,12 @@
         window.addEventListener("scroll", reveal);
         reveal();
 
-        // High precision active link tracker
         window.addEventListener('scroll', () => {
             let current = "";
             const sections = document.querySelectorAll("section");
             sections.forEach(s => {
                 const sectionTop = s.offsetTop;
-                if (pageYOffset >= sectionTop - 60) {
+                if (pageYOffset >= sectionTop - 100) {
                     current = s.getAttribute("id");
                 }
             });
