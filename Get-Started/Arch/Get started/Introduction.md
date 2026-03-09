@@ -25,4 +25,8 @@ https://archlinux.org/
 
 <text color="black" type="bold">Note: If you thought if website is looking that old The OS will also but it's Completely opposite</text>
 
+<code>
+https://archlinux.org
+</code>
+
 </collapse>
