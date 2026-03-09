@@ -17,3 +17,6 @@ This is a secret
 this is inside box
 # Details
 </box>
+
+# <text color="blue" type=""bold>Text</text>
+<list type="number"> Hello </list>
