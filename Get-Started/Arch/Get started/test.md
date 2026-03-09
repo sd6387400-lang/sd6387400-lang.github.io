@@ -48,13 +48,13 @@ function helloWorld() {
 
 ### Media Integration
 **Image:**
-<image>test-image.png</image>
+<image>HD-wallpaper-mac-os-x-rancho-cucamonga-mountains-apple-thumbnail.jpg</image>
 
 **Video:**
-<video>demo-video.mp4</video>
+<video>screenrecorder-20260306-132914.mp4</video>
 
 **Audio:**
-<audio>theme-music.mp3</audio>
+<audio>screenrecorder-20260212-163542.mp3</audio>
 
 ---
 
