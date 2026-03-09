@@ -16,5 +16,5 @@ Patience
 Some linux knowledge(optinal but recommend)
 Arch linux iso.
 Knowledge if your system is MBR or GPT
-
+Windows or Linux Installed on computer.
 </list>
