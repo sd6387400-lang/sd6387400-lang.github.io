@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Control | Ultimate Admin Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --accent: #006494; --bg-base: #f8f9ff; --border: rgba(0, 0, 0, 0.05); }
+        @media (prefers-color-scheme: dark) {
+            :root { --bg-base: #0f1115; --accent: #91cdff; --border: rgba(255, 255, 255, 0.08); }
+            body { background-color: #0f1115; color: #e2e2e6; }
+            .glass-card { background: rgba(26, 28, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); }
+            input, textarea { background: #1a1c1e !important; color: white; border: 1px solid rgba(255,255,255,0.1) !important; }
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-base); }
+        .glass-card { backdrop-filter: blur(20px); border-radius: 24px; }
+        .btn-primary { background: var(--accent); color: white; transition: 0.3s; cursor: pointer; border:none; }
+        
+        .folder-content { display: none; margin-left: 1rem; border-left: 1px solid rgba(0,100,148,0.1); padding-left: 0.5rem; }
+        .folder-content.active { display: block; }
+        .chevron { transition: transform 0.2s; font-size: 8px; display: inline-block; }
+        .tree-btn { opacity: 0; transition: 0.2s; padding: 4px; border-radius: 4px; font-size: 10px; }
+        .group:hover .tree-btn { opacity: 1; }
+        .tag-ref { font-size: 10px; font-weight: 800; padding: 6px 10px; border-radius: 8px; background: rgba(0,0,0,0.05); color: var(--accent); cursor: pointer; }
+
+        /* PREVIEW SYNC */
+        #preview-box { line-height: 1.6; }
+        .logic-box { padding: 25px; margin: 30px 0; border-radius: 20px; border: 2px solid; }
+        .custom-collapse { border-radius: 20px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border); }
+        .custom-collapse summary { padding: 20px; cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .custom-collapse summary::after { content: '+'; }
+        .collapse-body { padding: 20px; }
+        .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
+        .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
+        .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
+        @keyframes blink { 50% { opacity: 0; } }
+        #preview-box img, #preview-box video, #preview-box audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <input type="file" id="global-uploader" class="hidden" onchange="handleFileUpload(event)">
+
+    <div id="auth-layer" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-6">
+        <div class="glass-card bg-white p-10 max-w-md w-full text-center shadow-2xl">
+            <h2 class="text-2xl font-extrabold mb-6">Logic Control</h2>
+            <input type="password" id="gh-token" placeholder="GitHub Token" class="w-full p-4 rounded-2xl mb-4 border outline-none text-center font-mono">
+            <button onclick="verifyAccess()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest text-sm">Initialize</button>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-4 lg:p-12">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-black tracking-tighter italic">ENGINE ADMIN PRO</h1>
+                <p id="status-bar" class="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">Ready for Logic</p>
+            </div>
+            <button onclick="logout()" class="p-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all"><i class="fas fa-power-off"></i></button>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass-card bg-white p-6 shadow-sm border border-blue-100">
+                    <h3 class="text-[10px] font-black uppercase tracking-widest mb-4 text-slate-400">Master Architecture</h3>
+                    <input type="text" id="new-folder-name" placeholder="Folder Name..." class="w-full p-4 rounded-xl border mb-3 text-sm font-bold">
+                    <button onclick="createMasterFolder()" id="master-btn" class="btn-primary w-full py-3 rounded-xl text-[9px] font-black uppercase tracking-widest">Execute Sync</button>
+                </div>
+
+                <div class="glass-card bg-white p-6 shadow-sm min-h-[500px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Project Tree</h3>
+                        <button onclick="loadRootTree()" class="text-blue-500 text-xs hover:rotate-180 transition-transform"><i class="fas fa-sync"></i></button>
+                    </div>
+                    <div id="tree-content" class="space-y-1"></div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass-card bg-white p-4 shadow-sm flex flex-wrap justify-between gap-4 border border-slate-100">
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <span class="tag-ref" onclick="insertTag('tw')">Typewriter</span>
+                        <span class="tag-ref" onclick="insertTag('box')">Box</span>
+                        <span class="tag-ref" onclick="insertTag('collapse')">Collapse</span>
+                        <span class="tag-ref" onclick="insertTag('heading')">Heading</span>
+                        <span class="tag-ref" onclick="insertTag('align')">Align</span>
+                        <span class="tag-ref" onclick="insertTag('code')">Code</span>
+                    </div>
+                    <div class="flex bg-slate-100 p-1 rounded-xl">
+                        <button onclick="setMode('write')" id="btn-write" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase bg-white shadow-sm transition-all">Write</button>
+                        <button onclick="setMode('preview')" id="btn-preview" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all">Preview</button>
+                    </div>
+                </div>
+
+                <div class="glass-card bg-white p-8 shadow-xl min-h-[650px] flex flex-col relative">
+                    <div class="flex flex-wrap justify-between items-end mb-6 gap-4">
+                        <div class="flex-1">
+                            <span id="editing-path-display" class="text-[9px] font-black text-blue-500 uppercase block mb-1 tracking-widest">No file selected</span>
+                            <input type="text" id="current-filename" placeholder="filename.md" class="font-black text-2xl bg-transparent border-none outline-none w-full tracking-tighter">
+                        </div>
+                        <button onclick="saveFile()" id="save-btn" class="btn-primary px-8 py-4 rounded-2xl text-xs font-black flex items-center gap-3">
+                            <i class="fas fa-cloud-arrow-up"></i> COMMIT
+                        </button>
+                    </div>
+                    <textarea id="editor" spellcheck="false" class="flex-1 w-full p-6 rounded-2xl border-none bg-slate-50 outline-none font-mono text-sm leading-relaxed mb-4 resize-none min-h-[450px]"></textarea>
+                    <div id="preview-box" class="hidden flex-1 w-full p-6 rounded-2xl bg-white border border-slate-100 overflow-y-auto min-h-[450px]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            owner: "sd6387400-lang",
+            repo: "sd6387400-lang.github.io",
+            roots: ["Get-Started", "Descriptions", "images", "videos", "audio"]
+        };
+
+        let GITHUB_TOKEN = localStorage.getItem('logic_engine_token');
+        let currentFileSha = null;
+        let activeFilePath = "";
+        let uploadTargetPath = "";
+
+        if(GITHUB_TOKEN) verifyAccess();
+
+        async function verifyAccess() {
+            const token = GITHUB_TOKEN || document.getElementById('gh-token').value.trim();
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+            if(res.ok) {
+                localStorage.setItem('logic_engine_token', token);
+                GITHUB_TOKEN = token;
+                document.getElementById('auth-layer').classList.add('hidden');
+                loadRootTree();
+            }
+        }
+
+        function logout() { localStorage.removeItem('logic_engine_token'); location.reload(); }
+
+        // --- TREE LOGIC ---
+        function loadRootTree() {
+            const tree = document.getElementById('tree-content');
+            tree.innerHTML = '';
+            CONFIG.roots.forEach(root => {
+                const subId = `tree-${btoa(root).replace(/=/g,'')}`;
+                const div = document.createElement('div');
+                div.className = "group";
+                div.innerHTML = `
+                    <div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer">
+                        <span onclick="toggleFolder('${subId}', '${root}', this)" class="text-[11px] font-black uppercase text-slate-600 flex items-center gap-2">
+                            <i class="fas fa-chevron-right chevron"></i>
+                            <i class="fas fa-database text-blue-500"></i> ${root}
+                        </span>
+                        <div class="flex gap-1">
+                            <button onclick="inTreeCreateFolder('${root}')" class="tree-btn text-blue-400" title="New Folder"><i class="fas fa-folder-plus"></i></button>
+                            <button onclick="triggerUpload('${root}')" class="tree-btn text-orange-400" title="Upload"><i class="fas fa-upload"></i></button>
+                        </div>
+                    </div>
+                    <div id="${subId}" class="folder-content"></div>
+                `;
+                tree.appendChild(div);
+            });
+        }
+
+        async function toggleFolder(id, path, el) {
+            const container = document.getElementById(id);
+            const chevron = el.querySelector('.chevron');
+            container.classList.toggle('active');
+            if (container.classList.contains('active')) {
+                chevron.style.transform = "rotate(90deg)";
+                if (container.innerHTML === '') loadDirectory(path, id);
+            } else {
+                chevron.style.transform = "rotate(0deg)";
+            }
+        }
+
+        async function loadDirectory(path, targetId) {
+            const container = document.getElementById(targetId);
+            container.innerHTML = '<div class="p-2 text-[9px] font-bold text-blue-400 italic">Syncing...</div>';
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
+            const items = await res.json();
+            container.innerHTML = '';
+            
+            items.sort((a,b) => (a.type === 'dir' ? -1 : 1)).forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "group";
+                if(item.type === 'dir') {
+                    const subId = `tree-${btoa(item.path).replace(/=/g,'')}`;
+                    itemDiv.innerHTML = `
+                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 cursor-pointer">
+                            <span onclick="toggleFolder('${subId}', '${item.path}', this)" class="text-xs font-bold text-slate-700 flex items-center gap-2">
+                                <i class="fas fa-chevron-right chevron"></i>
+                                <i class="fas fa-folder text-blue-300"></i> ${item.name}
+                            </span>
+                            <div class="flex gap-1">
+                                <button onclick="inTreeCreateFolder('${item.path}')" class="tree-btn text-blue-400"><i class="fas fa-folder-plus"></i></button>
+                                <button onclick="triggerUpload('${item.path}')" class="tree-btn text-orange-400"><i class="fas fa-upload"></i></button>
+                                <button onclick="prepareNewFile('${item.path}')" class="tree-btn text-green-500"><i class="fas fa-file-circle-plus"></i></button>
+                                <button onclick="deleteItem('${item.path}', '${item.sha}', true)" class="tree-btn text-red-300"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div id="${subId}" class="folder-content"></div>
+                    `;
+                } else {
+                    itemDiv.innerHTML = `
+                        <div class="flex justify-between items-center p-1 px-2 rounded-lg hover:bg-blue-50">
+                            <span onclick="openFile('${item.path}', '${item.sha}')" class="text-[11px] font-medium text-slate-500 cursor-pointer truncate">
+                                <i class="far fa-file-alt mr-2 text-slate-300"></i>${item.name}
+                            </span>
+                            <button onclick="deleteItem('${item.path}', '${item.sha}', false)" class="tree-btn text-red-300"><i class="fas fa-times"></i></button>
+                        </div>
+                    `;
+                }
+                container.appendChild(itemDiv);
+            });
+        }
+
+        // --- TREE ACTIONS ---
+        function inTreeCreateFolder(parentPath) {
+            const name = prompt("New Folder Name:");
+            if(!name) return;
+            const path = `${parentPath}/${name}/.keep`;
+            saveToGithub(path, btoa("Logic Keep"), "Create Folder");
+        }
+
+        function prepareNewFile(parentPath) {
+            activeFilePath = `${parentPath}/newfile.md`;
+            currentFileSha = null;
+            document.getElementById('editing-path-display').innerText = activeFilePath;
+            document.getElementById('current-filename').value = "newfile.md";
+            document.getElementById('editor').value = "";
+            setMode('write');
+        }
+
+        async function deleteItem(path, sha, isDir) {
+            if(!confirm(`Delete ${path}?`)) return;
+            document.getElementById('status-bar').innerText = "DELETING...";
+            if(isDir) {
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+                });
+                const items = await res.json();
+                for(const item of items) await deleteRecursive(item);
+            } else {
+                await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Delete ${path}`, sha: sha })
+                });
+            }
+            loadRootTree();
+            document.getElementById('status-bar').innerText = "READY";
+        }
+
+        async function deleteRecursive(item) {
+            if(item.type === 'dir') {
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${item.path}`, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+                });
+                const subItems = await res.json();
+                for(const s of subItems) await deleteRecursive(s);
+            } else {
+                await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${item.path}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Delete ${item.path}`, sha: item.sha })
+                });
+            }
+        }
+
+        // --- PREVIEW RENDERER ---
+        function setMode(mode) {
+            const editor = document.getElementById('editor');
+            const preview = document.getElementById('preview-box');
+            editor.classList.toggle('hidden', mode === 'preview');
+            preview.classList.toggle('hidden', mode === 'write');
+            document.getElementById('btn-write').className = mode === 'write' ? 'px-4 py-2 rounded-lg text-[10px] font-black uppercase bg-white shadow-sm' : 'px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400';
+            document.getElementById('btn-preview').className = mode === 'preview' ? 'px-4 py-2 rounded-lg text-[10px] font-black uppercase bg-white shadow-sm' : 'px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400';
+
+            if(mode === 'preview') {
+                let text = editor.value;
+                const rawBase = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/main`;
+                const pathParts = activeFilePath.split('/'); pathParts.pop();
+                const subPath = pathParts.join('/');
+
+                text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
+                text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => `<div style="font-size:${1.1-(s*0.08)}rem; text-align:${a}; font-weight:800; margin:1rem 0;">${c}</div>`);
+                text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => `<details class="custom-collapse" style="background:${bg||'#f1f1f1'}"><summary style="color:${c||'black'}">${h}</summary><div class="collapse-body">${con}</div></details>`);
+                text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => `<span class="tw-text tw-cursor" data-state="${state}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color}; font-weight:${type.includes('bold')?'800':'400'}"></span>`);
+                text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t==='dotted'?'dotted':'solid'}">${con}</div>`);
+                text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => `<div class="code-container"><button class="copy-btn">Copy</button><pre><code>${code.trim()}</code></pre></div>`);
+                text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'">`);
+                text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video controls><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`);
+
+                preview.innerHTML = marked.parse(text);
+                initTypewriters();
+            }
+        }
+
+        function initTypewriters() {
+            document.querySelectorAll('.tw-text').forEach(el => {
+                const fullText = el.getAttribute('data-fulltext');
+                let i = 0; el.innerText = '';
+                function type() { if (i < fullText.length) { el.innerText += fullText.charAt(i); i++; setTimeout(type, 50); } }
+                type();
+            });
+        }
+
+        // --- SAVE / OPEN / UTILS ---
+        async function openFile(path, sha) {
+            activeFilePath = path; currentFileSha = sha;
+            document.getElementById('editing-path-display').innerText = path;
+            document.getElementById('current-filename').value = path.split('/').pop();
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
+            const data = await res.json();
+            document.getElementById('editor').value = decodeURIComponent(escape(atob(data.content)));
+            setMode('write');
+        }
+
+        async function saveFile() {
+            const filename = document.getElementById('current-filename').value;
+            const dir = activeFilePath.substring(0, activeFilePath.lastIndexOf('/'));
+            const fullPath = `${dir}/${filename}`;
+            const content = btoa(unescape(encodeURIComponent(document.getElementById('editor').value)));
+            saveToGithub(fullPath, content, `Update ${filename}`, currentFileSha);
+        }
+
+        async function saveToGithub(path, content, msg, sha = null) {
+            document.getElementById('status-bar').innerText = "SYNCING...";
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: msg, content: content, sha: sha || undefined })
+            });
+            if(res.ok) {
+                const d = await res.json();
+                if(path === activeFilePath) currentFileSha = d.content.sha;
+                document.getElementById('status-bar').innerText = "SYNC SUCCESSFUL";
+                loadRootTree();
+            }
+        }
+
+        function insertTag(type) {
+            const area = document.getElementById('editor');
+            const tags = {
+                tw: '<tw state="continuous" color="#006494" type="bold">Text</tw>',
+                box: '<box color="#006494" type="solid">Content</box>',
+                collapse: '<collapse heading="Title" color="white" bg-color="#006494">Body</collapse>',
+                heading: '<heading size="1" align="center">Heading Text</heading>',
+                align: '<align type="center">Centered Content</align>',
+                code: '<code>\n// Paste Code Here\n</code>'
+            };
+            area.setRangeText(tags[type], area.selectionStart, area.selectionEnd, 'select');
+        }
+
+        async function createMasterFolder() {
+            const name = document.getElementById('new-folder-name').value.trim();
+            if(!name) return;
+            document.getElementById('master-btn').disabled = true;
+            for(const root of CONFIG.roots) {
+                const path = root === "Descriptions" ? `${root}/${name}.md` : `${root}/${name}/init.md`;
+                await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: `Init ${name}`, content: btoa("Logic Initialized") })
+                });
+            }
+            document.getElementById('new-folder-name').value = '';
+            document.getElementById('master-btn').disabled = false;
+            loadRootTree();
+        }
+
+        function triggerUpload(path) { uploadTargetPath = path; document.getElementById('global-uploader').click(); }
+        async function handleFileUpload(e) {
+            const file = e.target.files[0]; if(!file) return;
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const base64 = event.target.result.split(',')[1];
+                saveToGithub(`${uploadTargetPath}/${file.name}`, base64, `Upload ${file.name}`);
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
+</body>
+</html>
