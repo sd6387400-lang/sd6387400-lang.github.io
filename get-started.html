@@ -116,8 +116,8 @@
 
     <div class="container" id="picker-view">
         <header>
-            <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -2px;">Logic Engine</h1>
-            <p style="color: var(--text-dim);">Select a node to begin.</p>
+            <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -2px;">Get Started And Build Something New</h1>
+            <p style="color: var(--text-dim);">Begain The Story By choosing any of your needs using the card below and make your journey to reality</p>
         </header>
         <div class="repo-grid" id="grid"></div>
     </div>
@@ -232,7 +232,7 @@
             document.querySelectorAll('.sidebar-link').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             const render = document.getElementById('md-render');
-            render.innerHTML = '<h3>Assembling Logic...</h3>';
+            render.innerHTML = '<h3>Loading Text...</h3>';
 
             try {
                 const res = await fetch(url + '?t=' + new Date().getTime());
