@@ -19,4 +19,10 @@ Knowledge if your system is MBR or GPT
 Windows or Linux Installed on computer.
 </list>
 
-Link of Arch Linux https://archlinux.org/
+<collapse heading="You may wonder from where do I download It" color="#006494" bg-color="rgba(0,100,148,0.1)">
+From here official website 
+https://archlinux.org/
+
+<text color="black" type="bold">Note: If you thought if website is looking that old The OS will also but it's Completely opposite</text>
+
+</collapse>
