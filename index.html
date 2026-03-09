@@ -17,6 +17,9 @@
             --sun-glow: rgba(0, 102, 255, 0.3);
             --selection: #ccff00; 
             --mid-bg: #f2f2f7; 
+            /* Added circle colors to match your theme */
+            --blob-1: #d0e4ff;
+            --blob-2: #e1dfff;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -30,6 +33,8 @@
                 --orbit-line: rgba(255,255,255,0.12);
                 --sun-glow: rgba(88, 166, 255, 0.4);
                 --mid-bg: #1c2128; 
+                --blob-1: #1e2a3d;
+                --blob-2: #28224d;
             }
         }
 
@@ -143,9 +148,30 @@
         .btn-main { background:var(--accent); color:white; padding:20px; border-radius:16px; text-decoration:none; font-weight:800; display:block; text-align:center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 20px var(--sun-glow); }
         .btn-main:hover { transform: translateY(-5px); box-shadow: 0 15px 30px var(--sun-glow); }
 
-        .bg-blobs { position: absolute; width: 100%; height: 100%; z-index: 1; pointer-events: none; overflow: hidden; }
-        .blob { position: absolute; border-radius: 50%; background: var(--accent); opacity: 0.1; animation: float 18s infinite alternate ease-in-out; filter: blur(50px); }
-        @keyframes float { 0% { transform: translate(0,0); } 100% { transform: translate(120px, -120px); } }
+        /* --- Updated Section 3 Background (Solid Circles) --- */
+        .bg-blobs { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+        .blob { 
+            position: absolute; 
+            width: 500px; 
+            height: 500px; 
+            border-radius: 50%; 
+            opacity: 0.6; /* Solid visible opacity */
+            filter: none; /* Removed blur */
+            animation: floatCircle 20s infinite ease-in-out alternate;
+        }
+        .blob-1 { background: var(--blob-1); top: -100px; left: -100px; }
+        .blob-2 { 
+            background: var(--blob-2); 
+            bottom: -100px; 
+            right: -100px; 
+            animation-delay: -10s; 
+            animation-duration: 25s;
+        }
+        @keyframes floatCircle { 
+            0% { transform: translate(0, 0) scale(1); } 
+            50% { transform: translate(100px, 50px) scale(1.1); }
+            100% { transform: translate(-50px, 100px) scale(1); } 
+        }
 
         /* MOBILE FIXES */
         @media (max-width: 1024px) {
@@ -180,13 +206,13 @@
             <h2>PROJECTS</h2>
             <p class="subtitle">Discover New Things Lovely</p>
         </div>
-        <a href="#page1" class="active" onclick="setActive(this)">
+        <a href="#page1" id="link-page1" class="active" onclick="setActive(this)">
             <i data-lucide="home"></i> Home
         </a>
-        <a href="#page2" onclick="setActive(this)">
+        <a href="#page2" id="link-page2" onclick="setActive(this)">
             <i data-lucide="user"></i> About Me
         </a>
-        <a href="#page3" onclick="setActive(this)">
+        <a href="#page3" id="link-page3" onclick="setActive(this)">
             <i data-lucide="zap"></i> Get Started
         </a>
         <a href="creations.html">
@@ -266,9 +292,10 @@
 
     <section id="page3">
         <div class="bg-blobs"> 
-            <div class="blob" style="width: 300px; height: 300px; top: 10%; left: 5%;"></div>
-            <div class="blob" style="width: 400px; height: 400px; bottom: 10%; right: 5%; animation-delay: -5s;"></div>
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
         </div>
+        
         <div class="container reveal">
             <div class="card" style="text-align: center; max-width: 750px; background: var(--card-bg); box-shadow: 0 30px 60px rgba(0,0,0,0.15); border: 2px solid var(--border); position: relative; z-index: 20;">
                 <h2>Let's build something <span>incredible.</span></h2>
@@ -311,9 +338,32 @@
             }
         }
 
+        // --- NEW ADAPTABLE SIDEBAR LOGIC ---
+        // This detects which section is currently on screen and highlights the sidebar link
+        const observerOptions = {
+            root: null,
+            threshold: 0.6 // Highlights when 60% of the section is visible
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    const sidebarLink = document.getElementById('link-' + id);
+                    if (sidebarLink) {
+                        document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+                        sidebarLink.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
+        });
+
         window.addEventListener("scroll", reveal);
         reveal();
     </script>
 </body>
-                        </html>
-        
+</html>
