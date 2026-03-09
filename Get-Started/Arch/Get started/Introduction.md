@@ -14,4 +14,7 @@ So the answer of this question is No, The installation of arch linux is not simp
 <list type="number">
 Patience 
 Some linux knowledge(optinal but recommend)
+Arch linux iso.
+Knowledge if your system is MBR or GPT
+
 </list>
