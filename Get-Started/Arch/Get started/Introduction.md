@@ -1,3 +1,3 @@
-<text color="blue" type="bold-italic-underline">
+<text color="lime" type="bold-underline">
 <heading size="1" align="center">Introduction</heading></text>
 ---
