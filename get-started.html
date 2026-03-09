@@ -49,10 +49,14 @@
         
         .menu-btn { position: fixed; bottom: 30px; left: 30px; z-index: 1001; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; }
         
-        /* --- Reload Button Style --- */
-        .reload-btn { position: fixed; bottom: 30px; right: 30px; z-index: 1001; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transition: transform 0.3s ease; display: flex; align-items: center; justify-content: center; }
-        .reload-btn:hover { transform: rotate(45deg) scale(1.1); }
-        .reload-btn:active { transform: scale(0.95); }
+        /* --- Floating Action Buttons --- */
+        .fab-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 1001; }
+        .fab { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transition: 0.3s; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+        .fab:hover { transform: scale(1.1); }
+
+        /* --- Inline Redirect Button Style --- */
+        .inline-redirect { display: inline-flex; align-items: center; background: var(--accent); color: white !important; padding: 2px 8px; border-radius: 6px; font-size: 0.7rem; text-decoration: none !important; margin-left: 6px; vertical-align: middle; transition: 0.2s; }
+        .inline-redirect:hover { opacity: 0.8; transform: translateY(-1px); }
 
         .sidebar { position: fixed; top: 0; left: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); z-index: 1000; padding: 40px 20px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border); overflow-y: auto; }
         
@@ -105,6 +109,7 @@
         @keyframes blink { 50% { opacity: 0; } }
 
         #md-render img, #md-render video, #md-render audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
+        hr { border: 0; height: 1px; background: var(--border); margin: 30px 0; }
     </style>
 </head>
 <body>
@@ -113,9 +118,11 @@
     <div id="overlay-ui" onclick="toggleSidebar()"></div>
     <button class="menu-btn" id="menu-trigger" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
 
-    <button class="reload-btn" onclick="location.reload()" title="Reload Page">
-        <i data-lucide="refresh-cw"></i>
-    </button>
+    <div class="fab-container">
+        <button class="fab" onclick="location.reload()" title="Reload Engine">
+            <i data-lucide="refresh-cw"></i>
+        </button>
+    </div>
 
     <nav class="sidebar" id="sidebar">
         <div class="back-pill" style="width:100%; justify-content:center; margin-bottom:30px;" onclick="location.reload()"><i data-lucide="home"></i> Home</div>
@@ -124,8 +131,8 @@
 
     <div class="container" id="picker-view">
         <header>
-            <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -2px;">Logic Engine</h1>
-            <p style="color: var(--text-dim);">Select a node to begin.</p>
+            <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -2px;">Get Started</h1>
+            <p style="color: var(--text-dim);">Choose any of the cards below to make it your reality...</p>
         </header>
         <div class="repo-grid" id="grid"></div>
     </div>
@@ -240,7 +247,7 @@
             document.querySelectorAll('.sidebar-link').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             const render = document.getElementById('md-render');
-            render.innerHTML = '<h3>Assembling Logic...</h3>';
+            render.innerHTML = '<h3>Loading...</h3>';
 
             try {
                 const res = await fetch(url + '?t=' + new Date().getTime());
@@ -288,6 +295,9 @@
 
                 text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
 
+                // --- Horizontal Rule Fix ---
+                text = text.replace(/^---$/gm, '<hr>');
+
                 // --- Added Code Copy Trigger ---
                 text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
                     const clean = code.trim();
@@ -298,7 +308,13 @@
                 text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video muted playsinline loop><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`);
                 text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'"></audio>`);
 
+                // --- Automatic Redirect Button for HTTPS links ---
+                text = text.replace(/\[(.*?)\]\((https:\/\/.*?)\)/g, (m, label, link) => {
+                    return `[${label}](${link}) <a href="${link}" target="_blank" class="inline-redirect"><i data-lucide="external-link" style="width:12px;height:12px;"></i></a>`;
+                });
+
                 render.innerHTML = marked.parse(text);
+                lucide.createIcons(); // Re-trigger to render new inline icons
                 initTypewriters();
                 setupVideoAutoPlay();
                 
@@ -327,7 +343,7 @@
                 type();
             });
         }
-
+        
         function setupVideoAutoPlay() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
