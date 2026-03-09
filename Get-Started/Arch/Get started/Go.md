@@ -21,4 +21,4 @@ this is inside box
 <text color="blue" type=""bold>Text</text>
 <list type="number"> Hello </list>
 
-<tw state="once">Ttext here </tw>
+<tw state="continuous">Ttext here </tw>
