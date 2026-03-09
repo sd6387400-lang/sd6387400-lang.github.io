@@ -17,9 +17,11 @@
             --sun-glow: rgba(0, 102, 255, 0.3);
             --selection: #ccff00; 
             --mid-bg: #f2f2f7; 
-            /* Added circle colors to match your theme */
+            /* Circle colors */
             --blob-1: #d0e4ff;
             --blob-2: #e1dfff;
+            --blob-3: #d1fae5; /* Greenish for Page 2 */
+            --blob-4: #fee2e2; /* Reddish for Page 2 */
         }
 
         @media (prefers-color-scheme: dark) {
@@ -35,6 +37,8 @@
                 --mid-bg: #1c2128; 
                 --blob-1: #1e2a3d;
                 --blob-2: #28224d;
+                --blob-3: #1a302a;
+                --blob-4: #3d1e1e;
             }
         }
 
@@ -129,7 +133,12 @@
         .info-item { background: var(--bg); padding: 18px; border-radius: 20px; border: 1px solid var(--border); text-align: center; }
         .info-item span { display: block; font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 5px; }
 
-        .orbit-system { position: relative; width: 450px; height: 450px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+        /* Mobile Skill Cloud Styling */
+        .mobile-cloud { display: none; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+        .cloud-tag { padding: 8px 16px; border-radius: 12px; color: white; font-size: 13px; font-weight: 700; }
+        .cloud-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.4; margin-bottom: 10px; width: 100%; font-weight: 800; }
+
+        .orbit-system { position: relative; width: 450px; height: 450px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; z-index: 10; }
         .sun { width: 90px; height: 90px; background: var(--card-bg); border: 2.5px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; color: var(--accent); box-shadow: 0 0 35px var(--sun-glow); z-index: 5; }
         .ring { position: absolute; border: 1.5px dashed var(--orbit-line); border-radius: 50%; }
         .r1 { width: 280px; height: 280px; animation: rot 25s linear infinite; }
@@ -140,32 +149,19 @@
         @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes crot { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
 
-        .marquee { display: none; position: absolute; bottom: 30px; width: 100%; overflow: hidden; }
-        .m-track { display: flex; width: max-content; gap: 15px; animation: scrollMarquee 20s linear infinite; }
-        .m-tag { padding: 12px 25px; border-radius: 15px; color: white; font-weight: 700; font-size: 13px; white-space: nowrap; }
-        @keyframes scrollMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
         .btn-main { background:var(--accent); color:white; padding:20px; border-radius:16px; text-decoration:none; font-weight:800; display:block; text-align:center; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 20px var(--sun-glow); }
         .btn-main:hover { transform: translateY(-5px); box-shadow: 0 15px 30px var(--sun-glow); }
 
-        /* --- Updated Section 3 Background (Solid Circles) --- */
+        /* --- Global Background Blobs --- */
         .bg-blobs { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
         .blob { 
             position: absolute; 
             width: 500px; 
             height: 500px; 
             border-radius: 50%; 
-            opacity: 0.6; /* Solid visible opacity */
-            filter: none; /* Removed blur */
+            opacity: 0.6;
+            filter: none;
             animation: floatCircle 20s infinite ease-in-out alternate;
-        }
-        .blob-1 { background: var(--blob-1); top: -100px; left: -100px; }
-        .blob-2 { 
-            background: var(--blob-2); 
-            bottom: -100px; 
-            right: -100px; 
-            animation-delay: -10s; 
-            animation-duration: 25s;
         }
         @keyframes floatCircle { 
             0% { transform: translate(0, 0) scale(1); } 
@@ -177,15 +173,15 @@
         @media (max-width: 1024px) {
             header { padding: 0 5%; }
             .orbit-system { display: none; }
+            .mobile-cloud { display: flex; }
             section { padding: 80px 15px 40px 15px; display: flex; flex-direction: column; justify-content: center; }
             .container { flex-direction: column; text-align: center; }
-            .card { padding: 25px 20px; width: 100%; max-width: 360px; }
+            .card { padding: 30px 20px; width: 100%; max-width: 380px; }
             h1, h2 { font-size: 2.1rem; }
             .info-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
             .info-item { padding: 10px 5px; border-radius: 12px; }
             .info-item b { font-size: 0.8rem; }
             .info-item span { font-size: 8px; }
-            .marquee { display: block; position: absolute; bottom: 20px; width: 100vw; }
         }
     </style>
 </head>
@@ -226,6 +222,10 @@
     </div>
 
     <section id="page1">
+        <div class="bg-blobs"> 
+            <div class="blob" style="background: var(--blob-1); top: -100px; left: -100px;"></div>
+            <div class="blob" style="background: var(--blob-2); bottom: -100px; right: -100px; animation-delay: -5s;"></div>
+        </div>
         <div class="container reveal">
             <div class="card">
                 <span class="badge">Available for Projects</span>
@@ -236,7 +236,17 @@
                     <div class="info-item"><span>Role</span><b>Developer</b></div>
                     <div class="info-item"><span>Focus</span><b>Logic</b></div>
                 </div>
-                <a href="#page3" class="btn-main">Change Your Imagination to reality</a>
+                
+                <div class="mobile-cloud">
+                    <div class="cloud-label">Core Tech Stack</div>
+                    <div class="cloud-tag" style="background:#e34f26">HTML5</div>
+                    <div class="cloud-tag" style="background:#1572b6">CSS3</div>
+                    <div class="cloud-tag" style="background:#f7df1e; color:black">JavaScript</div>
+                    <div class="cloud-tag" style="background:#3776ab">Python</div>
+                    <div class="cloud-tag" style="background:#00599c">C++</div>
+                </div>
+
+                <a href="#page3" class="btn-main" style="margin-top:25px;">Change Your Imagination to reality</a>
             </div>
 
             <div class="orbit-system">
@@ -252,23 +262,28 @@
                 </div>
             </div>
         </div>
-        <div class="marquee">
-            <div class="m-track">
-                <div class="m-tag" style="background:#e34f26">HTML5</div><div class="m-tag" style="background:#1572b6">CSS3</div><div class="m-tag" style="background:#f7df1e; color:black">JS</div><div class="m-tag" style="background:#3776ab">Python</div><div class="m-tag" style="background:#00599c">C++</div>
-                <div class="m-tag" style="background:#e34f26">HTML5</div><div class="m-tag" style="background:#1572b6">CSS3</div><div class="m-tag" style="background:#f7df1e; color:black">JS</div><div class="m-tag" style="background:#3776ab">Python</div><div class="m-tag" style="background:#00599c">C++</div>
-            </div>
-        </div>
     </section>
 
     <section id="page2">
+        <div class="bg-blobs"> 
+            <div class="blob" style="background: var(--blob-3); top: -50px; right: -100px;"></div>
+            <div class="blob" style="background: var(--blob-4); bottom: -150px; left: -50px; animation-delay: -7s;"></div>
+        </div>
         <div class="container reveal" style="flex-direction: row-reverse;">
             <div class="card">
                 <h2>The <span>Developer</span> Journey</h2>
                 <p>Building systems that don't just work, but work efficiently.</p>
                 <p>So, Hello Everyone My name is Pratyush, A small coder with a dream of helping people.</p>
-                <p>I am 16 Years Old And i love to create Things and love to develop Things I prefer and like, Thats why i took initiative to proivde them to our open source community.</p>
-                <div class="info-item" style="border-left: 4px solid var(--accent); text-align: left; background: var(--bg); padding: 15px;">
+                
+                <div class="info-item" style="border-left: 4px solid var(--accent); text-align: left; background: var(--bg); padding: 15px; margin-bottom: 20px;">
                     <b style="font-size: 0.95rem; opacity: 0.9;">"The best way to predict the future is to create it."</b>
+                </div>
+
+                <div class="mobile-cloud">
+                    <div class="cloud-label">My Passions</div>
+                    <div class="cloud-tag" style="background:#ff4757">Designing</div>
+                    <div class="cloud-tag" style="background:#2ed573">Helping Others</div>
+                    <div class="cloud-tag" style="background:#ffa502">Logic Building</div>
                 </div>
             </div>
             <div class="orbit-system">
@@ -282,18 +297,12 @@
                 </div>
             </div>
         </div>
-        <div class="marquee">
-            <div class="m-track" style="animation-direction: reverse;">
-                <div class="m-tag" style="background:#ff4757">Designing</div><div class="m-tag" style="background:#2ed573">Support</div><div class="m-tag" style="background:#ffa502">Logic Building</div>
-                <div class="m-tag" style="background:#ff4757">Designing</div><div class="m-tag" style="background:#2ed573">Support</div><div class="m-tag" style="background:#ffa502">Logic Building</div>
-            </div>
-        </div>
     </section>
 
     <section id="page3">
         <div class="bg-blobs"> 
-            <div class="blob blob-1"></div>
-            <div class="blob blob-2"></div>
+            <div class="blob" style="background: var(--blob-1); top: -100px; left: -100px;"></div>
+            <div class="blob" style="background: var(--blob-2); bottom: -100px; right: -100px; animation-delay: -10s;"></div>
         </div>
         
         <div class="container reveal">
@@ -338,13 +347,7 @@
             }
         }
 
-        // --- NEW ADAPTABLE SIDEBAR LOGIC ---
-        // This detects which section is currently on screen and highlights the sidebar link
-        const observerOptions = {
-            root: null,
-            threshold: 0.6 // Highlights when 60% of the section is visible
-        };
-
+        const observerOptions = { root: null, threshold: 0.6 };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -358,9 +361,7 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('section').forEach(section => {
-            observer.observe(section);
-        });
+        document.querySelectorAll('section').forEach(section => { observer.observe(section); });
 
         window.addEventListener("scroll", reveal);
         reveal();
