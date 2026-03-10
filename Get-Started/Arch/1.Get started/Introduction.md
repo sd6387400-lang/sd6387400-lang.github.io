@@ -17,7 +17,7 @@ Master the System: Using Arch transforms you from a "user" into an "architect" o
 <collapse heading="Is Arch really 'too hard' to use?" color="#006494" bg-color="#f0f7ff">
 Arch is not "hard"—it is intentional. It requires you to understand how your system functions. While it has a steeper learning curve, the result is a system that is perfectly optimized for your specific hardware.
 </collapse>
-<collapse heading="What kind of hardware does it support?" color="#91cdff" bg-color="#f0f7ff">
+<collapse heading="What kind of hardware does it support?" color="red" bg-color="#FF8D70">
 Arch runs on almost anything! From high-end workstations to legacy laptops, its lightweight nature makes it an incredible way to breathe new life into older devices.
 </collapse>
 <collapse heading="What if I break something?" color="green" bg-color="#E0FFCC"">
