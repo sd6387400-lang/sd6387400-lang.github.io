@@ -1,11 +1,11 @@
 <heading size="1" align="center">Welcome to the Arch Ecosystem</heading>
 <align type="center"><tw state="continuous" color="#006494" type="bold">Elevate your computing. With ARCH</tw></align>
-<box color="#FFFB7A" type="solid">
+<box color="#006495" type="solid">
 <heading size="3" align="left">What is Arch Linux?</heading>
 Arch is not just an operating system; it is a crafting platform. Unlike traditional systems that make choices for you, Arch provides the raw, powerful components you need to build your ideal digital environment from the ground up.
 </box>
 <heading size="2" align="left">Why Arch? The "Arch-Factor"</heading>
-<box color="#8AF3FF" type="solid">
+<box color="#006495" type="solid">
 <list type="bullet">
 Infinite Customization: Every service, driver, and application is hand-picked by you. No bloat, no compromises.
 Rolling Release Model: Once you install Arch, you are always on the latest version. Say goodbye to massive, disruptive OS upgrades.
