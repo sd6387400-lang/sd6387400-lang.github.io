@@ -9,4 +9,5 @@ Type This in Your Arch Linux ISO commandline
 iwctl
 device list
 </code><br>
-Then use this
+Then You Might see something like 
+<image>iwctl-device-list-2.webp</image>
