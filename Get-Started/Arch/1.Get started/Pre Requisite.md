@@ -50,3 +50,23 @@ Preparing A bootable Pendrive in Windows is Much easier.
 
 <heading size="1" align="left">Now You are done Preparing Your Pendrive To Boot</heading>
 </box>
+
+<box color="#ff8a5c" type="dotted">
+<heading size="1" align="center">In Any Linux</heading>
+
+1. Download belena etcher from your prederd Browser
+
+<heading size="1" align="left"></heading>
+2. Extract Zip and Open the Belina Etcher
+
+<heading size="1" align="left"></heading>
+3. Click on Select device and select Your attached Pendrive(Make sure it is empty it will formet)
+
+<heading size="1" align="left"></heading>
+4. Click on Select file and choose arch linux ISO.
+
+<heading size="1" align="left"></heading>
+5. Click on start and wait until your pendrive Gets ready.
+
+<heading size="1" align="left">Now, Your Bootable Pendrive is Also DONE!</heading>
+</box>
