@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started </title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-base: #f8f9ff;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --text-main: #1a1c1e;
+            --text-dim: #44474e;
+            --accent: #006494;
+            --sidebar-bg: rgba(255, 255, 255, 0.98);
+            --border: rgba(0, 0, 0, 0.05);
+            --blob-1: #d0e4ff;
+            --blob-2: #e1dfff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-base: #0f1115;
+                --card-bg: rgba(26, 28, 30, 0.6);
+                --text-main: #e2e2e6;
+                --text-dim: #c4c6cf;
+                --accent: #91cdff;
+                --sidebar-bg: rgba(15, 17, 21, 0.98);
+                --border: rgba(255, 255, 255, 0.08);
+                --blob-1: #1e2a3d;
+                --blob-2: #28224d;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+
+        .bg-wrapper { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; width: 500px; height: 500px; border-radius: 50%; opacity: 0.99; animation: float 15s infinite ease-in-out alternate; }
+        .blob-1 { background: var(--blob-1); top: -150px; left: -150px; }
+        .blob-2 { background: var(--blob-2); bottom: -150px; right: -150px; animation-delay: -7s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 80px) scale(1.1); } }
+
+        #overlay-ui { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; opacity: 0; visibility: hidden; transition: 0.3s; }
+        #overlay-ui.active { opacity: 1; visibility: visible; }
+        
+        .menu-btn { position: fixed; bottom: 30px; left: 30px; z-index: 1001; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; }
+        
+        .sidebar { position: fixed; top: 0; left: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); z-index: 1000; padding: 40px 20px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border); overflow-y: auto; }
+        
+        @media (min-aspect-ratio: 1/1) {
+            .sidebar { left: 0 !important; }
+            #reader-view, #picker-view { padding-left: 320px; }
+            .menu-btn { display: none !important; }
+            #overlay-ui { display: none !important; }
+        }
+
+        @media (max-aspect-ratio: 1/1) {
+            .sidebar.active { left: 0; }
+            .menu-btn { display: block; }
+            .container { padding: 20px 10px !important; }
+            #reader-view { padding-top: 20px !important; }
+            #reader-content { border-radius: 20px !important; padding: 20px !important; width: 100% !important; max-width: none !important; margin: 0 !important; }
+        }
+
+        .search-container { margin-bottom: 20px; position: relative; }
+        .search-input { width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-size: 0.9rem; outline: none; transition: 0.3s; }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(145, 205, 255, 0.2); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
+
+        .sidebar-dropdown { margin-bottom: 10px; border-radius: 15px; overflow: hidden; }
+        .dropdown-trigger { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; color: var(--accent); cursor: pointer; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; background: rgba(0,0,0,0.02); }
+        .dropdown-content { display: none; padding-left: 10px; margin-top: 5px; }
+        .sidebar-dropdown.active .dropdown-content { display: block; }
+        .sidebar-dropdown.active .drop-icon { transform: rotate(180deg); transition: 0.3s; }
+
+        .container { padding: 60px 20px; max-width: 1200px; margin: 0 auto; width: 100%; }
+        header { text-align: center; margin-bottom: 60px; }
+        .repo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        .repo-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 35px; padding: 40px; cursor: pointer; transition: 0.4s; backdrop-filter: blur(20px); text-align: center; }
+        .repo-card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        .card-desc { color: var(--text-dim); font-size: 0.9rem; margin-top: 10px; line-height: 1.4; }
+
+        #reader-view { display: none; padding-top: 60px; width: 100%; }
+        #reader-content { background: var(--card-bg); border: 1px solid var(--border); padding: 50px; border-radius: 40px; max-width: 900px; margin: 0 auto; backdrop-filter: blur(20px); }
+        
+        .nav-actions { display: flex; gap: 10px; margin-bottom: 25px; }
+        .back-pill { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; background: var(--accent); color: white; border-radius: 100px; font-weight: 700; cursor: pointer; transition: 0.3s; flex: 1; justify-content: center; font-size: 0.9rem; }
+        .back-pill:hover { opacity: 0.9; transform: scale(0.98); }
+
+        .logic-box { padding: 25px; margin: 30px 0; border-radius: 20px; border: 2px solid; }
+        .sidebar-link { padding: 14px 18px; color: var(--text-dim); cursor: pointer; border-radius: 15px; margin-bottom: 5px; transition: 0.2s; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .sidebar-link:hover { background: rgba(0,0,0,0.05); }
+        .sidebar-link.active { background: var(--accent); color: white; }
+        
+        .custom-collapse { border-radius: 20px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border); }
+        .custom-collapse summary { padding: 20px; cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .custom-collapse summary::after { content: '+'; font-size: 1.2rem; }
+        .custom-collapse[open] summary::after { content: '−'; }
+        .collapse-body { padding: 20px; }
+
+        .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
+        .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; z-index: 10; }
+
+        .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        #md-render img, #md-render video, #md-render audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-wrapper"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+    <div id="overlay-ui" onclick="toggleSidebar()"></div>
+    <button class="menu-btn" id="menu-trigger" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="search-container">
+            <i data-lucide="search" class="search-icon" size="18"></i>
+            <input type="text" id="node-search" class="search-input" placeholder="Search guides..." onkeyup="filterNodes()">
+        </div>
+
+        <div class="nav-actions">
+            <div class="back-pill" onclick="location.reload()"><i data-lucide="home" size="18"></i> Home</div>
+            <div class="back-pill" onclick="location.reload()" style="background: var(--text-dim);"><i data-lucide="rotate-cw" size="18"></i> Reload</div>
+        </div>
+        
+        <div class="sidebar-link" onclick="window.location.href='index.html'"><i data-lucide="layout-dashboard" size="18"></i> Main</div>
+        <div class="sidebar-link" onclick="window.location.href='creations.html'"><i data-lucide="sparkles" size="18"></i> Creations</div>
+        
+        <hr style="opacity:0.1; margin: 15px 0;">
+        <div id="sidebar-links"></div>
+    </nav>
+
+    <div class="container" id="picker-view">
+        <header>
+            <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -2px;">Get Started</h1>
+            <p style="color: var(--text-dim);">Select Any of The card to begin The journey.</p>
+        </header>
+        <div class="repo-grid" id="grid"></div>
+    </div>
+
+    <div class="container" id="reader-view">
+        <div style="max-width:900px; margin:0 auto;">
+            <div id="reader-content">
+                <div id="md-render"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const USER = "sd6387400-lang";
+        const REPO = "sd6387400-lang.github.io";
+        const BASE = "Get-Started";
+        const DESC_PATH = "Descriptions";
+
+        lucide.createIcons();
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay-ui').classList.toggle('active');
+        }
+
+        function filterNodes() {
+            const input = document.getElementById('node-search').value.toLowerCase();
+            const cards = document.getElementsByClassName('repo-card');
+            
+            for (let card of cards) {
+                const name = card.querySelector('.repo-name').innerText.toLowerCase();
+                if (name.includes(input)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            }
+        }
+
+        async function init() {
+            const grid = document.getElementById('grid');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/${BASE}`);
+                const folders = await res.json();
+                grid.innerHTML = '';
+                for (const f of folders) {
+                    if(f.type === 'dir') {
+                        const card = document.createElement('div');
+                        card.className = 'repo-card';
+                        card.innerHTML = `<div class="repo-name" style="font-weight:800; color:var(--accent); font-size:1.5rem;">${f.name.replace(/-/g, ' ')}</div>
+                                          <div class="card-desc" id="desc-${f.name}">Searching for metadata...</div>`;
+                        card.onclick = () => loadProject(f.path);
+                        grid.appendChild(card);
+                        fetchDescription(f.name);
+                    }
+                }
+            } catch (e) { grid.innerHTML = 'Source Link Error.'; }
+        }
+
+        async function fetchDescription(folderName) {
+            const descEl = document.getElementById(`desc-${folderName}`);
+            try {
+                const res = await fetch(`https://raw.githubusercontent.com/${USER}/${REPO}/main/${DESC_PATH}/${folderName}.md`);
+                if (res.ok) {
+                    const text = await res.text();
+                    descEl.innerText = text.substring(0, 120) + (text.length > 120 ? '...' : '');
+                } else { descEl.innerText = "Stable Documentation Node."; }
+            } catch (e) { descEl.innerText = "Stable Documentation Node."; }
+        }
+
+        async function loadProject(path) {
+            document.getElementById('picker-view').style.display = 'none';
+            document.getElementById('reader-view').style.display = 'block';
+            const links = document.getElementById('sidebar-links');
+            const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/${encodeURIComponent(path)}`);
+            const subFolders = await res.json();
+            links.innerHTML = '';
+
+            let firstFileUrl = null, firstFileEl = null;
+
+            for(const sub of subFolders) {
+                if(sub.type === 'dir') {
+                    const dropdown = document.createElement('div');
+                    dropdown.className = 'sidebar-dropdown active';
+                    
+                    const trigger = document.createElement('div');
+                    trigger.className = 'dropdown-trigger';
+                    trigger.innerHTML = `<span>${sub.name.replace(/-/g, ' ')}</span><i class="drop-icon" data-lucide="chevron-down"></i>`;
+                    trigger.onclick = () => dropdown.classList.toggle('active');
+                    
+                    const content = document.createElement('div');
+                    content.className = 'dropdown-content';
+                    
+                    dropdown.appendChild(trigger);
+                    dropdown.appendChild(content);
+                    links.appendChild(dropdown);
+
+                    const fRes = await fetch(sub.url);
+                    const files = await fRes.json();
+                    files.forEach(file => {
+                        if(file.name.endsWith('.md')) {
+                            const item = document.createElement('div');
+                            item.className = 'sidebar-link';
+                            item.innerText = file.name.replace('.md', '');
+                            if(!firstFileUrl) { firstFileUrl = file.download_url; firstFileEl = item; }
+                            item.onclick = (e) => { e.stopPropagation(); fetchContent(file.download_url, item); };
+                            content.appendChild(item);
+                        }
+                    });
+                }
+            }
+            lucide.createIcons();
+            if(firstFileUrl) fetchContent(firstFileUrl, firstFileEl);
+        }
+
+        function copyCode(btn, encoded) {
+            const code = atob(encoded);
+            navigator.clipboard.writeText(code);
+            btn.innerText = "Copied!";
+            setTimeout(() => btn.innerText = "Copy", 2000);
+        }
+
+        async function fetchContent(url, el) {
+            document.querySelectorAll('.sidebar-link').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            const render = document.getElementById('md-render');
+            render.innerHTML = '<h3>Loading...</h3>';
+
+            try {
+                const res = await fetch(url + '?t=' + new Date().getTime());
+                let text = await res.text();
+                const pathParts = new URL(url).pathname.split('/main/')[1].split('/');
+                pathParts.shift(); pathParts.pop();
+                const subPath = pathParts.join('/');
+                const rawBase = `https://raw.githubusercontent.com/${USER}/${REPO}/main`;
+
+                text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
+                text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
+                    const fontSize = (1.1 - (s * 0.08)) + "rem";
+                    const weight = s <= 3 ? '800' : '600';
+                    return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${weight}; margin:1rem 0; line-height:1.2;">${c}</div>`;
+                });
+                text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
+                    return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}15;">
+                                <summary style="color:${c}; font-weight:700;">${h}</summary>
+                                <div class="collapse-body">${con}</div>
+                            </details>`;
+                });
+                text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => {
+                    const b = type.includes('bold') ? 'bold' : 'normal', i = type.includes('italic') ? 'italic' : 'normal';
+                    return `<span class="tw-text tw-cursor" data-state="${state || 'continuous'}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color || 'inherit'}; font-weight:${b}; font-style:${i};"></span>`;
+                });
+                text = text.replace(/<text color="(.*?)" type="(.*?)">([\s\S]*?)<\/text>/g, (m, color, type, content) => {
+                    let s = `color:${color || 'inherit'};`;
+                    if(type.includes('bold')) s += 'font-weight:bold;';
+                    if(type.includes('italic')) s += 'font-style:italic;';
+                    if(type.includes('underline')) s += 'text-decoration:underline;';
+                    return `<span style="${s}">${content}</span>`;
+                });
+                text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
+                    const tag = type === 'number' ? 'ol' : 'ul';
+                    return `<${tag} style="margin:15px 0 15px 40px;">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
+                });
+                text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
+                text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
+                    const clean = code.trim();
+                    return `<div class="code-container"><button class="copy-btn" onclick="copyCode(this, '${btoa(clean)}')">Copy</button><pre><code>${clean}</code></pre></div>`;
+                });
+                text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'">`);
+                text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video muted playsinline loop><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`);
+                text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'"></audio>`);
+
+                render.innerHTML = marked.parse(text);
+                initTypewriters();
+                setupVideoAutoPlay();
+                
+                if(window.matchMedia("(max-aspect-ratio: 1/1)").matches) {
+                    document.getElementById('sidebar').classList.remove('active');
+                    document.getElementById('overlay-ui').classList.remove('active');
+                }
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (e) { render.innerHTML = 'Error Loading Content.'; }
+        }
+
+        function initTypewriters() {
+            document.querySelectorAll('.tw-text').forEach(el => {
+                const fullText = el.getAttribute('data-fulltext');
+                const state = el.dataset.state;
+                let i = 0;
+                function type() {
+                    if (i < fullText.length) {
+                        el.innerText += fullText.charAt(i);
+                        i++;
+                        setTimeout(type, 80);
+                    } else if (state === 'continuous') {
+                        setTimeout(() => { el.innerText = ''; i = 0; type(); }, 2000);
+                    }
+                }
+                type();
+            });
+        }
+
+        function setupVideoAutoPlay() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.play(); } 
+                    else { entry.target.pause(); }
+                });
+            }, { threshold: 0.5 });
+            document.querySelectorAll('#md-render video').forEach(v => observer.observe(v));
+        }
+
+        init();
+    </script>
+</body>
+</html>
