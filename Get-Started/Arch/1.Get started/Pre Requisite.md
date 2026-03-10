@@ -75,7 +75,9 @@ Preparing A bootable Pendrive in Windows is Much easier.
 1. ShutDown Your PC or Laptop <br>
 2. Start your PC or laptop and rapidly Press your Boot Manager Key ( I provided according to brands)<br>
 3. Select Your Pendrive And boot from it may take 30-60sec to load.<br>
+<align type="center">(Note:If it didn't boot forse shutdown and try again)</align>
 
-<collapse heading="Title" color="white" bg-color="#1a1c1e">
-
+<collapse heading="Boot Manager Keys" color="green" bg-color="#E0FFCC"">
+<heading size="1" align="left">Acer/Samsung/Lenovo/Toshiba/Dell</heading> F12
+<heading size="1" align="left">Asus/HP</heading> Esc
 </collapse>
