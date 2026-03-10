@@ -20,8 +20,8 @@ Arch is not "hard"—it is intentional. It requires you to understand how your s
 <collapse heading="What kind of hardware does it support?" color="#91cdff" bg-color="#f0f7ff">
 Arch runs on almost anything! From high-end workstations to legacy laptops, its lightweight nature makes it an incredible way to breathe new life into older devices.
 </collapse>
-<collapse heading="What if I break something?" color="#006494" bg-color="#f0f7ff">
-Breaking a system is the best way to learn how to fix it. Arch’s documentation (The Arch Wiki) is legendary—it is widely considered the best technical documentation in the entire Linux world.
+<collapse heading="What if I break something?" color="green" bg-color="#E0FFCC"">
+Breaking a system is the best way to learn how to fix it. Arch Linux documentation (The Arch Wiki) is legendary,it is widely considered the best technical documentation in the entire Linux world.
 </collapse>
 <image>archlinux-logo-dark-1200dpi.png</image>
 <align type="center"><text color="#d6d6d6" type="regular">Source:Arch Linux</text></align>
