@@ -8,7 +8,7 @@ A Working Keyboard[Cause you need for long time]
 A Windows Or Linux Present in your PC
 Patience 
 </list>
-
+<Hr>
 <collapse heading="How Do I Get Arch ISO?" color="green" bg-color="#E0FFCC">
 By Getting on This Website And Choosing your Country Mirror For Good Speed
 
@@ -50,7 +50,7 @@ Preparing A bootable Pendrive in Windows is Much easier.
 
 <heading size="1" align="left">Now You are done Preparing Your Pendrive To Boot</heading>
 </box>
-
+<Hr>
 <box color="#ff8a5c" type="dotted">
 
 <heading size="1" align="center">In Any Linux</heading>
@@ -70,3 +70,12 @@ Preparing A bootable Pendrive in Windows is Much easier.
 
 <heading size="1" align="left">Now, Your Bootable Pendrive is Also DONE!</heading>
 </box>
+<hr>
+<heading size="1" align="left">Booting with Bootable media</heading>
+1. ShutDown Your PC or Laptop <br>
+2. Start your PC or laptop and rapidly Press your Boot Manager Key ( I provided according to brands)<br>
+3. Select Your Pendrive And boot from it may take 30-60sec to load.<br>
+
+<collapse heading="Title" color="white" bg-color="#1a1c1e">
+
+</collapse>
