@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Control | Ultimate Admin Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --accent: #006494; --bg-base: #f8f9ff; --border: rgba(0, 0, 0, 0.05); }
+        @media (prefers-color-scheme: dark) {
+            :root { --bg-base: #0f1115; --accent: #ccff00; --border: rgba(255, 255, 255, 0.08); }
+            body { background-color: #0f1115; color: #e2e2e6; }
+            .glass-card { background: rgba(26, 28, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); }
+            input, textarea { background: #1a1c1e !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+            #preview-box { background: #0f1115 !important; color: #e2e2e6 !important; }
+        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-base); margin: 0; padding: 0; }
+        .glass-card { backdrop-filter: blur(20px); border-radius: 24px; }
+        .btn-primary { background: var(--accent); color: #000; font-weight: 800; transition: 0.3s; cursor: pointer; border:none; }
+        .folder-content { display: none; margin-left: 1rem; border-left: 1px solid rgba(204,255,0,0.2); padding-left: 0.5rem; }
+        .folder-content.active { display: block; }
+        .chevron { transition: transform 0.2s; font-size: 8px; display: inline-block; }
+        .tree-btn { opacity: 0; transition: 0.2s; padding: 4px; border-radius: 4px; font-size: 10px; }
+        .group:hover .tree-btn { opacity: 1; }
+        .tag-ref { font-size: 10px; font-weight: 800; padding: 6px 10px; border-radius: 8px; background: rgba(0,0,0,0.05); color: var(--accent); cursor: pointer; }
+        #sync-loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white; }
+        .slider-container { width: 280px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 20px; }
+        .slider-progress { width: 0%; height: 100%; background: #ccff00; transition: width 0.3s ease; box-shadow: 0 0 20px #ccff00; }
+        #preview-box { line-height: 1.6; }
+        .logic-box { padding: 25px; margin: 30px 0; border-radius: 20px; border: 2px solid; }
+        .custom-collapse { border-radius: 20px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border); }
+        .custom-collapse summary { padding: 20px; cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+        .custom-collapse summary::after { content: '+'; }
+        .custom-collapse[open] summary::after { content: '−'; }
+        .collapse-body { padding: 20px; }
+        .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
+        .copy-btn { position: absolute; top: 12px; right: 12px; background: #ccff00; color: black; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
+        .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
+        @keyframes blink { 50% { opacity: 0; } }
+        #preview-box img, #preview-box video, #preview-box audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <div id="sync-loader">
+        <p id="loader-msg" class="text-[10px] font-black uppercase tracking-[0.4em] text-white">Logic Processing</p>
+        <div class="slider-container"><div id="slider-bar" class="slider-progress"></div></div>
+    </div>
+
+    <input type="file" id="global-uploader" class="hidden" onchange="handleFileUpload(event)">
+    <input type="color" id="color-picker" class="hidden" onchange="insertColor(this.value)">
+
+    <div id="auth-layer" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-6">
+        <div class="glass-card bg-white p-10 max-w-md w-full text-center shadow-2xl">
+            <h2 class="text-2xl font-extrabold mb-6">Logic Control</h2>
+            <input type="password" id="gh-token" placeholder="GitHub Token" class="w-full p-4 rounded-2xl mb-4 border outline-none text-center font-mono">
+            <button onclick="verifyAccess()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest text-sm">Initialize</button>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-4 lg:p-12">
+        <header class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-black tracking-tighter italic">ENGINE ADMIN PRO</h1>
+                <p id="status-bar" class="text-[10px] font-black text-[#ccff00] uppercase tracking-[0.2em]">Ready for Logic</p>
+            </div>
+            <button onclick="logout()" class="p-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all"><i class="fas fa-power-off"></i></button>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass-card bg-white p-6 shadow-sm border border-blue-100">
+                    <h3 class="text-[10px] font-black uppercase tracking-widest mb-4 text-slate-400">Master Architecture</h3>
+                    <input type="text" id="new-folder-name" placeholder="Root Folder Name..." class="w-full p-4 rounded-xl border mb-3 text-sm font-bold">
+                    <button onclick="runWithLoader(createMasterFolder, 'Syncing Architecture...')" id="master-btn" class="btn-primary w-full py-3 rounded-xl text-[9px] font-black uppercase tracking-widest">Global Sync</button>
+                </div>
+
+                <div class="glass-card bg-white p-6 shadow-sm min-h-[500px]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Project Tree</h3>
+                        <button onclick="loadRootTree()" class="text-blue-500 text-xs hover:rotate-180 transition-transform"><i class="fas fa-sync"></i></button>
+                    </div>
+                    <div id="tree-content" class="space-y-1"></div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass-card bg-white p-4 shadow-sm flex flex-wrap justify-between gap-4 border border-slate-100">
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <span class="tag-ref" onclick="insertTag('tw')">Typewriter</span>
+                        <span class="tag-ref" onclick="insertTag('box')">Box</span>
+                        <span class="tag-ref" onclick="insertTag('collapse')">Collapse</span>
+                        <span class="tag-ref" onclick="insertTag('heading')">Heading</span>
+                        <span class="tag-ref" onclick="insertTag('align')">Align</span>
+                        <span class="tag-ref" onclick="insertTag('code')">Code</span>
+                        <span class="tag-ref" onclick="insertTag('image')">Image</span>
+                        <span class="tag-ref" onclick="insertTag('video')">Video</span>
+                        <span class="tag-ref" onclick="insertTag('audio')">Audio</span>
+                        <span class="tag-ref" onclick="insertTag('list')">List</span>
+                        <span class="tag-ref" onclick="insertTag('br')">Break</span>
+                        <span class="tag-ref" onclick="document.getElementById('color-picker').click()" style="background:#ccff00; color:black;">Color Palette</span>
+                    </div>
+                    <div class="flex bg-slate-100 p-1 rounded-xl">
+                        <button onclick="setMode('write')" id="btn-write" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase bg-white shadow-sm transition-all">Write</button>
+                        <button onclick="setMode('preview')" id="btn-preview" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all">Preview</button>
+                    </div>
+                </div>
+
+                <div class="glass-card bg-white p-8 shadow-xl min-h-[650px] flex flex-col relative">
+                    <div class="flex flex-wrap justify-between items-end mb-6 gap-4">
+                        <div class="flex-1">
+                            <span id="editing-path-display" class="text-[9px] font-black text-blue-500 uppercase block mb-1 tracking-widest">No file selected</span>
+                            <input type="text" id="current-filename" placeholder="filename.md" class="font-black text-2xl bg-transparent border-none outline-none w-full tracking-tighter">
+                        </div>
+                        <button onclick="runWithLoader(saveFile, 'Committing Changes...')" id="save-btn" class="btn-primary px-8 py-4 rounded-2xl text-xs font-black flex items-center gap-3">
+                            <i class="fas fa-cloud-arrow-up"></i> COMMIT
+                        </button>
+                    </div>
+                    <textarea id="editor" spellcheck="false" class="flex-1 w-full p-6 rounded-2xl border-none bg-slate-50 outline-none font-mono text-sm leading-relaxed mb-4 resize-none min-h-[450px]"></textarea>
+                    <div id="preview-box" class="hidden flex-1 w-full p-6 rounded-2xl bg-white border border-slate-100 overflow-y-auto min-h-[450px]"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            owner: "sd6387400-lang",
+            repo: "sd6387400-lang.github.io",
+            roots: ["Get-Started", "Descriptions", "images", "videos", "audio"]
+        };
+
+        let GITHUB_TOKEN = localStorage.getItem('logic_engine_token');
+        let currentFileSha = null;
+        let activeFilePath = "";
+        let uploadTargetPath = "";
+
+        // AUTH & LOADER
+        function startSlider(msg) {
+            document.getElementById('loader-msg').innerText = msg;
+            const loader = document.getElementById('sync-loader');
+            const bar = document.getElementById('slider-bar');
+            loader.style.display = 'flex';
+            bar.style.width = '0%';
+            let w = 0;
+            const interval = setInterval(() => {
+                w += (98 - w) * 0.1;
+                bar.style.width = w + '%';
+            }, 100);
+            return { loader, interval, bar };
+        }
+
+        async function runWithLoader(fn, msg) {
+            const loaderData = startSlider(msg);
+            try { await fn(); } 
+            finally { 
+                clearInterval(loaderData.interval);
+                loaderData.bar.style.width = '100%';
+                setTimeout(() => { loaderData.loader.style.display = 'none'; }, 500);
+            }
+        }
+
+        async function verifyAccess() {
+            const token = document.getElementById('gh-token').value.trim();
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}`, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+            if(res.ok) {
+                localStorage.setItem('logic_engine_token', token);
+                GITHUB_TOKEN = token;
+                document.getElementById('auth-layer').style.display = 'none';
+                loadRootTree();
+            }
+        }
+
+        if(GITHUB_TOKEN) {
+            document.getElementById('auth-layer').style.display = 'none';
+            loadRootTree();
+        }
+
+        // TREE LOGIC (RESTORING YOUR FULL DEEP SYNC BUTTONS)
+        async function loadRootTree() {
+            const tree = document.getElementById('tree-content');
+            tree.innerHTML = '';
+            for(const root of CONFIG.roots) {
+                const item = createTreeItem(root, root, true);
+                tree.appendChild(item);
+            }
+        }
+
+        function createTreeItem(name, path, isFolder) {
+            const div = document.createElement('div');
+            div.className = "group";
+            const content = document.createElement('div');
+            content.className = "flex items-center justify-between p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-all";
+            const left = document.createElement('div');
+            left.className = "flex items-center gap-2 overflow-hidden";
+            left.innerHTML = isFolder ? 
+                `<i class="fas fa-chevron-right chevron text-[8px] text-slate-300"></i><i class="fas fa-folder text-blue-400 text-xs"></i><span class="text-[11px] font-bold text-slate-600 truncate">${name}</span>` :
+                `<i class="fas fa-file-code text-slate-400 text-xs ml-4"></i><span class="text-[11px] font-medium text-slate-500 truncate">${name}</span>`;
+            
+            const right = document.createElement('div');
+            right.className = "flex gap-1";
+            
+            if(isFolder) {
+                // RESTORED: Deep Sync Upload and New File buttons
+                right.innerHTML = `
+                    <button onclick="event.stopPropagation(); triggerUpload('${path}')" class="tree-btn text-blue-500 hover:bg-blue-50"><i class="fas fa-upload"></i></button>
+                    <button onclick="event.stopPropagation(); createNewFile('${path}')" class="tree-btn text-green-500 hover:bg-green-50"><i class="fas fa-plus"></i></button>
+                `;
+                content.onclick = () => toggleFolder(div, path);
+            } else {
+                right.innerHTML = `<button onclick="event.stopPropagation(); deleteFile('${path}')" class="tree-btn text-red-400 hover:bg-red-50"><i class="fas fa-trash"></i></button>`;
+                content.onclick = () => loadFileContent(path);
+            }
+
+            content.appendChild(left);
+            content.appendChild(right);
+            div.appendChild(content);
+
+            if(isFolder) {
+                const sub = document.createElement('div');
+                sub.className = "folder-content";
+                div.appendChild(sub);
+            }
+            return div;
+        }
+
+        async function toggleFolder(element, path) {
+            const sub = element.querySelector('.folder-content');
+            const chevron = element.querySelector('.chevron');
+            sub.classList.toggle('active');
+            chevron.style.transform = sub.classList.contains('active') ? 'rotate(90deg)' : 'rotate(0deg)';
+            if(sub.classList.contains('active') && !sub.innerHTML) {
+                sub.innerHTML = '<p class="text-[9px] p-2 text-slate-400 italic">Reading Stream...</p>';
+                await loadDirectory(path, sub);
+            }
+        }
+
+        async function loadDirectory(path, container) {
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
+            const data = await res.json();
+            container.innerHTML = '';
+            if(Array.isArray(data)) {
+                data.forEach(item => {
+                    container.appendChild(createTreeItem(item.name, item.path, item.type === 'dir'));
+                });
+            }
+        }
+
+        // FILE OPS
+        async function loadFileContent(path) {
+            activeFilePath = path;
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+            });
+            const data = await res.json();
+            currentFileSha = data.sha;
+            document.getElementById('editor').value = decodeURIComponent(escape(atob(data.content)));
+            document.getElementById('current-filename').value = data.name;
+            document.getElementById('editing-path-display').innerText = path;
+            setMode('write');
+        }
+
+        async function saveFile() {
+            const content = document.getElementById('editor').value;
+            const filename = document.getElementById('current-filename').value;
+            const pathParts = activeFilePath.split('/');
+            pathParts[pathParts.length - 1] = filename;
+            const newPath = pathParts.join('/');
+
+            const body = {
+                message: `Logic Update: ${filename}`,
+                content: btoa(unescape(encodeURIComponent(content))),
+                sha: currentFileSha
+            };
+
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${activeFilePath}`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+
+            if(res.ok) {
+                const data = await res.json();
+                currentFileSha = data.content.sha;
+                activeFilePath = newPath;
+                document.getElementById('status-bar').innerText = "Logic Committed Successfully";
+                setTimeout(() => document.getElementById('status-bar').innerText = "Ready for Logic", 3000);
+            }
+        }
+
+        function createNewFile(parentPath) {
+            const name = prompt("Enter Filename (with extension):");
+            if(name) {
+                activeFilePath = `${parentPath}/${name}`;
+                currentFileSha = null;
+                document.getElementById('editor').value = '';
+                document.getElementById('current-filename').value = name;
+                document.getElementById('editing-path-display').innerText = activeFilePath;
+                setMode('write');
+            }
+        }
+
+        async function deleteFile(path) {
+            if(confirm(`Erase logic at ${path}?`)) {
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+                });
+                const data = await res.json();
+                await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: "Logic Erasure", sha: data.sha })
+                });
+                loadRootTree();
+            }
+        }
+
+        // DEEP SYNC HELPERS
+        function triggerUpload(path) {
+            uploadTargetPath = path;
+            document.getElementById('global-uploader').click();
+        }
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const content = e.target.result.split(',')[1];
+                await runWithLoader(async () => {
+                    await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${uploadTargetPath}/${file.name}`, {
+                        method: 'PUT',
+                        headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: `Media Sync: ${file.name}`, content: content })
+                    });
+                }, "Syncing Media...");
+                loadRootTree();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function createMasterFolder() {
+            const name = document.getElementById('new-folder-name').value;
+            if(!name) return;
+            await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/Get-Started/${name}/.keep`, {
+                method: 'PUT',
+                headers: { 'Authorization': `token ${GITHUB_TOKEN}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: "Arch Architecture Sync", content: btoa("") })
+            });
+            loadRootTree();
+        }
+
+        // EDITOR MODES
+        function setMode(mode) {
+            const editor = document.getElementById('editor');
+            const preview = document.getElementById('preview-box');
+            const btnW = document.getElementById('btn-write');
+            const btnP = document.getElementById('btn-preview');
+            if(mode === 'preview') {
+                editor.classList.add('hidden');
+                preview.classList.remove('hidden');
+                btnP.classList.add('bg-white', 'shadow-sm');
+                btnP.classList.remove('text-slate-400');
+                btnW.classList.remove('bg-white', 'shadow-sm');
+                btnW.classList.add('text-slate-400');
+                renderPreview();
+            } else {
+                editor.classList.remove('hidden');
+                preview.classList.add('hidden');
+                btnW.classList.add('bg-white', 'shadow-sm');
+                btnW.classList.remove('text-slate-400');
+                btnP.classList.remove('bg-white', 'shadow-sm');
+                btnP.classList.add('text-slate-400');
+            }
+        }
+
+        // TAGS & PREVIEW
+        function renderPreview() {
+            const preview = document.getElementById('preview-box');
+            let text = document.getElementById('editor').value;
+            const rawBase = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/main`;
+
+            text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
+            text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
+                const fontSize = (1.1 - (s * 0.08)) + "rem";
+                return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:800; margin:1rem 0;">${c}</div>`;
+            });
+            text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
+                return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}15;">
+                            <summary style="color:${c}; font-weight:700;">${h}</summary>
+                            <div class="collapse-body">${con}</div>
+                        </details>`;
+            });
+            text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, s, c, t, con) => `<span class="tw-cursor" style="color:${c}; font-weight:${t.includes('bold')?'800':'400'}">${con}</span>`);
+            text = text.replace(/<text color="(.*?)" type="(.*?)">([\s\S]*?)<\/text>/g, (m, c, t, con) => `<span style="color:${c}; font-weight:${t.includes('bold')?'800':'400'}">${con}</span>`);
+            text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
+                const tag = type === 'number' ? 'ol' : 'ul';
+                return `<${tag} style="margin:15px 0 15px 40px;">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
+            });
+            text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
+            text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
+                const clean = code.trim();
+                return `<div class="code-container"><button class="copy-btn">Copy</button><pre><code>${clean}</code></pre></div>`;
+            });
+            
+            // MEDIA PREVIEW LOGIC
+            text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${n.trim()}">`);
+            text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video controls><source src="${rawBase}/videos/${n.trim()}" type="video/mp4"></video>`);
+            text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${n.trim()}"></audio>`);
+
+            preview.innerHTML = marked.parse(text);
+            
+            document.querySelectorAll('.copy-btn').forEach(btn => btn.onclick = () => { 
+                navigator.clipboard.writeText(btn.nextElementSibling.innerText); 
+                btn.innerText = "COPIED"; 
+                setTimeout(() => btn.innerText = "COPY", 2000); 
+            });
+        }
+
+        function insertTag(type) {
+            const editor = document.getElementById('editor');
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            const tags = {
+                tw: '<tw state="active" color="#ccff00" type="bold">Text</tw>',
+                box: '<box color="#ccff00" type="solid">Content</box>',
+                collapse: '<collapse heading="Title" color="white" bg-color="#1a1c1e">Body</collapse>',
+                heading: '<heading size="1" align="left">Headline</heading>',
+                align: '<align type="center">Content</align>',
+                code: '<code>\nCode\n</code>',
+                image: '<image>filename.jpg</image>',
+                video: '<video>filename.mp4</video>',
+                audio: '<audio>filename.mp3</audio>',
+                list: '<list type="bullet">\nitem\n</list>',
+                br: '<br>'
+            };
+            editor.value = text.substring(0, start) + (tags[type] || '') + text.substring(end);
+            editor.focus();
+        }
+
+        function insertColor(color) {
+            const editor = document.getElementById('editor');
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+            const text = editor.value;
+            editor.value = text.substring(0, start) + color + text.substring(end);
+            navigator.clipboard.writeText(color);
+            editor.focus();
+        }
+
+        function logout() {
+            localStorage.removeItem('logic_engine_token');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
