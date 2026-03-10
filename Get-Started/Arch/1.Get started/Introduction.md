@@ -15,10 +15,10 @@ Master the System: Using Arch transforms you from a "user" into an "architect" o
 </box>
 <heading size="2" align="left">Frequently Asked Questions</heading>
 <collapse heading="Is Arch really 'too hard' to use?" color="" bg-color="#f0f7ff">
-<text color="#d6d6d6" type="regular">Arch is not "hard" to use,”it is intentional. It requires you to understand how your system functions. While it has a steeper learning curve, the result is a system that is perfectly optimized for your specific hardware.</text>
+<text color="black" type="regular">Arch is not "hard" to use,it is intentional. It requires you to understand how your system functions. While it has a steeper learning curve, the result is a system that is perfectly optimized for your specific hardware.</text>
 </collapse>
 <collapse heading="What kind of hardware does it support?" color="" bg-color="#f0f7ff">
-<text color="#d6d6d6" type="regular">Arch runs on almost anything! From high-end workstations to legacy laptops, its lightweight nature makes it an incredible way to breathe new life into older devices.</text>
+<text color="black" type="regular">Arch runs on almost anything! From high-end workstations to legacy laptops, its lightweight nature makes it an incredible way to breathe new life into older devices.</text>
 </collapse>
 <collapse heading="What if I break something?" color="" bg-color="#f0f7ff">
 <text color="black" type="regular">Breaking a system is the best way to learn how to fix it. Arch Linux documentation (The Arch Wiki) is legendary,it is widely considered the best technical documentation in the entire Linux world.</text>
