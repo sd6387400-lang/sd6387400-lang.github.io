@@ -66,13 +66,11 @@
             #reader-content { border-radius: 20px !important; padding: 20px !important; width: 100% !important; max-width: none !important; margin: 0 !important; }
         }
 
-        /* --- Search Bar Styles --- */
         .search-container { margin-bottom: 20px; position: relative; }
         .search-input { width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-size: 0.9rem; outline: none; transition: 0.3s; }
         .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(145, 205, 255, 0.2); }
         .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
 
-        /* --- Sidebar Dropdown Styles --- */
         .sidebar-dropdown { margin-bottom: 10px; border-radius: 15px; overflow: hidden; }
         .dropdown-trigger { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; color: var(--accent); cursor: pointer; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; background: rgba(0,0,0,0.02); }
         .dropdown-content { display: none; padding-left: 10px; margin-top: 5px; }
@@ -89,7 +87,6 @@
         #reader-view { display: none; padding-top: 60px; width: 100%; }
         #reader-content { background: var(--card-bg); border: 1px solid var(--border); padding: 50px; border-radius: 40px; max-width: 900px; margin: 0 auto; backdrop-filter: blur(20px); }
         
-        /* Flex wrapper for the Home and Reload buttons */
         .nav-actions { display: flex; gap: 10px; margin-bottom: 25px; }
         .back-pill { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; background: var(--accent); color: white; border-radius: 100px; font-weight: 700; cursor: pointer; transition: 0.3s; flex: 1; justify-content: center; font-size: 0.9rem; }
         .back-pill:hover { opacity: 0.9; transform: scale(0.98); }
@@ -265,6 +262,9 @@
         }
 
         async function fetchContent(url, el) {
+            // New logic: Hide search bar when entering a file
+            document.querySelector('.search-container').style.display = 'none';
+
             document.querySelectorAll('.sidebar-link').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             const render = document.getElementById('md-render');
@@ -278,6 +278,9 @@
                 const subPath = pathParts.join('/');
                 const rawBase = `https://raw.githubusercontent.com/${USER}/${REPO}/main`;
 
+                // Line Break support
+                text = text.replace(/<br>/g, '<br>');
+                
                 text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
                 text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
                     const fontSize = (1.1 - (s * 0.08)) + "rem";
