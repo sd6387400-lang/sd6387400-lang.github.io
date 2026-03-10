@@ -31,3 +31,6 @@ https://archlinux.org
 </code>
 
 </collapse>
+
+<hr>
+---
