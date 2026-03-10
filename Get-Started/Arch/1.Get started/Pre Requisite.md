@@ -1,6 +1,7 @@
 <heading size="1" align="center">Pre Required Materials</heading>
 <hr>
 
+<heading size="1" align="left"></heading>
 <list type="number">
 Arch Linux ISO
 A Working Keyboard[Cause you need for long time]
@@ -30,26 +31,22 @@ By Getting on This Website And Choosing your Country Mirror For Good Speed
 <heading size="1" align="center">In Windows</heading>
 
 Preparing A bootable Pendrive in Windows is Much easier.
-<list type="number">
-
-
-Goto Your Any web Browser And Search for tool Rufus or download from there https://rufus.ie/en/ make sure To download non "p" or portable version.(Download Normal one)
 
 <heading size="1" align="left"></heading>
-Open Rufus Tool with your file explorer.
+<heading size="1" align="left"></heading>
+1. Goto your any web Browser and search for Rufus and Download it, You can also download from here -> https://rufus.ie/en/
 
 <heading size="1" align="left"></heading>
-Select the downloaded Arch ISO from Select file button
+2. Locate Rufus and open it,
 
 <heading size="1" align="left"></heading>
-Attach a empty pendrive in it cause it will erase all data of pendrive 
+3. Click on Select File button and select arch linux ISO you downloaded earlier
 
 <heading size="1" align="left"></heading>
-Choose MBR or GPT based on your system.
+4. Attach a EMPTY Pendrive Cause Data is Going to be erased 
 
 <heading size="1" align="left"></heading>
-Click on start and choose write in ISO mode, Use DD mode if pendrive didn't worked after 3 failed attepmts
-</list>
+5. click on start and write it in DD mode and let the process happen it will take some time.
 
 <heading size="1" align="left">Now You are done Preparing Your Pendrive To Boot</heading>
 </box>
