@@ -24,6 +24,7 @@ Arch runs on almost anything! From high-end workstations to legacy laptops, its 
 Breaking a system is the best way to learn how to fix it. Arch’s documentation (The Arch Wiki) is legendary—it is widely considered the best technical documentation in the entire Linux world.
 </collapse>
 <image>archlinux-logo-dark-1200dpi.png</image>
+<align type="center"><text color="#d6d6d6" type="regular">Source:Arch Linux</text></align>
 <heading size="2" align="center">Ready to begin?</heading>
 <align type="center">
 <text color="#44474e" type="italic">"The terminal is your canvas. Let's start painting."</text>
