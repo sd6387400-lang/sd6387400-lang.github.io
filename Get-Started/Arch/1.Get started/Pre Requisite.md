@@ -10,7 +10,7 @@ Patience
 </list>
 <Hr>
 <collapse heading="How Do I Get Arch ISO?" color="green" bg-color="#E0FFCC">
-By Getting on This Website And Choosing your Country Mirror For Good Speed
+<text color="black" type="regular">By Getting on This Website And Choosing your Country Mirror For Good Speed</text>
 
 <heading size="1" align="left"></heading>
 
@@ -78,6 +78,6 @@ Preparing A bootable Pendrive in Windows is Much easier.
 <align type="center">(Note:If it didn't boot forse shutdown and try again)</align>
 
 <collapse heading="Boot Manager Keys" color="green" bg-color="#E0FFCC"">
-<heading size="1" align="left">Acer/Samsung/Lenovo/Toshiba/Dell</heading> F12
-<heading size="1" align="left">Asus/HP</heading> Esc
+<text color="black" type="regular"><heading size="1" align="left">Acer/Samsung/Lenovo/Toshiba/Dell</heading> F12
+<heading size="1" align="left">Asus/HP</heading> Esc</text>
 </collapse>
