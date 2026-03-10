@@ -1,6 +1,6 @@
 <heading size="1" align="center">Welcome to the Arch Ecosystem</heading>
 <align type="center"><tw state="continuous" color="#006494" type="bold">Elevate your computing. With ARCH</tw></align>
-<box color="#006494" type="solid">
+<box color="#FFFB7A" type="solid">
 <heading size="3" align="left">What is Arch Linux?</heading>
 Arch is not just an operating system; it is a crafting platform. Unlike traditional systems that make choices for you, Arch provides the raw, powerful components you need to build your ideal digital environment from the ground up.
 </box>
