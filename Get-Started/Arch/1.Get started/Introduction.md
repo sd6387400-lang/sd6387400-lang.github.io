@@ -22,4 +22,6 @@ Short Answer is <text color="black" type="bold">YES</text> a beginner can instal
 
 <image>archlinux-logo-dark-1200dpi.png</image>
 
+<hr>
+
 <align type="center">Source: Arch Linux</align>
