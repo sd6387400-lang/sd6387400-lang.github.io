@@ -11,7 +11,7 @@ Patience
 <collapse heading="How Do I Get Arch ISO?" color="green" bg-color="#E0FFCC">
 By Getting on This Website And Choosing your Country Mirror For Good Speed
 
-https://archlinux.org/download/
+<text color="green" type="bold">https://archlinux.org/download/</text>
 
 <text color="green" type="bold">Note: If you think If website looks that old OS might also look the Same but it is not the case.</text>
 </collapse>
