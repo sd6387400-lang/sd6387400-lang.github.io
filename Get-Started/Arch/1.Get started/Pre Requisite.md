@@ -8,7 +8,7 @@ A Windows Or Linux Present in your PC
 Patience 
 </list>
 
-<collapse heading="Title" color="white" bg-color="#1a1c1e">
+<collapse heading="Title" color="green" bg-color="#E0FFCC">
 Body
 
 </collapse>
