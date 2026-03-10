@@ -35,19 +35,19 @@ Preparing A bootable Pendrive in Windows is Much easier.
 
 Goto Your Any web Browser And Search for tool Rufus or download from there https://rufus.ie/en/ make sure To download non "p" or portable version.(Download Normal one)
 
-
+<heading size="1" align="left"></heading>
 Open Rufus Tool with your file explorer.
 
-
+<heading size="1" align="left"></heading>
 Select the downloaded Arch ISO from Select file button
 
-
+<heading size="1" align="left"></heading>
 Attach a empty pendrive in it cause it will erase all data of pendrive 
 
-
+<heading size="1" align="left"></heading>
 Choose MBR or GPT based on your system.
 
-
+<heading size="1" align="left"></heading>
 Click on start and choose write in ISO mode, Use DD mode if pendrive didn't worked after 3 failed attepmts
 </list>
 
