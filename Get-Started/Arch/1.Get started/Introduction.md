@@ -5,7 +5,7 @@
 Arch is not just an operating system; it is a crafting platform. Unlike traditional systems that make choices for you, Arch provides the raw, powerful components you need to build your ideal digital environment from the ground up.
 </box>
 <heading size="2" align="left">Why Arch? The "Arch-Factor"</heading>
-<box color="#91cdff" type="solid">
+<box color="#8AF3FF" type="solid">
 <list type="bullet">
 Infinite Customization: Every service, driver, and application is hand-picked by you. No bloat, no compromises.
 Rolling Release Model: Once you install Arch, you are always on the latest version. Say goodbye to massive, disruptive OS upgrades.
