@@ -49,15 +49,6 @@
         
         .menu-btn { position: fixed; bottom: 30px; left: 30px; z-index: 1001; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; }
         
-        /* --- Floating Action Buttons --- */
-        .fab-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 1001; }
-        .fab { background: var(--accent); color: white; border: none; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transition: 0.3s; display: flex; align-items: center; justify-content: center; text-decoration: none; }
-        .fab:hover { transform: scale(1.1); }
-
-        /* --- Inline Redirect Button Style --- */
-        .inline-redirect { display: inline-flex; align-items: center; background: var(--accent); color: white !important; padding: 2px 8px; border-radius: 6px; font-size: 0.7rem; text-decoration: none !important; margin-left: 6px; vertical-align: middle; transition: 0.2s; }
-        .inline-redirect:hover { opacity: 0.8; transform: translateY(-1px); }
-
         .sidebar { position: fixed; top: 0; left: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); z-index: 1000; padding: 40px 20px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border); overflow-y: auto; }
         
         @media (min-aspect-ratio: 1/1) {
@@ -71,6 +62,12 @@
             .sidebar.active { left: 0; }
             .menu-btn { display: block; }
         }
+
+        /* --- Search Bar Styles --- */
+        .search-container { margin-bottom: 20px; position: relative; }
+        .search-input { width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-size: 0.9rem; outline: none; transition: 0.3s; }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(145, 205, 255, 0.2); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
 
         /* --- Sidebar Dropdown Styles --- */
         .sidebar-dropdown { margin-bottom: 10px; border-radius: 15px; overflow: hidden; }
@@ -88,20 +85,23 @@
 
         #reader-view { display: none; padding-top: 60px; width: 100%; }
         #reader-content { background: var(--card-bg); border: 1px solid var(--border); padding: 50px; border-radius: 40px; max-width: 900px; margin: 0 auto; backdrop-filter: blur(20px); }
-        .back-pill { display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; background: var(--accent); color: white; border-radius: 100px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-bottom: 40px; }
+        
+        /* Flex wrapper for the Home and Reload buttons */
+        .nav-actions { display: flex; gap: 10px; margin-bottom: 25px; }
+        .back-pill { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; background: var(--accent); color: white; border-radius: 100px; font-weight: 700; cursor: pointer; transition: 0.3s; flex: 1; justify-content: center; font-size: 0.9rem; }
+        .back-pill:hover { opacity: 0.9; transform: scale(0.98); }
 
         .logic-box { padding: 25px; margin: 30px 0; border-radius: 20px; border: 2px solid; }
-        .sidebar-link { padding: 14px 18px; color: var(--text-dim); cursor: pointer; border-radius: 15px; margin-bottom: 5px; transition: 0.2s; font-weight: 600; }
+        .sidebar-link { padding: 14px 18px; color: var(--text-dim); cursor: pointer; border-radius: 15px; margin-bottom: 5px; transition: 0.2s; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .sidebar-link:hover { background: rgba(0,0,0,0.05); }
         .sidebar-link.active { background: var(--accent); color: white; }
         
-        /* Styled Collapsible */
         .custom-collapse { border-radius: 20px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border); }
         .custom-collapse summary { padding: 20px; cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; }
         .custom-collapse summary::after { content: '+'; font-size: 1.2rem; }
         .custom-collapse[open] summary::after { content: '−'; }
         .collapse-body { padding: 20px; }
 
-        /* --- Code Copy Styles --- */
         .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
         .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; z-index: 10; }
 
@@ -109,7 +109,6 @@
         @keyframes blink { 50% { opacity: 0; } }
 
         #md-render img, #md-render video, #md-render audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
-        hr { border: 0; height: 1px; background: var(--border); margin: 30px 0; }
     </style>
 </head>
 <body>
@@ -118,21 +117,28 @@
     <div id="overlay-ui" onclick="toggleSidebar()"></div>
     <button class="menu-btn" id="menu-trigger" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
 
-    <div class="fab-container">
-        <button class="fab" onclick="location.reload()" title="Reload Engine">
-            <i data-lucide="refresh-cw"></i>
-        </button>
-    </div>
-
     <nav class="sidebar" id="sidebar">
-        <div class="back-pill" style="width:100%; justify-content:center; margin-bottom:30px;" onclick="location.reload()"><i data-lucide="home"></i> Home</div>
+        <div class="search-container">
+            <i data-lucide="search" class="search-icon" size="18"></i>
+            <input type="text" id="node-search" class="search-input" placeholder="Search guides..." onkeyup="filterNodes()">
+        </div>
+
+        <div class="nav-actions">
+            <div class="back-pill" onclick="location.reload()"><i data-lucide="home" size="18"></i> Home</div>
+            <div class="back-pill" onclick="location.reload()" style="background: var(--text-dim);"><i data-lucide="rotate-cw" size="18"></i> Reload</div>
+        </div>
+        
+        <div class="sidebar-link" onclick="window.location.href='index.html'"><i data-lucide="layout-dashboard" size="18"></i> Main</div>
+        <div class="sidebar-link" onclick="window.location.href='creations.html'"><i data-lucide="sparkles" size="18"></i> Creations</div>
+        
+        <hr style="opacity:0.1; margin: 15px 0;">
         <div id="sidebar-links"></div>
     </nav>
 
     <div class="container" id="picker-view">
         <header>
-            <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -2px;">Get Started</h1>
-            <p style="color: var(--text-dim);">Choose any of the cards below to make it your reality...</p>
+            <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -2px;">Logic Engine</h1>
+            <p style="color: var(--text-dim);">Select a node to begin.</p>
         </header>
         <div class="repo-grid" id="grid"></div>
     </div>
@@ -156,6 +162,21 @@
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay-ui').classList.toggle('active');
+        }
+
+        // Search Filter Logic
+        function filterNodes() {
+            const input = document.getElementById('node-search').value.toLowerCase();
+            const cards = document.getElementsByClassName('repo-card');
+            
+            for (let card of cards) {
+                const name = card.querySelector('.repo-name').innerText.toLowerCase();
+                if (name.includes(input)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            }
         }
 
         async function init() {
@@ -201,7 +222,6 @@
 
             for(const sub of subFolders) {
                 if(sub.type === 'dir') {
-                    // Added Dropdown Wrapper
                     const dropdown = document.createElement('div');
                     dropdown.className = 'sidebar-dropdown active';
                     
@@ -235,7 +255,6 @@
             if(firstFileUrl) fetchContent(firstFileUrl, firstFileEl);
         }
 
-        // --- Helper for Code Copying ---
         function copyCode(btn, encoded) {
             const code = atob(encoded);
             navigator.clipboard.writeText(code);
@@ -247,7 +266,7 @@
             document.querySelectorAll('.sidebar-link').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             const render = document.getElementById('md-render');
-            render.innerHTML = '<h3>Loading...</h3>';
+            render.innerHTML = '<h3>Assembling Logic...</h3>';
 
             try {
                 const res = await fetch(url + '?t=' + new Date().getTime());
@@ -257,29 +276,22 @@
                 const subPath = pathParts.join('/');
                 const rawBase = `https://raw.githubusercontent.com/${USER}/${REPO}/main`;
 
-                // --- Alignment Trigger ---
                 text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
-
-                // --- Custom Heading Trigger ---
                 text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
                     const fontSize = (1.1 - (s * 0.08)) + "rem";
                     const weight = s <= 3 ? '800' : '600';
                     return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${weight}; margin:1rem 0; line-height:1.2;">${c}</div>`;
                 });
-
-                // --- Styled Collapse Trigger ---
                 text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
                     return `<details class="custom-collapse" style="background:${bg || '#f1f1f1'}">
                                 <summary style="color:${c || 'black'}">${h}</summary>
                                 <div class="collapse-body">${con}</div>
                             </details>`;
                 });
-
                 text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => {
                     const b = type.includes('bold') ? 'bold' : 'normal', i = type.includes('italic') ? 'italic' : 'normal';
                     return `<span class="tw-text tw-cursor" data-state="${state || 'continuous'}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color || 'inherit'}; font-weight:${b}; font-style:${i};"></span>`;
                 });
-
                 text = text.replace(/<text color="(.*?)" type="(.*?)">([\s\S]*?)<\/text>/g, (m, color, type, content) => {
                     let s = `color:${color || 'inherit'};`;
                     if(type.includes('bold')) s += 'font-weight:bold;';
@@ -287,34 +299,20 @@
                     if(type.includes('underline')) s += 'text-decoration:underline;';
                     return `<span style="${s}">${content}</span>`;
                 });
-
                 text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
                     const tag = type === 'number' ? 'ol' : 'ul';
                     return `<${tag} style="margin:15px 0 15px 40px;">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
                 });
-
                 text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
-
-                // --- Horizontal Rule Fix ---
-                text = text.replace(/^---$/gm, '<hr>');
-
-                // --- Added Code Copy Trigger ---
                 text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
                     const clean = code.trim();
                     return `<div class="code-container"><button class="copy-btn" onclick="copyCode(this, '${btoa(clean)}')">Copy</button><pre><code>${clean}</code></pre></div>`;
                 });
-                
                 text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'">`);
                 text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video muted playsinline loop><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`);
                 text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'"></audio>`);
 
-                // --- Automatic Redirect Button for HTTPS links ---
-                text = text.replace(/\[(.*?)\]\((https:\/\/.*?)\)/g, (m, label, link) => {
-                    return `[${label}](${link}) <a href="${link}" target="_blank" class="inline-redirect"><i data-lucide="external-link" style="width:12px;height:12px;"></i></a>`;
-                });
-
                 render.innerHTML = marked.parse(text);
-                lucide.createIcons(); // Re-trigger to render new inline icons
                 initTypewriters();
                 setupVideoAutoPlay();
                 
@@ -343,7 +341,7 @@
                 type();
             });
         }
-        
+
         function setupVideoAutoPlay() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
