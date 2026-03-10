@@ -51,5 +51,5 @@ Choose MBR or GPT based on your system.
 Click on start and choose write in ISO mode, Use DD mode if pendrive didn't worked after 3 failed attepmts
 </list>
 
-
+<heading size="1" align="left">Now You are done Preparing Your Pendrive To Boot</heading>
 </box>
