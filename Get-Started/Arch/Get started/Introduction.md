@@ -20,7 +20,9 @@ Windows or Linux Installed on computer.
 </list>
 
 <collapse heading="You may wonder from where do I download It" color="#006494" bg-color="rgba(0,100,148,0.1)">
-From here official website https://archlinux.org/
+From here official website 
+
+<text color="blue" type="bold">https://archlinux.org</text>
 
 <text color="black" type="bold">Note: If you thought if website is looking that old The OS will also but it's Completely opposite</text>
 
