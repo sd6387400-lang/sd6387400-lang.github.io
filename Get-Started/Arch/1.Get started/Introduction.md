@@ -1,27 +1,30 @@
-<heading size="1" align="center">Introduction</heading>
-<hr>
+<heading size="1" align="center">Welcome to the Arch Ecosystem</heading>
+<align type="center"><tw state="continuous" color="#006494" type="bold">Elevate your computing. Define your own reality.</tw></align>
+<box color="#006494" type="solid">
+<heading size="3" align="left">What is Arch Linux?</heading>
+Arch is not just an operating system; it is a crafting platform. Unlike traditional systems that make choices for you, Arch provides the raw, powerful components you need to build your ideal digital environment from the ground up.
+</box>
+<heading size="2" align="left">Why Arch? The "Arch-Factor"</heading>
+<box color="#91cdff" type="solid">
+<list type="bullet">
+Infinite Customization: Every service, driver, and application is hand-picked by you. No bloat, no compromises.
+Rolling Release Model: Once you install Arch, you are always on the latest version. Say goodbye to massive, disruptive OS upgrades.
+The AUR Advantage: Access the world's most extensive community-driven software repository. If it exists for Linux, the AUR has it.
+Master the System: Using Arch transforms you from a "user" into an "architect" of your own machine.
+</list>
+</box>
+<heading size="2" align="left">Frequently Asked Questions</heading>
+<collapse heading="Is Arch really 'too hard' to use?" color="#006494" bg-color="#f0f7ff">
+Arch is not "hard"—it is intentional. It requires you to understand how your system functions. While it has a steeper learning curve, the result is a system that is perfectly optimized for your specific hardware.
+</collapse>
+<collapse heading="What kind of hardware does it support?" color="#91cdff" bg-color="#f0f7ff">
+Arch runs on almost anything! From high-end workstations to legacy laptops, its lightweight nature makes it an incredible way to breathe new life into older devices.
+</collapse>
+<collapse heading="What if I break something?" color="#006494" bg-color="#f0f7ff">
+Breaking a system is the best way to learn how to fix it. Arch’s documentation (The Arch Wiki) is legendary—it is widely considered the best technical documentation in the entire Linux world.
+</collapse>
+<heading size="2" align="center">Ready to begin?</heading>
+<align type="center">
+<text color="#44474e" type="italic">"The terminal is your canvas. Let's start painting."</text>
+</align>
 
-<heading size="1" align="left"></heading>
-
-
-<text color="#2ECEFF" type="bold">1.What Is Arch Linux?</text>
-
-So arch linux is A Linux Based Distro, Optimised For Performance, Gaming.
-
-<heading size="1" align="left"></heading>
-
-<text color="#2ECEFF" type="bold">2.Is installation of it not easy.</text>
-
-Answer is yes installation of this Operating System is Not easy as you might think cause we need to type many commands and wait for hours to led it download it, But still it is worth it.
-
-<heading size="1" align="left"></heading>
-
-<text color="#2ECEFF" type="bold">3.Can a beginner can install it..</text>
-
-Short Answer is <text color="#2ECEFF" type="bold">YES</text> a beginner can install it, But they have to follow installtion guide wisely.
-
-<image>archlinux-logo-dark-1200dpi.png</image>
-
-<hr>
-
-<align type="center">Source: Arch Linux</align>
