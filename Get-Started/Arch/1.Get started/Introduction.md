@@ -4,6 +4,10 @@
 <heading size="1" align="left"></heading>
 
 
-<text color="blue" type="bold-italic-underline">1.What Is Arch Linux?</text>
+<text color="black" type="bold">1.What Is Arch Linux?</text>
 
-So arch linux is A Linux Based Distro
+So arch linux is A Linux Based Distro, Optimised For Performance, Gaming.
+
+<heading size="1" align="left"></heading>
+
+<text color="black" type="bold">1.What Is Arch Linux?</text>
