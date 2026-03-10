@@ -23,6 +23,7 @@ Arch runs on almost anything! From high-end workstations to legacy laptops, its 
 <collapse heading="What if I break something?" color="#006494" bg-color="#f0f7ff">
 Breaking a system is the best way to learn how to fix it. Arch’s documentation (The Arch Wiki) is legendary—it is widely considered the best technical documentation in the entire Linux world.
 </collapse>
+<image>archlinux-logo-dark-1200dpi.png</image>
 <heading size="2" align="center">Ready to begin?</heading>
 <align type="center">
 <text color="#44474e" type="italic">"The terminal is your canvas. Let's start painting."</text>
