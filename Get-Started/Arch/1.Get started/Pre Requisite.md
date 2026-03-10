@@ -78,6 +78,7 @@ Preparing A bootable Pendrive in Windows is Much easier.
 <align type="center">(Note:If it didn't boot forse shutdown and try again)</align>
 
 <collapse heading="Boot Manager Keys" color="green" bg-color="#E0FFCC"">
-<text color="black" type="regular"><heading size="1" align="left">Acer/Samsung/Lenovo/Toshiba/Dell</heading> F12
+<text color="black" type="regular"><heading size="1" align="left">Acer/Samsung/Lenovo/<br>
+Toshiba/Dell</heading> F12
 <heading size="1" align="left">Asus/HP</heading> Esc</text>
 </collapse>
