@@ -52,8 +52,8 @@ Preparing A bootable Pendrive in Windows is Much easier.
 </box>
 
 <box color="#ff8a5c" type="dotted">
-<heading size="1" align="center">In Any Linux</heading>
 
+<heading size="1" align="center">In Any Linux</heading>
 1. Download belena etcher from your prederd Browser
 
 <heading size="1" align="left"></heading>
