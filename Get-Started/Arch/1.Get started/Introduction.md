@@ -10,4 +10,7 @@ So arch linux is A Linux Based Distro, Optimised For Performance, Gaming.
 
 <heading size="1" align="left"></heading>
 
-<text color="black" type="bold">1.What Is Arch Linux?</text>
+<text color="black" type="bold">2.Is installation of it not easy.</text>
+
+Answer is yes installation of this Operating System is Not easy as you might think cause we need to type many commands and wait for hours to led it download it, But still it is worth it.
+
