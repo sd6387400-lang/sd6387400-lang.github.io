@@ -18,7 +18,7 @@ Answer is yes installation of this Operating System is Not easy as you might thi
 
 <text type="bold">3.Can a beginner can install it..</text>
 
-Short Answer is <text color="black" type="bold">YES</text> a beginner can install it, But they have to follow installtion guide wisely.
+Short Answer is <text type="bold">YES</text> a beginner can install it, But they have to follow installtion guide wisely.
 
 <image>archlinux-logo-dark-1200dpi.png</image>
 
