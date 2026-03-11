@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,18 +9,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --accent: #ccff00; --bg-base: #0f1115; --border: rgba(255, 255, 255, 0.08); }
-        
+        /* THEME VARIABLES */
+        :root[data-theme="light"] {
+            --bg-base: #f4f7ff;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-main: #1a1c1e;
+            --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.1);
+            --editor-bg: #ffffff;
+            --accent: #0066ff;
+            --accent-text: #ffffff;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-base: #0f1115;
+            --card-bg: rgba(26, 28, 30, 0.6);
+            --text-main: #e2e2e6;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --editor-bg: #1a1c1e;
+            --accent: #ccff00;
+            --accent-text: #000000;
+        }
+
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             background-color: var(--bg-base); 
-            color: #e2e2e6;
+            color: var(--text-main);
             margin: 0; 
             padding: 0; 
+            transition: background-color 0.3s ease;
         }
 
         .glass-card { 
-            background: rgba(26, 28, 30, 0.6); 
+            background: var(--card-bg); 
             backdrop-filter: blur(20px); 
             border-radius: 24px; 
             border: 1px solid var(--border);
@@ -28,29 +50,29 @@
 
         .btn-primary { 
             background: var(--accent); 
-            color: #000; 
+            color: var(--accent-text); 
             font-weight: 800; 
             transition: 0.3s; 
             cursor: pointer; 
             border: none; 
         }
 
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(204, 255, 0, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
         .tag-ref { 
             font-size: 10px; 
             font-weight: 800; 
             padding: 6px 10px; 
             border-radius: 8px; 
-            background: rgba(255,255,255,0.05); 
+            background: rgba(128,128,128,0.1); 
             color: var(--accent); 
             cursor: pointer; 
             transition: 0.2s;
         }
-        .tag-ref:hover { background: var(--accent); color: black; }
+        .tag-ref:hover { background: var(--accent); color: var(--accent-text); }
 
         /* PREVIEW STYLING */
-        #preview-box { line-height: 1.6; color: #e2e2e6; }
+        #preview-box { line-height: 1.6; color: var(--text-main); }
         .logic-box { padding: 25px; margin: 30px 0; border-radius: 20px; border: 2px solid; }
         
         .custom-collapse { border-radius: 20px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border); }
@@ -59,15 +81,27 @@
         .custom-collapse[open] summary::after { content: '−'; }
         .collapse-body { padding: 20px; }
 
-        .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
-        .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: black; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
+        .code-container { position: relative; background: #000000; color: #ccff00; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
+        .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: var(--accent-text); border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
         
         .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
         @keyframes blink { 50% { opacity: 0; } }
 
         #preview-box img, #preview-box video { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
         
-        textarea { background: #1a1c1e !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+        textarea { background: var(--editor-bg) !important; color: var(--text-main) !important; border: 1px solid var(--border) !important; }
+        
+        select.theme-selector {
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 800;
+            outline: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="min-h-screen pb-20 p-4 lg:p-12">
@@ -77,11 +111,16 @@
     <div class="max-w-6xl mx-auto">
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl font-black tracking-tighter italic text-white">LOGIC WRITER</h1>
+                <h1 class="text-3xl font-black tracking-tighter italic">LOGIC WRITER</h1>
                 <p id="status-bar" class="text-[10px] font-black text-[#ccff00] uppercase tracking-[0.2em]">Offline Local Mode</p>
             </div>
-            <div class="flex gap-3">
-                <button onclick="clearStorage()" class="p-3 bg-red-900/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all text-xs font-bold">CLEAR ALL</button>
+            <div class="flex items-center gap-3">
+                <select id="theme-choice" class="theme-selector" onchange="changeTheme(this.value)">
+                    <option value="dark">Dark View</option>
+                    <option value="light">Light View</option>
+                    <option value="system">System Default</option>
+                </select>
+                <button onclick="clearStorage()" class="p-3 bg-red-900/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all text-xs font-bold uppercase">Clear All</button>
             </div>
         </header>
 
@@ -95,17 +134,17 @@
                     <span class="tag-ref" onclick="insertTag('align')">Align</span>
                     <span class="tag-ref" onclick="insertTag('code')">Code</span>
                     <span class="tag-ref" onclick="insertTag('list')">List</span>
-                    <span class="tag-ref" onclick="document.getElementById('color-picker').click()" style="background:#ccff00; color:black;">Color Palette</span>
+                    <span class="tag-ref" onclick="document.getElementById('color-picker').click()">Color Palette</span>
                 </div>
-                <div class="flex bg-white/5 p-1 rounded-xl">
-                    <button onclick="setMode('write')" id="btn-write" class="px-6 py-2 rounded-lg text-[10px] font-black uppercase bg-[#ccff00] text-black shadow-sm transition-all">Write</button>
-                    <button onclick="setMode('preview')" id="btn-preview" class="px-6 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all">Preview</button>
+                <div class="flex bg-gray-500/10 p-1 rounded-xl">
+                    <button onclick="setMode('write')" id="btn-write" class="px-6 py-2 rounded-lg text-[10px] font-black uppercase transition-all">Write</button>
+                    <button onclick="setMode('preview')" id="btn-preview" class="px-6 py-2 rounded-lg text-[10px] font-black uppercase transition-all">Preview</button>
                 </div>
             </div>
 
             <div class="glass-card p-8 min-h-[700px] flex flex-col relative">
                 <div class="mb-6">
-                    <input type="text" id="doc-title" placeholder="Document Title..." class="font-black text-3xl bg-transparent border-none outline-none w-full tracking-tighter text-white">
+                    <input type="text" id="doc-title" placeholder="Document Title..." class="font-black text-3xl bg-transparent border-none outline-none w-full tracking-tighter">
                     <span class="text-[9px] font-black text-[#ccff00] uppercase block mt-1 tracking-widest">Auto-saving to LocalStorage</span>
                 </div>
                 
@@ -123,26 +162,46 @@
     </div>
 
     <script>
-        // CORE LOGIC
         const editor = document.getElementById('editor');
         const titleInput = document.getElementById('doc-title');
+        const root = document.documentElement;
 
-        // Load data on startup
+        // THEME ENGINE
+        function changeTheme(theme) {
+            localStorage.setItem('logic_theme', theme);
+            if (theme === 'system') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+            } else {
+                root.setAttribute('data-theme', theme);
+            }
+        }
+
+        // Listen for system changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+            if (localStorage.getItem('logic_theme') === 'system') {
+                root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
+        });
+
         window.onload = () => {
+            // Load Content
             const savedContent = localStorage.getItem('logic_content');
             const savedTitle = localStorage.getItem('logic_title');
             if (savedContent) editor.value = savedContent;
             if (savedTitle) titleInput.value = savedTitle;
+
+            // Load Theme
+            const savedTheme = localStorage.getItem('logic_theme') || 'dark';
+            document.getElementById('theme-choice').value = savedTheme;
+            changeTheme(savedTheme);
+
+            // Set initial mode UI
+            setMode('write');
         };
 
-        // Auto-save on typing
-        editor.addEventListener('input', () => {
-            localStorage.setItem('logic_content', editor.value);
-        });
-
-        titleInput.addEventListener('input', () => {
-            localStorage.setItem('logic_title', titleInput.value);
-        });
+        editor.addEventListener('input', () => localStorage.setItem('logic_content', editor.value));
+        titleInput.addEventListener('input', () => localStorage.setItem('logic_title', titleInput.value));
 
         function setMode(mode) {
             const preview = document.getElementById('preview-box');
@@ -152,20 +211,18 @@
             if(mode === 'preview') {
                 editor.classList.add('hidden');
                 preview.classList.remove('hidden');
-                // UI Toggle
-                btnP.classList.add('bg-[#ccff00]', 'text-black');
-                btnP.classList.remove('text-slate-400');
-                btnW.classList.remove('bg-[#ccff00]', 'text-black');
-                btnW.classList.add('text-slate-400');
+                btnP.style.backgroundColor = 'var(--accent)';
+                btnP.style.color = 'var(--accent-text)';
+                btnW.style.backgroundColor = 'transparent';
+                btnW.style.color = 'var(--text-muted)';
                 renderPreview();
             } else {
                 editor.classList.remove('hidden');
                 preview.classList.add('hidden');
-                // UI Toggle
-                btnW.classList.add('bg-[#ccff00]', 'text-black');
-                btnW.classList.remove('text-slate-400');
-                btnP.classList.remove('bg-[#ccff00]', 'text-black');
-                btnP.classList.add('text-slate-400');
+                btnW.style.backgroundColor = 'var(--accent)';
+                btnW.style.color = 'var(--accent-text)';
+                btnP.style.backgroundColor = 'transparent';
+                btnP.style.color = 'var(--text-muted)';
             }
         }
 
@@ -173,11 +230,10 @@
             const preview = document.getElementById('preview-box');
             let text = editor.value;
 
-            // Custom Tag Parsing (Matching original logic)
             text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
             text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
                 const fontSize = (2.5 - (s * 0.3)) + "rem";
-                return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:800; margin:1rem 0; color:white;">${c}</div>`;
+                return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:800; margin:1rem 0;">${c}</div>`;
             });
             text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
                 return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}20;">
@@ -198,7 +254,6 @@
 
             preview.innerHTML = marked.parse(text);
             
-            // Re-bind copy buttons
             document.querySelectorAll('.copy-btn').forEach(btn => btn.onclick = () => { 
                 navigator.clipboard.writeText(btn.nextElementSibling.innerText); 
                 btn.innerText = "COPIED"; 
