@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* THEME VARIABLES */
         :root[data-theme="light"] {
             --bg-base: #f4f7ff;
             --card-bg: rgba(255, 255, 255, 0.8);
@@ -69,23 +68,27 @@
         }
         .tag-ref:hover { background: var(--accent); color: var(--accent-text); }
 
-        /* PREVIEW STYLING - MATCHED TO ADMIN */
+        /* MATCHED PREVIEW STYLING FROM GET-STARTED2.HTML */
         #preview-box { line-height: 1.6; color: var(--text-main); }
         .logic-box { padding: 25px; margin: 30px 0; border-radius: 20px; border: 2px solid; }
         
         .custom-collapse { border-radius: 20px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border); }
         .custom-collapse summary { padding: 20px; cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; }
-        .custom-collapse summary::after { content: '+'; }
+        .custom-collapse summary::after { content: '+'; font-size: 1.2rem; }
         .custom-collapse[open] summary::after { content: '−'; }
         .collapse-body { padding: 20px; }
 
-        .code-container { position: relative; background: #000000; color: #ccff00; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
+        .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
         .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: var(--accent-text); border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
         
         .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
         @keyframes blink { 50% { opacity: 0; } }
 
         #preview-box img, #preview-box video, #preview-box audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
+        #preview-box img { border: none !important; }
+        
+        .custom-href { color: var(--accent); text-decoration: none; font-weight: 700; transition: 0.2s; }
+        .custom-href:hover { text-decoration: underline; opacity: 0.8; }
         
         textarea { background: var(--editor-bg) !important; color: var(--text-main) !important; border: 1px solid var(--border) !important; }
         
@@ -109,13 +112,13 @@
     <div class="max-w-6xl mx-auto">
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl font-black tracking-tighter italic">LOGIC WRITER</h1>
-                <p id="status-bar" class="text-[10px] font-black text-[#ccff00] uppercase tracking-[0.2em]">Offline Local Mode</p>
+                <h1 class="text-3xl font-black tracking-tighter italic">GET STARTED VIEW WRITER</h1>
+                <p id="status-bar" class="text-[10px] font-black text-[#ccff00] uppercase tracking-[0.2em]">Local Mode for anybody</p>
             </div>
             <div class="flex items-center gap-3">
                 <select id="theme-choice" class="theme-selector" onchange="changeTheme(this.value)">
-                    <option value="dark">Dark View</option>
-                    <option value="light">Light View</option>
+                    <option value="dark">Dark Mode</option>
+                    <option value="light">Light Mode</option>
                     <option value="system">System Default</option>
                 </select>
                 <button onclick="clearStorage()" class="p-3 bg-red-900/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all text-xs font-bold uppercase">Clear All</button>
@@ -129,6 +132,8 @@
                     <span class="tag-ref" onclick="insertTag('box')">Box</span>
                     <span class="tag-ref" onclick="insertTag('collapse')">Collapse</span>
                     <span class="tag-ref" onclick="insertTag('heading')">Heading</span>
+                    <span class="tag-ref" onclick="insertTag('href')">Link (Href)</span>
+                    <span class="tag-ref" onclick="insertTag('text')">Styled Text</span>
                     <span class="tag-ref" onclick="insertTag('align')">Align</span>
                     <span class="tag-ref" onclick="insertTag('code')">Code</span>
                     <span class="tag-ref" onclick="insertTag('image')">Image</span>
@@ -220,29 +225,59 @@
             const preview = document.getElementById('preview-box');
             let text = editor.value;
 
-            // RENDERING LOGIC
+            // UPDATED RENDERING LOGIC MATCHED TO GET-STARTED2.HTML
             text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
+            
             text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
-                const fontSize = (2.5 - (s * 0.3)) + "rem";
-                return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:800; margin:1rem 0;">${c}</div>`;
+                const sizeMap = {
+                    1: '2.8rem', 2: '2.4rem', 3: '2.0rem', 
+                    4: '1.8rem', 5: '1.6rem', 6: '1.4rem', 
+                    7: '1.2rem', 8: '1.1rem', 9: '1.05rem', 10: '1rem'
+                };
+                const fontSize = sizeMap[s] || "1.2rem";
+                const weight = s <= 3 ? '800' : '600';
+                return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${weight}; margin:1.5rem 0 0.8rem 0; line-height:1.2; color:var(--text-main);">${c}</div>`;
             });
+
             text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
-                return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}20;">
+                return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}15;">
                             <summary style="color:${c}; font-weight:700;">${h}</summary>
                             <div class="collapse-body">${con}</div>
                         </details>`;
             });
-            text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, s, c, t, con) => `<span class="tw-cursor" style="color:${c}; font-weight:${t.includes('bold')?'800':'400'}">${con}</span>`);
+
+            text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => {
+                const b = type.includes('bold') ? 'bold' : 'normal', i = type.includes('italic') ? 'italic' : 'normal';
+                return `<span class="tw-cursor" style="color:${color || 'inherit'}; font-weight:${b}; font-style:${i};">${content}</span>`;
+            });
+
+            text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g, (m, h, l) => {
+                const linkText = h || l.trim();
+                return `<a href="${l.trim()}" class="custom-href" target="_blank">${linkText}</a>`;
+            });
+
+            text = text.replace(/<text color="(.*?)" type="(.*?)">([\s\S]*?)<\/text>/g, (m, color, type, content) => {
+                let s = `color:${color || 'inherit'};`;
+                if(type.includes('bold')) s += 'font-weight:bold;';
+                if(type.includes('italic')) s += 'font-style:italic;';
+                if(type.includes('underline')) s += 'text-decoration:underline;';
+                return `<span style="${s}">${content}</span>`;
+            });
+
             text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
                 const tag = type === 'number' ? 'ol' : 'ul';
                 return `<${tag} style="margin:15px 0 15px 40px; list-style-type: ${type === 'number' ? 'decimal' : 'disc'};">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
             });
-            text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}10; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
-            text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => `<div class="code-container"><button class="copy-btn">Copy</button><pre><code>${code.trim()}</code></pre></div>`);
+
+            text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
             
-            // MEDIA RENDERING
+            text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
+                const clean = code.trim();
+                return `<div class="code-container"><button class="copy-btn">Copy</button><pre><code>${clean}</code></pre></div>`;
+            });
+            
             text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${n.trim()}">`);
-            text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video controls><source src="${n.trim()}" type="video/mp4"></video>`);
+            text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video muted playsinline loop controls><source src="${n.trim()}" type="video/mp4"></video>`);
             text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${n.trim()}"></audio>`);
             text = text.replace(/<br>/g, '<br>');
 
@@ -264,11 +299,13 @@
                 box: '<box color="#ccff00" type="solid">Content</box>',
                 collapse: '<collapse heading="Title" color="#ccff00" bg-color="#000000">Body</collapse>',
                 heading: '<heading size="1" align="left">Headline</heading>',
+                href: '<href heading="Link Title">https://link-url.com</href>',
+                text: '<text color="#ccff00" type="bold italic underline">Styled Text</text>',
                 align: '<align type="center">Content</align>',
                 code: '<code>\nCode\n</code>',
-                image: '<image>url_or_filename</image>',
-                video: '<video>url_or_filename</video>',
-                audio: '<audio>url_or_filename</audio>',
+                image: '<image>image_filename.png</image>',
+                video: '<video>video_filename.mp4</video>',
+                audio: '<audio>audio_filename.mp3</audio>',
                 list: '<list type="bullet">\nitem 1\nitem 2\n</list>',
                 br: '<br>'
             };
