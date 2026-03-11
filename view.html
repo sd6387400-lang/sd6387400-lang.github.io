@@ -57,8 +57,6 @@
             border: none; 
         }
 
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-
         .tag-ref { 
             font-size: 10px; 
             font-weight: 800; 
@@ -71,7 +69,7 @@
         }
         .tag-ref:hover { background: var(--accent); color: var(--accent-text); }
 
-        /* PREVIEW STYLING */
+        /* PREVIEW STYLING - MATCHED TO ADMIN */
         #preview-box { line-height: 1.6; color: var(--text-main); }
         .logic-box { padding: 25px; margin: 30px 0; border-radius: 20px; border: 2px solid; }
         
@@ -87,7 +85,7 @@
         .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
         @keyframes blink { 50% { opacity: 0; } }
 
-        #preview-box img, #preview-box video { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
+        #preview-box img, #preview-box video, #preview-box audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
         
         textarea { background: var(--editor-bg) !important; color: var(--text-main) !important; border: 1px solid var(--border) !important; }
         
@@ -133,8 +131,12 @@
                     <span class="tag-ref" onclick="insertTag('heading')">Heading</span>
                     <span class="tag-ref" onclick="insertTag('align')">Align</span>
                     <span class="tag-ref" onclick="insertTag('code')">Code</span>
+                    <span class="tag-ref" onclick="insertTag('image')">Image</span>
+                    <span class="tag-ref" onclick="insertTag('video')">Video</span>
+                    <span class="tag-ref" onclick="insertTag('audio')">Audio</span>
                     <span class="tag-ref" onclick="insertTag('list')">List</span>
-                    <span class="tag-ref" onclick="document.getElementById('color-picker').click()">Color Palette</span>
+                    <span class="tag-ref" onclick="insertTag('br')">Break</span>
+                    <span class="tag-ref" onclick="document.getElementById('color-picker').click()" style="background:var(--accent); color:var(--accent-text);">Color Palette</span>
                 </div>
                 <div class="flex bg-gray-500/10 p-1 rounded-xl">
                     <button onclick="setMode('write')" id="btn-write" class="px-6 py-2 rounded-lg text-[10px] font-black uppercase transition-all">Write</button>
@@ -166,7 +168,6 @@
         const titleInput = document.getElementById('doc-title');
         const root = document.documentElement;
 
-        // THEME ENGINE
         function changeTheme(theme) {
             localStorage.setItem('logic_theme', theme);
             if (theme === 'system') {
@@ -177,26 +178,15 @@
             }
         }
 
-        // Listen for system changes
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            if (localStorage.getItem('logic_theme') === 'system') {
-                root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-            }
-        });
-
         window.onload = () => {
-            // Load Content
             const savedContent = localStorage.getItem('logic_content');
             const savedTitle = localStorage.getItem('logic_title');
             if (savedContent) editor.value = savedContent;
             if (savedTitle) titleInput.value = savedTitle;
 
-            // Load Theme
             const savedTheme = localStorage.getItem('logic_theme') || 'dark';
             document.getElementById('theme-choice').value = savedTheme;
             changeTheme(savedTheme);
-
-            // Set initial mode UI
             setMode('write');
         };
 
@@ -230,6 +220,7 @@
             const preview = document.getElementById('preview-box');
             let text = editor.value;
 
+            // RENDERING LOGIC
             text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
             text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
                 const fontSize = (2.5 - (s * 0.3)) + "rem";
@@ -244,13 +235,16 @@
             text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, s, c, t, con) => `<span class="tw-cursor" style="color:${c}; font-weight:${t.includes('bold')?'800':'400'}">${con}</span>`);
             text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
                 const tag = type === 'number' ? 'ol' : 'ul';
-                const style = type === 'number' ? 'list-style-type: decimal;' : 'list-style-type: disc;';
-                return `<${tag} style="margin:15px 0 15px 40px; ${style}">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
+                return `<${tag} style="margin:15px 0 15px 40px; list-style-type: ${type === 'number' ? 'decimal' : 'disc'};">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
             });
             text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}10; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
-            text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
-                return `<div class="code-container"><button class="copy-btn">Copy</button><pre><code>${code.trim()}</code></pre></div>`;
-            });
+            text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => `<div class="code-container"><button class="copy-btn">Copy</button><pre><code>${code.trim()}</code></pre></div>`);
+            
+            // MEDIA RENDERING
+            text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${n.trim()}">`);
+            text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video controls><source src="${n.trim()}" type="video/mp4"></video>`);
+            text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${n.trim()}"></audio>`);
+            text = text.replace(/<br>/g, '<br>');
 
             preview.innerHTML = marked.parse(text);
             
@@ -271,8 +265,12 @@
                 collapse: '<collapse heading="Title" color="#ccff00" bg-color="#000000">Body</collapse>',
                 heading: '<heading size="1" align="left">Headline</heading>',
                 align: '<align type="center">Content</align>',
-                code: '<code>\n// Your Code Here\n</code>',
-                list: '<list type="bullet">\nitem 1\nitem 2\n</list>'
+                code: '<code>\nCode\n</code>',
+                image: '<image>url_or_filename</image>',
+                video: '<video>url_or_filename</video>',
+                audio: '<audio>url_or_filename</audio>',
+                list: '<list type="bullet">\nitem 1\nitem 2\n</list>',
+                br: '<br>'
             };
             editor.value = text.substring(0, start) + (tags[type] || '') + text.substring(end);
             localStorage.setItem('logic_content', editor.value);
@@ -281,8 +279,7 @@
 
         function insertColor(color) {
             const start = editor.selectionStart;
-            const text = editor.value;
-            editor.value = text.substring(0, start) + color + text.substring(start);
+            editor.value = editor.value.substring(0, start) + color + editor.value.substring(start);
             localStorage.setItem('logic_content', editor.value);
             editor.focus();
         }
