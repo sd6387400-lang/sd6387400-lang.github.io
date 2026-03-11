@@ -109,6 +109,11 @@
         @keyframes blink { 50% { opacity: 0; } }
 
         #md-render img, #md-render video, #md-render audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
+        /* FIXED IMAGE BORDER BRO */
+        #md-render img { border: none !important; }
+        /* STYLING FOR NEW HREF TAG */
+        .custom-href { color: var(--accent); text-decoration: none; font-weight: 700; transition: 0.2s; }
+        .custom-href:hover { text-decoration: underline; opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -276,11 +281,19 @@
                 const rawBase = `https://raw.githubusercontent.com/${USER}/${REPO}/main`;
 
                 text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
+                
+                // FIXED HEADING SIZES BRO
                 text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
-                    const fontSize = (1.1 - (s * 0.08)) + "rem";
+                    const sizeMap = {
+                        1: '2.8rem', 2: '2.4rem', 3: '2.0rem', 
+                        4: '1.8rem', 5: '1.6rem', 6: '1.4rem', 
+                        7: '1.2rem', 8: '1.1rem', 9: '1.05rem', 10: '1rem'
+                    };
+                    const fontSize = sizeMap[s] || "1.2rem";
                     const weight = s <= 3 ? '800' : '600';
-                    return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${weight}; margin:1rem 0; line-height:1.2;">${c}</div>`;
+                    return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${weight}; margin:1.5rem 0 0.8rem 0; line-height:1.2; color:var(--text-main);">${c}</div>`;
                 });
+
                 text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
                     return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}15;">
                                 <summary style="color:${c}; font-weight:700;">${h}</summary>
@@ -291,6 +304,13 @@
                     const b = type.includes('bold') ? 'bold' : 'normal', i = type.includes('italic') ? 'italic' : 'normal';
                     return `<span class="tw-text tw-cursor" data-state="${state || 'continuous'}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color || 'inherit'}; font-weight:${b}; font-style:${i};"></span>`;
                 });
+
+                // NEW HREF LOGIC BRO
+                text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g, (m, h, l) => {
+                    const linkText = h || l.trim();
+                    return `<a href="${l.trim()}" class="custom-href" target="_blank">${linkText}</a>`;
+                });
+
                 text = text.replace(/<text color="(.*?)" type="(.*?)">([\s\S]*?)<\/text>/g, (m, color, type, content) => {
                     let s = `color:${color || 'inherit'};`;
                     if(type.includes('bold')) s += 'font-weight:bold;';
