@@ -14,7 +14,9 @@
             :root { --bg-base: #0f1115; --accent: #ccff00; --border: rgba(255, 255, 255, 0.08); }
             body { background-color: #0f1115; color: #e2e2e6; }
             .glass-card { background: rgba(26, 28, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); }
-            input, textarea { background: #1a1c1e !important; color: white; border: 1px solid rgba(255,255,255,0.1) !important; }
+            input, textarea { background: #1a1c1e !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+            /* Fixed dark mode preview breaking */
+            #preview-box { background: #0f1115 !important; color: #e2e2e6 !important; }
         }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-base); }
         .glass-card { backdrop-filter: blur(20px); border-radius: 24px; }
@@ -36,12 +38,42 @@
         .custom-collapse { border-radius: 20px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border); }
         .custom-collapse summary { padding: 20px; cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; }
         .custom-collapse summary::after { content: '+'; }
+        .custom-collapse[open] summary::after { content: '−'; }
         .collapse-body { padding: 20px; }
         .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
         .copy-btn { position: absolute; top: 12px; right: 12px; background: #ccff00; color: black; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
         .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
         @keyframes blink { 50% { opacity: 0; } }
         #preview-box img, #preview-box video, #preview-box audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
+        /* This makes the preview container look like a real page in the admin */
+    #preview-box {
+        min-height: 500px;
+        border-radius: 12px;
+        padding: 2rem;
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+    }
+
+    .dark #preview-box {
+        background-color: #0f1115; /* Matches your view site dark bg */
+        color: #e2e2e6;
+    }
+
+    #preview-box {
+        background-color: #f8f9ff; /* Matches your view site light bg */
+        color: #1a1c1e;
+    }
+
+    /* Style the dropdown options for dark mode */
+    #theme-selector option {
+        background: white;
+        color: black;
+    }
+    .dark #theme-selector option {
+        background: #1a1c1e;
+        color: white;
+    }
+    
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -98,8 +130,19 @@
                         <span class="tag-ref" onclick="insertTag('heading')">Heading</span>
                         <span class="tag-ref" onclick="insertTag('align')">Align</span>
                         <span class="tag-ref" onclick="insertTag('code')">Code</span>
+                        <span class="tag-ref" onclick="insertTag('href')">Link</span>
+                        <span class="tag-ref" onclick="insertTag('text')">Text Style</span>
+                        <span class="tag-ref" onclick="insertTag('list')">List</span>
+                        <span class="tag-ref" onclick="insertTag('image')">Image</span>
+                        <span class="tag-ref" onclick="insertTag('video')">Video</span>
+                        <span class="tag-ref" onclick="insertTag('audio')">Audio</span>
                         <span class="tag-ref" onclick="insertTag('br')">Break</span>
+                        <span class="tag-ref bg-accent text-black" onclick="document.getElementById('colorPicker').click()" style="background: var(--accent); color: #000;">
+                        <i class="fa-solid fa-palette mr-1"></i> Palette
+                        </span>
+                        <input type="color" id="colorPicker" class="hidden" onchange="handleColorSelection(this.value)">
                     </div>
+
                     <div class="flex bg-slate-100 p-1 rounded-xl">
                         <button onclick="setMode('write')" id="btn-write" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase bg-white shadow-sm transition-all">Write</button>
                         <button onclick="setMode('preview')" id="btn-preview" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all">Preview</button>
@@ -122,8 +165,60 @@
             </div>
         </div>
     </div>
+    <footer class="mt-8 mb-4 flex justify-center items-center gap-4 py-6 border-t border-slate-200 dark:border-white/5">
+        <div class="flex items-center gap-2">
+            <span class="text-[10px] font-black uppercase text-slate-400">Preview Theme:</span>
+            <div class="flex bg-slate-100 dark:bg-white/5 p-1 rounded-lg border border-slate-200 dark:border-white/10">
+                <select id="theme-selector" onchange="changeTheme(this.value)" class="bg-transparent text-[10px] font-bold uppercase px-2 outline-none cursor-pointer text-slate-500 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors">
+                    <option value="system">System Default</option>
+                    <option value="light">Light Mode</option>
+                    <option value="dark">Dark Mode</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="h-4 w-[1px] bg-slate-200 dark:bg-white/10"></div>
+
+        <button onclick="localStorage.removeItem('github_token'); location.reload();" class="text-[10px] font-black uppercase text-red-500/60 hover:text-red-500 transition-colors">
+            <i class="fa-solid fa-power-off mr-1"></i> Reset Session
+        </button>
+    </footer>
+
 
     <script>
+    
+    function changeTheme(theme) {
+        const html = document.documentElement;
+        const previewBox = document.getElementById('preview-box');
+        
+        if (theme === 'dark') {
+            html.classList.add('dark');
+                html.style.colorScheme = 'dark';
+        } else if (theme === 'light') {
+            html.classList.remove('dark');
+            html.style.colorScheme = 'light';
+        } else {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+            html.style.colorScheme = 'normal';
+        }
+        
+        localStorage.setItem('admin-theme', theme);
+    }
+    
+    // Load saved theme on startup
+    window.addEventListener('load', () => {
+        const savedTheme = localStorage.getItem('admin-theme') || 'system';
+        const selector = document.getElementById('theme-selector');
+        if(selector) {
+            selector.value = savedTheme;
+            changeTheme(savedTheme);
+        }
+    });
+    
         const CONFIG = {
             owner: "sd6387400-lang",
             repo: "sd6387400-lang.github.io",
@@ -135,7 +230,6 @@
         let activeFilePath = "";
         let uploadTargetPath = "";
 
-        // --- LOADER ---
         function startSlider(msg) {
             document.getElementById('loader-msg').innerText = msg;
             const loader = document.getElementById('sync-loader');
@@ -176,7 +270,6 @@
 
         function logout() { localStorage.removeItem('logic_engine_token'); location.reload(); }
 
-        // --- TREE LOGIC ---
         function loadRootTree() {
             const tree = document.getElementById('tree-content');
             tree.innerHTML = '';
@@ -221,7 +314,6 @@
             });
             const items = await res.json();
             container.innerHTML = '';
-            
             items.sort((a,b) => (a.type === 'dir' ? -1 : 1)).forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = "group";
@@ -257,16 +349,11 @@
             });
         }
 
-        // --- UPLOAD LOGIC ---
-        function triggerUpload(path) {
-            uploadTargetPath = path;
-            document.getElementById('global-uploader').click();
-        }
+        function triggerUpload(path) { uploadTargetPath = path; document.getElementById('global-uploader').click(); }
 
         async function handleFileUpload(event) {
             const file = event.target.files[0];
             if(!file) return;
-            
             runWithLoader(async () => {
                 const reader = new FileReader();
                 reader.onload = async (e) => {
@@ -279,11 +366,9 @@
             }, `Uploading ${file.name}...`);
         }
 
-        // --- ADVANCED DEEP SYNC ---
         async function inTreeDeepSync(parentPath) {
             const name = prompt("New Folder Name (Deep Sync):");
             if(!name) return;
-
             let relativePath = "";
             for(let root of CONFIG.roots) {
                 if(parentPath.startsWith(root)) {
@@ -292,11 +377,8 @@
                     break;
                 }
             }
-
             for(let root of CONFIG.roots) {
-                const targetPath = relativePath 
-                    ? `${root}/${relativePath}/${name}/.keep` 
-                    : `${root}/${name}/.keep`;
+                const targetPath = relativePath ? `${root}/${relativePath}/${name}/.keep` : `${root}/${name}/.keep`;
                 await saveToGithub(targetPath, btoa("Logic Keep"), `Deep Sync: ${name}`);
             }
             loadRootTree();
@@ -314,21 +396,13 @@
         async function renameItem(oldPath, isDir) {
             const newName = prompt("Enter new name:", oldPath.split('/').pop());
             if(!newName) return;
-            
-            const pathParts = oldPath.split('/');
-            pathParts.pop();
+            const pathParts = oldPath.split('/'); pathParts.pop();
             const newPath = pathParts.length > 0 ? `${pathParts.join('/')}/${newName}` : newName;
-
             runWithLoader(async () => {
-                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${oldPath}`, {
-                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-                });
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${oldPath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
                 const data = await res.json();
-
                 if(Array.isArray(data)) {
-                    for(let item of data) {
-                        await moveRecursive(item, oldPath, newPath);
-                    }
+                    for(let item of data) await moveRecursive(item, oldPath, newPath);
                 } else {
                     await saveToGithub(newPath, data.content, `Rename ${oldPath} to ${newPath}`);
                     await deleteItem(oldPath, data.sha, false, true);
@@ -340,9 +414,7 @@
         async function moveRecursive(item, oldBase, newBase) {
             const targetPath = item.path.replace(oldBase, newBase);
             if(item.type === 'dir') {
-                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${item.path}`, {
-                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-                });
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${item.path}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
                 const subItems = await res.json();
                 for(let s of subItems) await moveRecursive(s, oldBase, newBase);
             } else {
@@ -351,7 +423,6 @@
             }
         }
 
-        // --- FILE ACTIONS ---
         function prepareNewFile(parentPath) {
             activeFilePath = `${parentPath}/newfile.md`;
             currentFileSha = null;
@@ -364,9 +435,7 @@
         async function deleteItem(path, sha, isDir, silent = false) {
             if(!silent && !confirm(`Delete ${path}?`)) return;
             if(isDir) {
-                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
-                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-                });
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
                 const items = await res.json();
                 for(const item of items) await deleteRecursive(item);
             } else {
@@ -381,11 +450,9 @@
 
         async function deleteRecursive(item) {
             if(item.type === 'dir') {
-                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${item.path}`, {
-                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-                });
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${item.path}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
                 const subItems = await res.json();
-                for(const s of subItems) await deleteRecursive(s);
+                for(let s of subItems) await deleteRecursive(s);
             } else {
                 await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${item.path}`, {
                     method: 'DELETE',
@@ -398,9 +465,7 @@
         async function openFile(path, sha) {
             activeFilePath = path;
             currentFileSha = sha;
-            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
-                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-            });
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
             const data = await res.json();
             document.getElementById('editor').value = atob(data.content);
             document.getElementById('current-filename').value = data.name;
@@ -413,16 +478,11 @@
             const filename = document.getElementById('current-filename').value;
             const pathParts = activeFilePath.split('/'); pathParts.pop();
             const fullPath = pathParts.length > 0 ? `${pathParts.join('/')}/${filename}` : filename;
-            
-            // Re-fetch latest SHA to prevent conflict
             try {
-                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${fullPath}`, {
-                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-                });
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${fullPath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
                 const data = await res.json();
                 currentFileSha = data.sha;
             } catch(e) { currentFileSha = null; }
-
             await saveToGithub(fullPath, btoa(content), `Update ${filename}`, currentFileSha);
             loadRootTree();
         }
@@ -437,22 +497,57 @@
             });
         }
 
-        // --- TAGS & UI ---
         function insertTag(type) {
             const editor = document.getElementById('editor');
             const start = editor.selectionStart;
-            const tag = {
-                tw: '<tw state="active" color="#ccff00" type="bold">Text</tw>',
-                box: '<box color="#ccff00" type="solid">Content</box>',
-                collapse: '<collapse heading="Title" color="white" bg-color="#1a1c1e">Body</collapse>',
-                heading: '<heading size="1" align="left">Headline</heading>',
-                align: '<align type="center">Content</align>',
-                code: '<code>\nCode\n</code>',
+            const end = editor.selectionEnd;
+            const selectedText = editor.value.substring(start, end) || "Content";
+    
+            const tags = {
+                tw: `<tw state="active" color="#ccff00" type="bold">${selectedText}</tw>`,
+                box: `<box color="#ccff00" type="solid">\n${selectedText}\n</box>`,
+                collapse: `<collapse heading="Title" color="white" bg-color="#1a1c1e">\n${selectedText}\n</collapse>`,
+                heading: `<heading size="1" align="left">${selectedText}</heading>`,
+                align: `<align type="center">${selectedText}</align>`,
+                code: `<code>\n${selectedText === 'Content' ? 'Code Here' : selectedText}\n</code>`,
+                href: `<href heading="Link Title">https://link-url.com</href>`,
+                text: `<text color="#ccff00" type="bold italic underline">\n${selectedText}\n</text>`,
+                list: `<list type="bullet">\nItem 1\nItem 2\nItem 3\n</list>`,
+                image: `<image>filename.png</image>`,
+                video: `<video>filename.mp4</video>`,
+                audio: `<audio>filename.mp3</audio>`,
                 br: '<br>'
-            }[type];
-            editor.value = editor.value.substring(0, start) + (tag || '') + editor.value.substring(editor.selectionEnd);
+            };
+
+        const tag = tags[type];
+        editor.value = editor.value.substring(0, start) + (tag || '') + editor.value.substring(end);
+        editor.focus();
+    
+        // Set cursor position inside the tag if no text was selected
+        const newPos = start + tag.length;
+        editor.setSelectionRange(newPos, newPos);
+    }
+
+        function handleColorSelection(color) {
+            const editor = document.getElementById('editor');
+            const start = editor.selectionStart;
+            const end = editor.selectionEnd;
+
+            // 1. Insert the color code at the cursor position
+            editor.value = editor.value.substring(0, start) + color + editor.value.substring(end);
+
+            // 2. Copy the color to clipboard
+            navigator.clipboard.writeText(color).then(() => {
+                // Optional: Visual feedback that it copied
+                console.log('Color copied: ' + color);
+            });
+
+            // 3. Put focus back on the editor and place cursor after the inserted color
             editor.focus();
+            const newPos = start + color.length;
+            editor.setSelectionRange(newPos, newPos);
         }
+
 
         function setMode(mode) {
             const editor = document.getElementById('editor');
@@ -465,19 +560,84 @@
             if(mode === 'preview') {
                 let text = editor.value;
                 const rawBase = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/main`;
-                text = text.replace(/<br>/g, '<br>')
-                           .replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>')
-                           .replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => `<div style="font-size:${1.1-(s*0.08)}rem; text-align:${a}; font-weight:800; margin:1rem 0;">${c}</div>`)
-                           .replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => `<details class="custom-collapse" style="background:${bg||'#f1f1f1'}"><summary style="color:${c||'black'}">${h}</summary><div class="collapse-body">${con}</div></details>`)
-                           .replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => `<span class="tw-text tw-cursor" data-state="${state}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color}; font-weight:${type.includes('bold')?'800':'400'}"></span>`)
-                           .replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t==='dotted'?'dotted':'solid'}">${con}</div>`)
-                           .replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => `<div class="code-container"><button class="copy-btn">Copy</button><pre><code>${code.trim()}</code></pre></div>`)
-                           .replace(/<image>(.*?)<\/image>/g, `<img src="${rawBase}/images/$1">`)
-                           .replace(/<video>(.*?)<\/video>/g, `<video controls><source src="${rawBase}/videos/$1"></video>`);
+                
+                // Determine subpath for images/videos based on current file location
+                const pathParts = activeFilePath.split('/');
+                pathParts.shift(); // remove root folder (e.g., Get-Started)
+                pathParts.pop();   // remove filename
+                const subPath = pathParts.join('/');
+
+                text = text.replace(/<br>/g, '<br>');
+                text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
+                
+                // MATCH VIEWING SITE HEADING SIZES
+                text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
+                    const sizeMap = {
+                        1: '2.8rem', 2: '2.4rem', 3: '2.0rem', 
+                        4: '1.8rem', 5: '1.6rem', 6: '1.4rem', 
+                        7: '1.2rem', 8: '1.1rem', 9: '1.05rem', 10: '1rem'
+                    };
+                    const fontSize = sizeMap[s] || "1.2rem";
+                    const weight = s <= 3 ? '800' : '600';
+                    return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${weight}; margin:1.5rem 0 0.8rem 0; line-height:1.2;">${c}</div>`;
+                });
+
+                text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
+                    return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}15;">
+                                <summary style="color: ${c}; font-weight: 700;">${h}</summary>
+                                <div class="collapse-body">${con}</div>
+                            </details>`;
+                });
+
+                text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => {
+                    const b = type.includes('bold') ? 'bold' : 'normal', i = type.includes('italic') ? 'italic' : 'normal';
+                    return `<span class="tw-text tw-cursor" data-state="${state || 'continuous'}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color || 'inherit'}; font-weight:${b}; font-style:${i};"></span>`;
+                });
+
+                // ADDED MISSING HREF TAG LOGIC
+                text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g, (m, h, l) => {
+                    const linkText = h || l.trim();
+                    return `<a href="${l.trim()}" class="custom-href" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:700;">${linkText}</a>`;
+                });
+
+                text = text.replace(/<text color="(.*?)" type="(.*?)">([\s\S]*?)<\/text>/g, (m, color, type, content) => {
+                    let s = `color:${color || 'inherit'};`;
+                    if(type.includes('bold')) s += 'font-weight:bold;';
+                    if(type.includes('italic')) s += 'font-style:italic;';
+                    if(type.includes('underline')) s += 'text-decoration:underline;';
+                    return `<span style="${s}">${content}</span>`;
+                });
+
+                text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
+                    const tag = type === 'number' ? 'ol' : 'ul';
+                    return `<${tag} style="margin:15px 0 15px 40px;">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
+                });
+
+                text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
+                
+                text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
+                    const clean = code.trim();
+                    return `<div class="code-container"><button class="copy-btn">Copy</button><pre><code>${clean}</code></pre></div>`;
+                });
+
+                // FIXED MEDIA PATHS TO MATCH VIEW SITE LOGIC
+                text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'">`);
+                text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video controls><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4" onerror="this.src='${rawBase}/videos/${n.trim()}'"></video>`);
+                text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'"></audio>`);
+
                 preview.innerHTML = marked.parse(text);
-                document.querySelectorAll('.copy-btn').forEach(btn => btn.onclick = () => { navigator.clipboard.writeText(btn.nextElementSibling.innerText); btn.innerText = "COPIED"; setTimeout(() => btn.innerText = "COPY", 2000); });
+                
+                // Initialize typewriter effects in preview
+                if (typeof initTypewriters === "function") initTypewriters();
+
+                document.querySelectorAll('.copy-btn').forEach(btn => btn.onclick = () => { 
+                    navigator.clipboard.writeText(btn.nextElementSibling.innerText); 
+                    btn.innerText = "COPIED"; 
+                    setTimeout(() => btn.innerText = "COPY", 2000); 
+                });
             }
         }
+
     </script>
 </body>
 </html>
