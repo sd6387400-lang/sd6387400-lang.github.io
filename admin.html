@@ -73,6 +73,20 @@
         background: #1a1c1e;
         color: white;
     }
+
+    /* CLEAN COLLAPSE 2 PREVIEW STYLING */
+        .clean-collapse { margin: 10px 0; border: none; background: transparent; }
+        .clean-collapse summary { 
+            padding: 10px 0; list-style: none; cursor: pointer; font-weight: 700; 
+            display: flex; justify-content: space-between; align-items: center; 
+            transition: opacity 0.2s; font-size: 1.1rem; 
+        }
+        .clean-collapse[open] summary i { transform: rotate(180deg); }
+        .clean-collapse summary i { transition: transform 0.3s ease; }
+        .clean-collapse summary:hover { opacity: 0.7; }
+        .clean-collapse summary::-webkit-details-marker { display: none; }
+        .clean-body { padding: 10px 0 10px 0; opacity: 0.8; line-height: 1.6; }
+        .collapse-hr { border: 0; height: 1px; background: var(--border); margin: 10px 0; opacity: 0.5; }
     
     </style>
 </head>
@@ -137,6 +151,7 @@
                         <span class="tag-ref" onclick="insertTag('video')">Video</span>
                         <span class="tag-ref" onclick="insertTag('audio')">Audio</span>
                         <span class="tag-ref" onclick="insertTag('br')">Break</span>
+                        <span class="tag-ref" onclick="insertTag('collapse2')">Collapse 2</span>
                         <span class="tag-ref bg-accent text-black" onclick="document.getElementById('colorPicker').click()" style="background: var(--accent); color: #000;">
                         <i class="fa-solid fa-palette mr-1"></i> Palette
                         </span>
@@ -516,7 +531,9 @@
                 image: `<image>filename.png</image>`,
                 video: `<video>filename.mp4</video>`,
                 audio: `<audio>filename.mp3</audio>`,
+                collapse2: `<collapse2 heading="Clean Title" unextendedhr="true" extendedhr="false">\n${selectedText}\n</collapse2>`,
                 br: '<br>'
+                
             };
 
         const tag = tags[type];
@@ -588,6 +605,16 @@
                                 <div class="collapse-body">${con}</div>
                             </details>`;
                 });
+
+
+
+                // NEW COLLAPSE2 PREVIEW RENDER
+                text = text.replace(/<collapse2 heading="(.*?)" unextendedhr="(.*?)" extendedhr="(.*?)">([\s\S]*?)<\/collapse2>/g, (m, h, uhr, exhr, con) => {
+                    const uHr = uhr === 'true' ? '<hr class="collapse-hr">' : '';
+                    const eHr = exhr === 'true' ? '<hr class="collapse-hr">' : '';
+                    return `<div class="collapse2-container"><details class="clean-collapse"><summary><span>${h}</span><i class="fas fa-chevron-down" style="font-size:12px; opacity:0.5"></i></summary><div class="clean-body">${con}${eHr}</div></details>${uHr}</div>`;
+                });
+
 
                 text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => {
                     const b = type.includes('bold') ? 'bold' : 'normal', i = type.includes('italic') ? 'italic' : 'normal';

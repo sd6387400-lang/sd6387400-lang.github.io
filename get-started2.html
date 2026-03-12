@@ -114,6 +114,56 @@
         /* STYLING FOR NEW HREF TAG */
         .custom-href { color: var(--accent); text-decoration: none; font-weight: 700; transition: 0.2s; }
         .custom-href:hover { text-decoration: underline; opacity: 0.8; }
+/* CLEAN COLLAPSE 2 STYLING */
+    .clean-collapse {
+        margin: 10px 0;
+        border: none;
+        background: transparent;
+    }
+
+    .clean-collapse summary {
+        padding: 10px 0;
+        list-style: none;
+        cursor: pointer;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: opacity 0.2s;
+        font-size: 1.1rem;
+        color: var(--text-main);
+    }
+
+    /* THIS ROTATES THE ARROW BRO */
+    .clean-collapse[open] summary i {
+        transform: rotate(180deg);
+    }
+
+    .clean-collapse summary i {
+        transition: transform 0.3s ease;
+    }
+
+    .clean-collapse summary:hover {
+        opacity: 0.7;
+    }
+
+    .clean-collapse summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .clean-body {
+        padding: 10px 0 10px 0;
+        color: var(--text-dim);
+        line-height: 1.6;
+    }
+
+    .collapse-hr {
+        border: 0;
+        height: 1px;
+        background: var(--border);
+        margin: 10px 0;
+        opacity: 0.5;
+    }
     </style>
 </head>
 <body>
@@ -266,7 +316,7 @@
             setTimeout(() => btn.innerText = "Copy", 2000);
         }
 
-        async function fetchContent(url, el) {
+async function fetchContent(url, el) {
             document.querySelectorAll('.sidebar-link').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             const render = document.getElementById('md-render');
@@ -280,37 +330,32 @@
                 const subPath = pathParts.join('/');
                 const rawBase = `https://raw.githubusercontent.com/${USER}/${REPO}/main`;
 
+                // 1. Core Layout & Headings
                 text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
-                
-                // FIXED HEADING SIZES BRO
                 text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
-                    const sizeMap = {
-                        1: '2.8rem', 2: '2.4rem', 3: '2.0rem', 
-                        4: '1.8rem', 5: '1.6rem', 6: '1.4rem', 
-                        7: '1.2rem', 8: '1.1rem', 9: '1.05rem', 10: '1rem'
-                    };
+                    const sizeMap = {1: '2.8rem', 2: '2.4rem', 3: '2.0rem', 4: '1.8rem', 5: '1.6rem', 6: '1.4rem', 7: '1.2rem', 8: '1.1rem', 9: '1.05rem', 10: '1rem'};
                     const fontSize = sizeMap[s] || "1.2rem";
-                    const weight = s <= 3 ? '800' : '600';
-                    return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${weight}; margin:1.5rem 0 0.8rem 0; line-height:1.2; color:var(--text-main);">${c}</div>`;
+                    return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${s <= 3 ? '800' : '600'}; margin:1.5rem 0 0.8rem 0; line-height:1.2; color:var(--text-main);">${c}</div>`;
                 });
 
+                // 2. Original Boxed Collapse
                 text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
-                    return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}15;">
-                                <summary style="color:${c}; font-weight:700;">${h}</summary>
-                                <div class="collapse-body">${con}</div>
-                            </details>`;
+                    return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}15;"><summary style="color:${c}; font-weight:700;">${h}</summary><div class="collapse-body">${con}</div></details>`;
                 });
+
+                // 3. NEW COLLAPSE2 - Joined into one line to prevent Markdown "Raw Code" leak
+                text = text.replace(/<collapse2 heading="(.*?)" unextendedhr="(.*?)" extendedhr="(.*?)">([\s\S]*?)<\/collapse2>/g, (m, h, uhr, exhr, con) => {
+                    const uHr = uhr === 'true' ? '<hr class="collapse-hr">' : '';
+                    const eHr = exhr === 'true' ? '<hr class="collapse-hr">' : '';
+                    // We keep this on one line so the Markdown parser doesn't inject <p> tags inside it
+                    return `<div class="collapse2-container"><details class="clean-collapse"><summary><span>${h}</span><i data-lucide="chevron-down" size="18" style="opacity:0.5"></i></summary><div class="clean-body">${con}${eHr}</div></details>${uHr}</div>`;
+                });
+
+                // 4. Text Formatting
                 text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => {
-                    const b = type.includes('bold') ? 'bold' : 'normal', i = type.includes('italic') ? 'italic' : 'normal';
-                    return `<span class="tw-text tw-cursor" data-state="${state || 'continuous'}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color || 'inherit'}; font-weight:${b}; font-style:${i};"></span>`;
+                    return `<span class="tw-text tw-cursor" data-state="${state || 'continuous'}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color || 'inherit'}; font-weight:${type.includes('bold')?'bold':'normal'}; font-style:${type.includes('italic')?'italic':'normal'};"></span>`;
                 });
-
-                // NEW HREF LOGIC BRO
-                text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g, (m, h, l) => {
-                    const linkText = h || l.trim();
-                    return `<a href="${l.trim()}" class="custom-href" target="_blank">${linkText}</a>`;
-                });
-
+                text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g, (m, h, l) => `<a href="${l.trim()}" class="custom-href" target="_blank">${h || l.trim()}</a>`);
                 text = text.replace(/<text color="(.*?)" type="(.*?)">([\s\S]*?)<\/text>/g, (m, color, type, content) => {
                     let s = `color:${color || 'inherit'};`;
                     if(type.includes('bold')) s += 'font-weight:bold;';
@@ -323,15 +368,16 @@
                     return `<${tag} style="margin:15px 0 15px 40px;">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
                 });
                 text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
-                text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
-                    const clean = code.trim();
-                    return `<div class="code-container"><button class="copy-btn" onclick="copyCode(this, '${btoa(clean)}')">Copy</button><pre><code>${clean}</code></pre></div>`;
-                });
+                
+                // 5. Media & Code
+                text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => `<div class="code-container"><button class="copy-btn" onclick="copyCode(this, '${btoa(code.trim())}')">Copy</button><pre><code>${code.trim()}</code></pre></div>`);
                 text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'">`);
                 text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video muted playsinline loop><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`);
                 text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'"></audio>`);
 
+                // Final Render
                 render.innerHTML = marked.parse(text);
+                lucide.createIcons();
                 initTypewriters();
                 setupVideoAutoPlay();
                 
@@ -342,6 +388,7 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } catch (e) { render.innerHTML = 'Error Loading Content.'; }
         }
+
 
         function initTypewriters() {
             document.querySelectorAll('.tw-text').forEach(el => {
