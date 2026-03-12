@@ -87,6 +87,19 @@
         .clean-collapse summary::-webkit-details-marker { display: none; }
         .clean-body { padding: 10px 0 10px 0; opacity: 0.8; line-height: 1.6; }
         .collapse-hr { border: 0; height: 1px; background: var(--border); margin: 10px 0; opacity: 0.5; }
+
+
+        /* Add this inside your <style> tag */
+        @media (prefers-color-scheme: dark) {
+            .adaptive-text { 
+                color: var(--dark-c) !important; 
+            }
+        }
+
+        /* Also add this to support your manual "Theme Selector" dropdown in the admin */
+        .dark .adaptive-text {
+            color: var(--dark-c) !important;
+        }
     
     </style>
 </head>
@@ -627,12 +640,36 @@
                     return `<a href="${l.trim()}" class="custom-href" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:700;">${linkText}</a>`;
                 });
 
-                text = text.replace(/<text color="(.*?)" type="(.*?)">([\s\S]*?)<\/text>/g, (m, color, type, content) => {
-                    let s = `color:${color || 'inherit'};`;
-                    if(type.includes('bold')) s += 'font-weight:bold;';
-                    if(type.includes('italic')) s += 'font-style:italic;';
-                    if(type.includes('underline')) s += 'text-decoration:underline;';
-                    return `<span style="${s}">${content}</span>`;
+                // REPLACE THE OLD <text> REGEX WITH THIS:
+                text = text.replace(/<text ([\s\S]*?)>([\s\S]*?)<\/text>/g, (m, attrs, content) => {
+                    const getAttr = (name) => {
+                        const match = attrs.match(new RegExp(`${name}="([^"]*)"`));
+                        return match ? match[1] : null;
+                    };
+
+                    const color = getAttr('color');
+                    const cLight = getAttr('color-light');
+                    const cDark = getAttr('color-dark');
+                    const type = getAttr('type') || '';
+
+                    let styles = "";
+                    let classAttr = "";
+                    
+                    // Logic: if color-light or color-dark exists, use CSS variables
+                    if (cLight || cDark) {
+                        styles += `--light-c: ${cLight || color || 'inherit'}; `;
+                        styles += `--dark-c: ${cDark || color || 'inherit'}; `;
+                        styles += `color: var(--light-c); `;
+                        classAttr = 'class="adaptive-text"'; 
+                    } else if (color) {
+                        styles += `color: ${color}; `;
+                    }
+
+                    if(type.includes('bold')) styles += 'font-weight:bold; ';
+                    if(type.includes('italic')) styles += 'font-style:italic; ';
+                    if(type.includes('underline')) styles += 'text-decoration:underline; ';
+
+                    return `<span ${classAttr} style="${styles.trim()}">${content}</span>`;
                 });
 
                 text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
