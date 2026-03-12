@@ -170,19 +170,75 @@
         }
 
         /* MOBILE FIXES */
+        /* UPDATED MOBILE & TABLET FIXES */
+        /* UPDATED MOBILE & TABLET FIXES */
         @media (max-width: 1024px) {
             header { padding: 0 5%; }
             .orbit-system { display: none; }
             .mobile-cloud { display: flex; }
-            section { padding: 80px 15px 40px 15px; display: flex; flex-direction: column; justify-content: center; }
-            .container { flex-direction: column; text-align: center; }
-            .card { padding: 30px 20px; width: 100%; max-width: 380px; }
-            h1, h2 { font-size: 2.1rem; }
-            .info-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .info-item { padding: 10px 5px; border-radius: 12px; }
-            .info-item b { font-size: 0.8rem; }
+            
+            section { 
+                padding: 60px 15px 30px 15px; /* Reduced padding to save vertical space */
+                display: flex; 
+                flex-direction: column; 
+                justify-content: center;
+                height: auto;
+                min-height: 100vh; 
+            }
+        
+            .container { 
+                flex-direction: column; 
+                text-align: center; 
+                width: 100%;
+                max-width: 90%;
+            }
+        
+            .card { 
+                padding: 30px 20px; /* Slimmer padding */
+                width: 100%; 
+                max-width: 650px; 
+                margin: 0 auto;
+            }
+        
+            /* Dynamic Text Scaling */
+            h1, h2 { 
+                font-size: clamp(1.8rem, 8vw, 2.8rem); /* Automatically shrinks based on width */
+                margin-bottom: 15px;
+            }
+        
+            p {
+                font-size: clamp(0.95rem, 4vw, 1.1rem);
+                margin-bottom: 20px;
+            }
+        
+            /* Logic Boxes: Shrink & Wrap */
+            .info-grid { 
+                display: flex; /* Changed from grid to flex for better shrinking */
+                flex-wrap: wrap; 
+                justify-content: center;
+                gap: 10px; 
+                margin-bottom: 25px;
+            }
+        
+            .info-item { 
+                flex: 1 1 80px; /* Allows boxes to shrink to 80px before wrapping */
+                min-width: 70px;
+                padding: 12px 5px; 
+                border-radius: 15px; 
+            }
+        
+            .info-item b { font-size: 0.85rem; }
             .info-item span { font-size: 8px; }
+        
+            /* Extra small screen adjustment (e.g. height < 700px) */
+            @media (max-height: 700px) {
+                h1, h2 { font-size: 1.6rem; }
+                .card { padding: 20px; }
+                .info-grid { gap: 5px; margin-bottom: 15px; }
+            }
         }
+
+
     </style>
 </head>
 <body>
