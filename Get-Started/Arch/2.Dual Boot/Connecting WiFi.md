@@ -17,4 +17,14 @@ Type This in your CommandLine.
 <code>
 iwctl device {device name(in my case wlan0)} set-property Powered on
 </code>
+<align type="center"><text color="#29b8ff" type="bold italic">
+Then Type this in your Command Line to check if it is Now Powerd On.
+</text></align>
+<code>
+<align type="center"><text color="#dbff29" type="bold">
+device list
+</text></align>
+</code>
 </collapse>
+
+<heading size="5">If
