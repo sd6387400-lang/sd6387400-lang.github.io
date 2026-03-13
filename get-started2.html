@@ -71,7 +71,7 @@
             /* This adds 100px of empty space at the end of the sidebar */
             /* so you can scroll the text up past the button */
             #sidebar-links {
-                padding-bottom: 80px !important; 
+                padding-bottom: 50px !important; 
             }
         }
         .sidebar { position: fixed; top: 0; left: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); z-index: 1000; padding: 40px 20px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border); overflow-y: auto; }
@@ -338,7 +338,7 @@
                     const card = document.createElement('div');
                     card.className = 'repo-card';
                     card.innerHTML = `<div class="repo-name" style="font-weight:800; color:var(--accent); font-size:1.5rem;">${f.name.replace(/-/g, ' ')}</div>
-                                      <div class="card-desc" id="desc-${f.name}">Searching for metadata...</div>`;
+                                      <div class="card-desc" id="desc-${f.name}"></div>`;
                     
                     // Logic: Update hash when clicking a card
                     card.onclick = () => {
@@ -460,11 +460,24 @@
         }
     }
 
-    function copyCode(btn, encoded) {
-        const code = atob(encoded);
-        navigator.clipboard.writeText(code);
-        btn.innerText = "Copied!";
-        setTimeout(() => btn.innerText = "Copy", 2000);
+    function copyCode(btn) {
+        // Find the <pre> element that is a sibling of the button
+        const pre = btn.nextElementSibling;
+        if (!pre) return;
+        
+        // Get only the innerText (this ignores HTML tags and gets what the user sees)
+        const textToCopy = pre.innerText;
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalText = btn.innerText;
+            btn.innerText = "Copied!";
+            btn.style.background = "#22c55e"; // Optional: Green success color
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = ""; // Reset color
+            }, 2000);
+        });
     }
 
     async function fetchContent(url, el) {
@@ -540,7 +553,12 @@
             text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
             
             // 5. Media & Code
-            text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => `<div class="code-container"><button class="copy-btn" onclick="copyCode(this, '${btoa(code.trim())}')">Copy</button><pre><code>${code.trim()}</code></pre></div>`);
+            text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
+                return `<div class="code-container">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>${code.trim()}</code></pre>
+                        </div>`;
+            });
             text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'">`);
             text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video muted playsinline loop><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`);
             text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'"></audio>`);
