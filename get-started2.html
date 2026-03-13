@@ -47,8 +47,33 @@
         #overlay-ui { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; opacity: 0; visibility: hidden; transition: 0.3s; }
         #overlay-ui.active { opacity: 1; visibility: visible; }
         
-        .menu-btn { position: fixed; bottom: 30px; left: 30px; z-index: 1001; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; }
-        
+        /* 1. Reset the menu button to stay in one place (stable) */
+        .menu-btn { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 30px; 
+            z-index: 1001; 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+            display: none;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* 2. Add the Scroll Buffer for Mobile */
+        @media (max-aspect-ratio: 1/1) {
+            .menu-btn { display: block; }
+            
+            /* This adds 100px of empty space at the end of the sidebar */
+            /* so you can scroll the text up past the button */
+            #sidebar-links {
+                padding-bottom: 50px !important; 
+            }
+        }
         .sidebar { position: fixed; top: 0; left: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); z-index: 1000; padding: 40px 20px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border); overflow-y: auto; }
         
         @media (min-aspect-ratio: 1/1) {
@@ -102,8 +127,53 @@
         .custom-collapse[open] summary::after { content: '−'; }
         .collapse-body { padding: 20px; }
 
-        .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
-        .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; z-index: 10; }
+        /* THE BOX: This stays fixed and doesn't scroll */
+        .code-container { 
+            position: relative; 
+            background: #2d2f34; /* Dark Gray */
+            color: #e2e2e6; 
+            border-radius: 15px; 
+            margin: 25px 0; 
+            border: 1px solid var(--border);
+            overflow: hidden; /* Prevents code from leaking out of rounded corners */
+        }
+
+        /* THE CODE: Only this part scrolls horizontally */
+        .code-container pre {
+            margin: 0;
+            padding: 20px;
+            padding-top: 40px; /* Extra space at the top so button doesn't cover first line */
+            overflow-x: auto; 
+            display: block;
+            width: 100%;
+            scrollbar-width: thin; /* Modern scrollbar for Firefox */
+        }
+
+        /* THE BUTTON: Pinned to the top-right of the container */
+        .copy-btn { 
+            position: absolute; 
+            top: 10px;
+            right: 10px;
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 6px 12px; 
+            border-radius: 8px; 
+            font-size: 0.7rem; 
+            cursor: pointer; 
+            font-weight: bold; 
+            z-index: 10; /* Ensures it stays on top of the code */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+        /* .code-container pre {
+            margin-top: 10px;
+            width: 100%;
+        } */
 
         .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
         @keyframes blink { 50% { opacity: 0; } }
@@ -114,7 +184,11 @@
         /* STYLING FOR NEW HREF TAG */
         .custom-href { color: var(--accent); text-decoration: none; font-weight: 700; transition: 0.2s; }
         .custom-href:hover { text-decoration: underline; opacity: 0.8; }
-/* CLEAN COLLAPSE 2 STYLING */
+    /* CLEAN COLLAPSE 2 STYLING */
+    .collapse2-container {
+        width: 100%;
+    }
+
     .clean-collapse {
         margin: 10px 0;
         border: none;
@@ -134,13 +208,18 @@
         color: var(--text-main);
     }
 
-    /* THIS ROTATES THE ARROW BRO */
-    .clean-collapse[open] summary i {
-        transform: rotate(180deg);
+    /* Target BOTH the 'i' and the 'svg' that Lucide creates */
+    .clean-collapse summary i,
+    .clean-collapse summary svg {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        display: inline-block;
+        opacity: 0.5;
     }
 
-    .clean-collapse summary i {
-        transition: transform 0.3s ease;
+    /* THE FIX: Rotate when the details parent is open */
+    .clean-collapse[open] summary i,
+    .clean-collapse[open] summary svg {
+        transform: rotate(180deg) !important;
     }
 
     .clean-collapse summary:hover {
@@ -164,6 +243,7 @@
         margin: 10px 0;
         opacity: 0.5;
     }
+
     </style>
 </head>
 <body>
@@ -179,10 +259,11 @@
         </div>
 
         <div class="nav-actions">
-            <div class="back-pill" onclick="location.reload()"><i data-lucide="home" size="18"></i> Home</div>
-            <div class="back-pill" onclick="location.reload()" style="background: var(--text-dim);"><i data-lucide="rotate-cw" size="18"></i> Reload</div>
+            <div class="back-pill" onclick="window.location.hash=''; location.reload();">
+                <i data-lucide="home" size="18"></i> Home
+            </div>
         </div>
-        
+                
         <div class="sidebar-link" onclick="window.location.href='index.html'"><i data-lucide="layout-dashboard" size="18"></i> Main</div>
         <div class="sidebar-link" onclick="window.location.href='creations.html'"><i data-lucide="sparkles" size="18"></i> Creations</div>
         
@@ -215,8 +296,21 @@
     lucide.createIcons();
 
     function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('active');
-        document.getElementById('overlay-ui').classList.toggle('active');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay-ui');
+        const btnIcon = document.querySelector('.menu-btn i');
+
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+
+        // Just change the icon for visual feedback
+        if (sidebar.classList.contains('active')) {
+            btnIcon.setAttribute('data-lucide', 'x');
+        } else {
+            btnIcon.setAttribute('data-lucide', 'menu');
+        }
+        
+        lucide.createIcons();
     }
 
     function filterNodes() {
@@ -289,6 +383,29 @@
             } else { descEl.innerText = "Stable Documentation Node."; }
         } catch (e) { descEl.innerText = "Stable Documentation Node."; }
     }
+
+
+
+
+        // 1. Create a custom renderer
+    const renderer = new marked.Renderer();
+
+    // 2. Define how code blocks should be rendered
+    renderer.code = (code) => {
+        return `
+        <div class="code-container">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><code>${code}</code></pre>
+        </div>`;
+    };
+
+    // 3. Tell marked to use this new renderer
+    marked.setOptions({ renderer: renderer });
+
+
+
+
+
 
     async function loadProject(path) {
         document.getElementById('picker-view').style.display = 'none';
