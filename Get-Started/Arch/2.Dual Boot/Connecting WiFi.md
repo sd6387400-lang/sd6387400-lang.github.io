@@ -1,6 +1,6 @@
 <heading size="1" align="center">Connecting WiFi</heading>
 <hr>
-<align type="center"><text type="bold">First make sure you are on this page by choosing non speech option.</text></align>
+<align type="center"><text type="bold">First make sure you are on this page by choosing non speech option.<br>NOTE: If you use Ethernet Skip this Step.</text></align>
 <image>arch-linux-2.png</image>
 <hr>
 <heading size="4" align="left">Process Begins From Here</heading>
@@ -25,6 +25,6 @@ Then Type this in your Command Line to check if it is Now Powerd On.
 device list
 </text></align>
 </code>
-</collapse>
+</collapse><hr>
 
-<heading size="5">If
+<heading size="7" align="left">If you got "Powered - On" continue from now</heading>
