@@ -1,0 +1,1 @@
+This is a simple Guide on creating A flashing Guide Of Custom ROMs on Mi439 Device Family.
