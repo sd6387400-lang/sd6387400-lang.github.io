@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Started</title>
+    <title>Get Started </title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -36,19 +36,49 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        html { scroll-behavior: smooth; }
         body { background-color: var(--bg-base); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+        a { color: inherit; }
+        ::selection { background: rgba(0, 150, 255, 0.22); }
 
         .bg-wrapper { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-        .blob { position: absolute; width: 500px; height: 500px; border-radius: 50%; opacity: 0.6; animation: float 15s infinite ease-in-out alternate; }
+        .blob { position: absolute; width: 500px; height: 500px; border-radius: 50%; opacity: 0.9; animation: float 15s infinite ease-in-out alternate; will-change: transform; }
         .blob-1 { background: var(--blob-1); top: -150px; left: -150px; }
         .blob-2 { background: var(--blob-2); bottom: -150px; right: -150px; animation-delay: -7s; }
-        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 80px) scale(1.1); } }
+        .blob { transform: translate(var(--mx, 0px), var(--my, 0px)); }
+        .blob-2 { transform: translate(calc(var(--mx, 0px) * -1), calc(var(--my, 0px) * -1)); }
+        @keyframes float { 0% { transform: translate(var(--mx, 0px), var(--my, 0px)) scale(1); } 100% { transform: translate(calc(var(--mx, 0px) + 60px), calc(var(--my, 0px) + 80px)) scale(1.1); } }
 
         #overlay-ui { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; opacity: 0; visibility: hidden; transition: 0.3s; }
         #overlay-ui.active { opacity: 1; visibility: visible; }
         
-        .menu-btn { position: fixed; bottom: 30px; left: 30px; z-index: 1001; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: none; }
-        
+        /* 1. Reset the menu button to stay in one place (stable) */
+        .menu-btn { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 30px; 
+            z-index: 1001; 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+            display: none;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* 2. Add the Scroll Buffer for Mobile */
+        @media (max-aspect-ratio: 1/1) {
+            .menu-btn { display: block; }
+            
+            /* This adds 100px of empty space at the end of the sidebar */
+            /* so you can scroll the text up past the button */
+            #sidebar-links {
+                padding-bottom: 50px !important; 
+            }
+        }
         .sidebar { position: fixed; top: 0; left: -320px; width: 300px; height: 100vh; background: var(--sidebar-bg); z-index: 1000; padding: 40px 20px; transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--border); overflow-y: auto; }
         
         @media (min-aspect-ratio: 1/1) {
@@ -69,7 +99,161 @@
         .search-container { margin-bottom: 20px; position: relative; }
         .search-input { width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-size: 0.9rem; outline: none; transition: 0.3s; }
         .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(145, 205, 255, 0.2); }
-        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); pointer-events: none; }
+        .search-icon-btn {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-dim);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            padding: 0;
+        }
+        .search-icon-btn:hover { background: rgba(0,0,0,0.04); border-color: var(--border); }
+        .search-icon-btn svg { width: 18px; height: 18px; }
+
+        /* In-folder (hash selected) search glow */
+        body.in-folder .search-input {
+            border-color: rgba(0, 150, 255, 0.9);
+            box-shadow: 0 0 0 3px rgba(0, 150, 255, 0.18), 0 0 22px rgba(0, 150, 255, 0.25);
+            animation: bluePulse 1.6s ease-in-out infinite;
+        }
+        body.in-folder .search-icon-btn {
+            color: rgba(0, 170, 255, 0.95);
+            filter: drop-shadow(0 0 10px rgba(0, 170, 255, 0.55));
+            animation: bluePulseIcon 1.6s ease-in-out infinite;
+        }
+        @keyframes bluePulse {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(0, 150, 255, 0.18), 0 0 18px rgba(0, 150, 255, 0.22); }
+            50% { box-shadow: 0 0 0 3px rgba(0, 150, 255, 0.28), 0 0 34px rgba(0, 150, 255, 0.45); }
+        }
+        @keyframes bluePulseIcon {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(0, 170, 255, 0.45)); }
+            50% { filter: drop-shadow(0 0 18px rgba(0, 170, 255, 0.8)); }
+        }
+
+        /* Sidebar folder glyph: animated accent orb (cleaner than cube) */
+        .orb-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            position: relative;
+            flex: 0 0 18px;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85), rgba(145,205,255,0.55) 35%, rgba(0,150,255,0.65) 60%, rgba(0,100,180,0.75) 100%);
+            box-shadow: 0 10px 25px rgba(0, 150, 255, 0.16);
+            overflow: hidden;
+        }
+        .orb-icon::before {
+            content: "";
+            position: absolute;
+            inset: -6px;
+            background: conic-gradient(from 180deg, rgba(0,150,255,0.0), rgba(0,150,255,0.65), rgba(145,205,255,0.0));
+            animation: orbSpin 1.9s linear infinite;
+            opacity: 0.55;
+        }
+        .orb-icon::after {
+            content: "";
+            position: absolute;
+            inset: 2px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 25% 25%, rgba(255,255,255,0.95), rgba(255,255,255,0.0) 55%);
+            opacity: 0.9;
+        }
+        @keyframes orbSpin { to { transform: rotate(360deg); } }
+
+        /* Search filter modal */
+        #search-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #search-modal.active { display: flex; }
+        #search-modal .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            backdrop-filter: blur(6px);
+        }
+        #search-modal .modal-card {
+            position: relative;
+            width: min(520px, 92vw);
+            border-radius: 22px;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+            padding: 18px;
+        }
+        #search-modal .modal-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+        #search-modal .modal-title h3 {
+            font-size: 1.05rem;
+            letter-spacing: -0.2px;
+        }
+        #search-modal .modal-close {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 12px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        #search-modal .modal-section {
+            background: rgba(0,0,0,0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        #search-modal .radio-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 10px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        #search-modal .radio-row:hover { background: rgba(0,0,0,0.05); }
+        #search-modal .radio-row input { margin-top: 3px; }
+        #search-modal .radio-label strong { display: block; }
+        #search-modal .radio-label span { display: block; color: var(--text-dim); font-size: 0.85rem; margin-top: 2px; }
+        #search-modal .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        #search-modal .btn {
+            flex: 1;
+            border: none;
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        #search-modal .btn-primary { background: var(--accent); color: white; }
+        #search-modal .btn-ghost { background: rgba(0,0,0,0.04); color: var(--text-main); border: 1px solid var(--border); }
+        .text-hit {
+            background: rgba(0, 160, 255, 0.25);
+            outline: 1px solid rgba(0, 160, 255, 0.35);
+            border-radius: 6px;
+            padding: 1px 3px;
+        }
 
         .sidebar-dropdown { margin-bottom: 10px; border-radius: 15px; overflow: hidden; }
         .dropdown-trigger { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; color: var(--accent); cursor: pointer; font-weight: 800; font-size: 0.75rem; text-transform: uppercase; background: rgba(0,0,0,0.02); }
@@ -80,12 +264,13 @@
         .container { padding: 60px 20px; max-width: 1200px; margin: 0 auto; width: 100%; }
         header { text-align: center; margin-bottom: 60px; }
         .repo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
-        .repo-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 35px; padding: 40px; cursor: pointer; transition: 0.4s; backdrop-filter: blur(20px); text-align: center; }
-        .repo-card:hover { transform: translateY(-10px); border-color: var(--accent); }
+        .repo-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 35px; padding: 40px; cursor: pointer; transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s, box-shadow 0.25s; backdrop-filter: blur(18px); text-align: center; will-change: transform; box-shadow: 0 18px 55px rgba(0,0,0,0.10); }
+        .repo-card:hover { transform: translateY(-10px) scale(1.01); border-color: rgba(0, 150, 255, 0.65); box-shadow: 0 26px 75px rgba(0,0,0,0.14); }
+        .repo-card:active { transform: translateY(-6px) scale(0.99); }
         .card-desc { color: var(--text-dim); font-size: 0.9rem; margin-top: 10px; line-height: 1.4; }
 
         #reader-view { display: none; padding-top: 60px; width: 100%; }
-        #reader-content { background: var(--card-bg); border: 1px solid var(--border); padding: 50px; border-radius: 40px; max-width: 900px; margin: 0 auto; backdrop-filter: blur(20px); }
+        #reader-content { background: var(--card-bg); border: 1px solid var(--border); padding: 50px; border-radius: 40px; max-width: 900px; margin: 0 auto; backdrop-filter: blur(18px); overflow: hidden; }
         
         .nav-actions { display: flex; gap: 10px; margin-bottom: 25px; }
         .back-pill { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; background: var(--accent); color: white; border-radius: 100px; font-weight: 700; cursor: pointer; transition: 0.3s; flex: 1; justify-content: center; font-size: 0.9rem; }
@@ -102,13 +287,420 @@
         .custom-collapse[open] summary::after { content: '−'; }
         .collapse-body { padding: 20px; }
 
-        .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
-        .copy-btn { position: absolute; top: 12px; right: 12px; background: var(--accent); color: white; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; z-index: 10; }
+        /* THE BOX: This stays fixed and doesn't scroll */
+        .code-container { 
+            position: relative; 
+            background: #2d2f34; /* Dark Gray */
+            color: #e2e2e6; 
+            border-radius: 15px; 
+            margin: 25px 0; 
+            border: 1px solid var(--border);
+            overflow: hidden; /* Prevents code from leaking out of rounded corners */
+        }
+
+        /* THE CODE: Only this part scrolls horizontally */
+        .code-container pre {
+            margin: 0;
+            padding: 20px;
+            padding-top: 40px; /* Extra space at the top so button doesn't cover first line */
+            overflow-x: auto; 
+            display: block;
+            width: 100%;
+            scrollbar-width: thin; /* Modern scrollbar for Firefox */
+        }
+
+        /* THE BUTTON: Pinned to the top-right of the container */
+        .copy-btn { 
+            position: absolute; 
+            top: 10px;
+            right: 10px;
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 6px 12px; 
+            border-radius: 8px; 
+            font-size: 0.7rem; 
+            cursor: pointer; 
+            font-weight: bold; 
+            z-index: 10; /* Ensures it stays on top of the code */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+        /* .code-container pre {
+            margin-top: 10px;
+            width: 100%;
+        } */
 
         .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
         @keyframes blink { 50% { opacity: 0; } }
 
         #md-render img, #md-render video, #md-render audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
+        /* FIXED IMAGE BORDER BRO */
+        #md-render img { border: none !important; }
+        /* STYLING FOR NEW HREF TAG */
+        .custom-href { color: var(--accent); text-decoration: none; font-weight: 700; transition: 0.2s; }
+        .custom-href:hover { text-decoration: underline; opacity: 0.8; }
+    /* CLEAN COLLAPSE 2 STYLING */
+    .collapse2-container {
+        width: 100%;
+    }
+
+    .clean-collapse {
+        margin: 10px 0;
+        border: none;
+        background: transparent;
+    }
+
+    .clean-collapse summary {
+        padding: 10px 0;
+        list-style: none;
+        cursor: pointer;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: opacity 0.2s;
+        font-size: 1.1rem;
+        color: var(--text-main);
+    }
+
+    /* Target BOTH the 'i' and the 'svg' that Lucide creates */
+    .clean-collapse summary i,
+    .clean-collapse summary svg {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        display: inline-block;
+        opacity: 0.5;
+    }
+
+    /* THE FIX: Rotate when the details parent is open */
+    .clean-collapse[open] summary i,
+    .clean-collapse[open] summary svg {
+        transform: rotate(180deg) !important;
+    }
+
+    .clean-collapse summary:hover {
+        opacity: 0.7;
+    }
+
+    .clean-collapse summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .clean-body {
+        padding: 10px 0 10px 0;
+        color: var(--text-dim);
+        line-height: 1.6;
+    }
+
+    .collapse-hr {
+        border: 0;
+        height: 1px;
+        background: var(--border);
+        margin: 10px 0;
+        opacity: 0.5;
+    }
+
+    /* Polished hero header */
+    .page-hero {
+        display: grid;
+        place-items: center;
+        gap: 10px;
+        margin-bottom: 60px;
+    }
+    .page-title {
+        font-size: clamp(2.5rem, 4vw, 3.8rem);
+        font-weight: 900;
+        letter-spacing: -2px;
+        line-height: 1.05;
+        background: linear-gradient(135deg, var(--accent), rgba(0, 150, 255, 0.55), rgba(145, 205, 255, 0.95));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 22px 60px rgba(0, 150, 255, 0.20);
+    }
+    .page-title {
+        position: relative;
+        isolation: isolate;
+        animation: titlePop 700ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+    }
+    .page-title::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -14px;
+        width: min(220px, 42vw);
+        height: 10px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: radial-gradient(circle at 10% 50%, rgba(145,205,255,0.0), rgba(145,205,255,0.65), rgba(0,150,255,0.0)),
+                    linear-gradient(90deg, rgba(0,150,255,0.0), rgba(0,150,255,0.45), rgba(0,150,255,0.0));
+        filter: blur(0.2px);
+        opacity: 0.85;
+        animation: underlineFlow 2.8s ease-in-out infinite;
+        z-index: -1;
+    }
+    @keyframes titlePop {
+        from { transform: translateY(10px) scale(0.98); filter: blur(3px); opacity: 0; }
+        to { transform: translateY(0) scale(1); filter: blur(0); opacity: 1; }
+    }
+    @keyframes underlineFlow {
+        0%,100% { transform: translateX(-50%) scaleX(0.92); opacity: 0.65; }
+        50% { transform: translateX(-50%) scaleX(1.05); opacity: 0.95; }
+    }
+    .page-hero {
+        position: relative;
+    }
+    .page-hero::before {
+        content: "";
+        position: absolute;
+        inset: -30px -20px -10px -20px;
+        background:
+          radial-gradient(circle at 22% 30%, rgba(0,150,255,0.14), transparent 55%),
+          radial-gradient(circle at 76% 35%, rgba(145,205,255,0.12), transparent 55%),
+          radial-gradient(circle at 55% 70%, rgba(225,223,255,0.12), transparent 60%);
+        filter: blur(0px);
+        pointer-events: none;
+        animation: heroLiquid 10s ease-in-out infinite alternate;
+        z-index: -1;
+    }
+    @keyframes heroLiquid {
+        0% { transform: translate3d(0,0,0) scale(1); }
+        100% { transform: translate3d(10px, -8px, 0) scale(1.03); }
+    }
+    .page-subtitle {
+        color: var(--text-dim);
+        max-width: 52ch;
+        line-height: 1.55;
+    }
+    .page-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.35);
+        backdrop-filter: blur(10px);
+        color: var(--text-dim);
+        font-weight: 800;
+        font-size: 0.82rem;
+        letter-spacing: -0.2px;
+    }
+
+    /* Folder intro / loading sequence */
+    .folder-hero {
+        display: grid;
+        gap: 14px;
+        padding: 18px 18px 22px 18px;
+        border-radius: 26px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.25);
+        backdrop-filter: blur(10px);
+        margin-bottom: 18px;
+        position: relative;
+        overflow: hidden;
+    }
+    .folder-hero::before {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        background: radial-gradient(circle at 15% 20%, rgba(0,150,255,0.20), transparent 55%),
+                    radial-gradient(circle at 85% 35%, rgba(145,205,255,0.18), transparent 55%);
+        pointer-events: none;
+    }
+    .folder-hero-top {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+    .folder-title {
+        font-size: 1.4rem;
+        font-weight: 900;
+        letter-spacing: -0.8px;
+        color: var(--text-main);
+    }
+    .folder-chip {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(0,0,0,0.03);
+        color: var(--text-dim);
+        font-weight: 800;
+        font-size: 0.8rem;
+        white-space: nowrap;
+    }
+    .folder-desc {
+        position: relative;
+        color: var(--text-dim);
+        line-height: 1.6;
+        min-height: 3.2em;
+    }
+    .shimmer {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        background: rgba(0,0,0,0.05);
+        border: 1px solid var(--border);
+        height: 10px;
+    }
+    .shimmer::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        transform: translateX(-70%);
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+        animation: shimmer 1.2s infinite ease-in-out;
+    }
+    @keyframes shimmer { to { transform: translateX(70%); } }
+
+    /* Card fly animation */
+    .card-fly {
+        position: fixed;
+        z-index: 2000;
+        border-radius: 28px;
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 30px 90px rgba(0,0,0,0.22);
+        overflow: hidden;
+        pointer-events: none;
+        transform-origin: top left;
+        will-change: transform, opacity;
+    }
+
+    /* Guide reveal smoothness */
+    #md-render { content-visibility: auto; contain-intrinsic-size: 800px; }
+    .guide-hidden { opacity: 0; transform: translateY(10px); filter: blur(2px); transition: 0.35s ease; }
+    .guide-shown { opacity: 1; transform: translateY(0); filter: blur(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+        .blob { animation: none; }
+        .repo-card, .guide-hidden { transition: none !important; }
+        .shimmer::before { animation: none; }
+    }
+
+    /* Fullscreen folder intro overlay */
+    #folder-intro-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2500;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 26px;
+    }
+    #folder-intro-overlay.active { display: flex; }
+    #folder-intro-overlay .overlay-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.38);
+        backdrop-filter: blur(14px);
+    }
+    #folder-intro-overlay .overlay-liquid {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.9;
+        background:
+          radial-gradient(circle at 20% 30%, rgba(0,150,255,0.18), transparent 52%),
+          radial-gradient(circle at 80% 35%, rgba(145,205,255,0.14), transparent 55%),
+          radial-gradient(circle at 55% 75%, rgba(225,223,255,0.12), transparent 58%);
+        filter: saturate(1.08);
+        animation: overlayLiquid 7.5s ease-in-out infinite alternate;
+    }
+    @keyframes overlayLiquid {
+        0% { transform: translate3d(0,0,0) scale(1); }
+        100% { transform: translate3d(16px, -12px, 0) scale(1.05); }
+    }
+    #folder-intro-overlay .overlay-card {
+        position: relative;
+        width: min(760px, 92vw);
+        border-radius: 32px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.18);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 40px 120px rgba(0,0,0,0.35);
+        overflow: hidden;
+        padding: 22px;
+        transform: translateY(14px) scale(0.98);
+        opacity: 0;
+        will-change: transform, opacity;
+    }
+    #folder-intro-overlay.active .overlay-card {
+        animation: overlayIn 620ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+    }
+    @keyframes overlayIn {
+        to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    #folder-intro-overlay.dismiss .overlay-card {
+        animation: overlayOut 380ms ease forwards;
+    }
+    @keyframes overlayOut {
+        to { transform: translateY(10px) scale(0.99); opacity: 0; }
+    }
+    #folder-intro-overlay .overlay-title {
+        font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+        font-weight: 950;
+        letter-spacing: -1.2px;
+        line-height: 1.08;
+        background: linear-gradient(135deg, rgba(145,205,255,0.98), var(--accent), rgba(225,223,255,0.92));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 20px 60px rgba(0, 150, 255, 0.18);
+    }
+    #folder-intro-overlay .overlay-kicker {
+        margin-top: 10px;
+        color: var(--text-dim);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 850;
+        letter-spacing: -0.2px;
+    }
+    #folder-intro-overlay .overlay-desc {
+        margin-top: 14px;
+        color: var(--text-dim);
+        line-height: 1.7;
+        font-size: 1rem;
+        min-height: 3.5em;
+    }
+    #folder-intro-overlay .overlay-progress {
+        margin-top: 18px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(0,0,0,0.10);
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+    #folder-intro-overlay .overlay-progress > div {
+        height: 100%;
+        width: 35%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, rgba(0,150,255,0.10), rgba(0,150,255,0.65), rgba(145,205,255,0.25));
+        animation: overlayProgress 1.1s ease-in-out infinite alternate;
+    }
+    @keyframes overlayProgress {
+        0% { transform: translateX(-10%); width: 28%; opacity: 0.75; }
+        100% { transform: translateX(160%); width: 48%; opacity: 0.95; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        #folder-intro-overlay .overlay-liquid,
+        #folder-intro-overlay .overlay-progress > div,
+        .page-title, .page-title::after { animation: none !important; }
+    }
+
     </style>
 </head>
 <body>
@@ -119,15 +711,18 @@
 
     <nav class="sidebar" id="sidebar">
         <div class="search-container">
-            <i data-lucide="search" class="search-icon" size="18"></i>
+            <button class="search-icon-btn" type="button" onclick="openSearchModal()" aria-label="Search filters">
+                <i data-lucide="search" size="18"></i>
+            </button>
             <input type="text" id="node-search" class="search-input" placeholder="Search guides..." onkeyup="filterNodes()">
         </div>
 
         <div class="nav-actions">
-            <div class="back-pill" onclick="location.reload()"><i data-lucide="home" size="18"></i> Home</div>
-            <div class="back-pill" onclick="location.reload()" style="background: var(--text-dim);"><i data-lucide="rotate-cw" size="18"></i> Reload</div>
+            <div class="back-pill" onclick="window.location.hash=''; location.reload();">
+                <i data-lucide="home" size="18"></i> Home
+            </div>
         </div>
-        
+                
         <div class="sidebar-link" onclick="window.location.href='index.html'"><i data-lucide="layout-dashboard" size="18"></i> Main</div>
         <div class="sidebar-link" onclick="window.location.href='creations.html'"><i data-lucide="sparkles" size="18"></i> Creations</div>
         
@@ -135,10 +730,55 @@
         <div id="sidebar-links"></div>
     </nav>
 
+    <div id="search-modal" aria-hidden="true">
+        <div class="modal-overlay" onclick="closeSearchModal()"></div>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-label="Search filters">
+            <div class="modal-title">
+                <h3>Search filters</h3>
+                <button class="modal-close" onclick="closeSearchModal()">Close</button>
+            </div>
+            <div class="modal-section">
+                <label class="radio-row">
+                    <input type="radio" name="searchMode" value="guides">
+                    <div class="radio-label">
+                        <strong>Guides</strong>
+                        <span>Filter only the guide files in the sidebar.</span>
+                    </div>
+                </label>
+                <label class="radio-row">
+                    <input type="radio" name="searchMode" value="dropdowns">
+                    <div class="radio-label">
+                        <strong>Dropdowns</strong>
+                        <span>Filter only the dropdown headings (folders) in the sidebar.</span>
+                    </div>
+                </label>
+                <label class="radio-row">
+                    <input type="radio" name="searchMode" value="combined">
+                    <div class="radio-label">
+                        <strong>Combined (default)</strong>
+                        <span>Filter dropdowns and guides together.</span>
+                    </div>
+                </label>
+                <label class="radio-row">
+                    <input type="radio" name="searchMode" value="content">
+                    <div class="radio-label">
+                        <strong>Search inside selected guide</strong>
+                        <span>Use the main search bar to find text inside the open guide.</span>
+                    </div>
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" onclick="resetSearchFilters()">Reset</button>
+                <button class="btn btn-primary" onclick="applySearchFilters()">Apply</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container" id="picker-view">
-        <header>
-            <h1 style="font-size: 3.5rem; font-weight: 800; letter-spacing: -2px;">Get Started </h1>
-            <p style="color: var(--text-dim);">Get Started and change it to reality</p>
+        <header class="page-hero">
+            <div class="page-badge"><i data-lucide="sparkles" size="16"></i> Choose a path</div>
+            <h1 class="page-title">Get Started</h1>
+            <p class="page-subtitle">Pick any card to begin. You’ll get a quick animated intro, then the full guide loads right under it.</p>
         </header>
         <div class="repo-grid" id="grid"></div>
     </div>
@@ -146,87 +786,328 @@
     <div class="container" id="reader-view">
         <div style="max-width:900px; margin:0 auto;">
             <div id="reader-content">
-                <div id="md-render"></div>
+                <div id="folder-hero" class="folder-hero" style="display:none;">
+                    <div class="folder-hero-top">
+                        <div class="folder-title" id="folder-title">Loading…</div>
+                        <div class="folder-chip"><i data-lucide="loader" size="16"></i> Preparing</div>
+                    </div>
+                    <div class="folder-desc">
+                        <span id="folder-desc-typed" class="tw-cursor"></span>
+                    </div>
+                    <div style="display:grid; gap:10px;">
+                        <div class="shimmer"></div>
+                        <div class="shimmer" style="width: 82%;"></div>
+                        <div class="shimmer" style="width: 65%;"></div>
+                    </div>
+                </div>
+                <div id="md-render" class="guide-hidden"></div>
             </div>
         </div>
     </div>
 
-    <script>
-        const USER = "sd6387400-lang";
-        const REPO = "sd6387400-lang.github.io";
-        const BASE = "Get-Started";
-        const DESC_PATH = "Descriptions";
+    <div id="folder-intro-overlay" aria-hidden="true">
+        <div class="overlay-backdrop"></div>
+        <div class="overlay-liquid"></div>
+        <div class="overlay-card" role="dialog" aria-modal="true" aria-label="Loading folder">
+            <div class="overlay-title" id="overlay-folder-title">Loading…</div>
+            <div class="overlay-kicker"><i data-lucide="sparkles" size="18"></i> Preparing your guide</div>
+            <div class="overlay-desc"><span id="overlay-folder-desc" class="tw-cursor"></span></div>
+            <div class="overlay-progress"><div></div></div>
+        </div>
+    </div>
 
-        lucide.createIcons();
+<script>
+    const MANIFEST_PATH = "get-started.manifest.json";
+    let MANIFEST = null;
+    const BASE_FALLBACK = "Get-Started";
+    const DESC_FALLBACK = "Descriptions";
+    let topLevelFoldersCache = [];
+    let currentSearchMode = 'combined';
+    const navAnimKey = 'gs:lastNavAnim';
+    let currentFolderName = '';
 
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay-ui').classList.toggle('active');
+    lucide.createIcons();
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay-ui');
+        const btnIcon = document.querySelector('.menu-btn i');
+
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+
+        // Just change the icon for visual feedback
+        if (sidebar.classList.contains('active')) {
+            btnIcon.setAttribute('data-lucide', 'x');
+        } else {
+            btnIcon.setAttribute('data-lucide', 'menu');
         }
+        
+        lucide.createIcons();
+    }
 
-        function filterNodes() {
-            const input = document.getElementById('node-search').value.toLowerCase();
-            const cards = document.getElementsByClassName('repo-card');
-            
-            for (let card of cards) {
-                const name = card.querySelector('.repo-name').innerText.toLowerCase();
-                if (name.includes(input)) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
-                }
+    function filterNodes() {
+        const raw = document.getElementById('node-search').value || '';
+        const input = raw.toLowerCase();
+        const cards = document.getElementsByClassName('repo-card');
+
+        // If we're inside a folder, this input filters the sidebar (and/or guide content)
+        if (document.body.classList.contains('in-folder')) {
+            if (currentSearchMode === 'content') {
+                if (raw.trim()) highlightInSelectedGuide(raw.trim());
+                else clearContentHighlights();
+                return;
+            }
+            applySidebarSearch(input);
+            return;
+        }
+        
+        for (let card of cards) {
+            const name = card.querySelector('.repo-name').innerText.toLowerCase();
+            if (name.includes(input)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
             }
         }
+    }
 
-        async function init() {
-            const grid = document.getElementById('grid');
-            try {
-                const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/${BASE}`);
-                const folders = await res.json();
-                grid.innerHTML = '';
-                for (const f of folders) {
-                    if(f.type === 'dir') {
-                        const card = document.createElement('div');
-                        card.className = 'repo-card';
-                        card.innerHTML = `<div class="repo-name" style="font-weight:800; color:var(--accent); font-size:1.5rem;">${f.name.replace(/-/g, ' ')}</div>
-                                          <div class="card-desc" id="desc-${f.name}">Searching for metadata...</div>`;
-                        card.onclick = () => loadProject(f.path);
-                        grid.appendChild(card);
-                        fetchDescription(f.name);
-                    }
+    async function init() {
+        const grid = document.getElementById('grid');
+        try {
+            const res = await fetch(MANIFEST_PATH + '?t=' + Date.now());
+            if (!res.ok) throw new Error('Manifest not found');
+            MANIFEST = await res.json();
+            const folders = Array.isArray(MANIFEST?.folders) ? MANIFEST.folders : [];
+            topLevelFoldersCache = folders.map(f => ({ type: 'dir', name: f.name }));
+            grid.innerHTML = '';
+            for (const f of folders) {
+                if(f?.name) {
+                    const card = document.createElement('div');
+                    card.className = 'repo-card';
+                    card.innerHTML = `<div class="repo-name" style="font-weight:800; color:var(--accent); font-size:1.5rem;">${f.name.replace(/-/g, ' ')}</div>
+                                      <div class="card-desc" id="desc-${f.name}"></div>`;
+                    
+                    // Logic: Update hash when clicking a card
+                    card.onclick = () => {
+                        stashNavAnimFromElement(card, f.name);
+                        window.location.hash = f.name;
+                    };
+                    
+                    grid.appendChild(card);
+                    fetchDescription(f.name);
                 }
-            } catch (e) { grid.innerHTML = 'Source Link Error.'; }
-        }
+            }
+            
+            // Populate sidebar with folder names when no folder is selected
+            renderTopLevelFoldersInSidebar(topLevelFoldersCache);
 
-        async function fetchDescription(folderName) {
-            const descEl = document.getElementById(`desc-${folderName}`);
-            try {
-                const res = await fetch(`https://raw.githubusercontent.com/${USER}/${REPO}/main/${DESC_PATH}/${folderName}.md`);
-                if (res.ok) {
-                    const text = await res.text();
-                    descEl.innerText = text.substring(0, 120) + (text.length > 120 ? '...' : '');
-                } else { descEl.innerText = "Stable Documentation Node."; }
-            } catch (e) { descEl.innerText = "Stable Documentation Node."; }
-        }
+            // Check if a hash exists on initial load
+            handleHashNavigation();
 
-        async function loadProject(path) {
-            document.getElementById('picker-view').style.display = 'none';
-            document.getElementById('reader-view').style.display = 'block';
-            const links = document.getElementById('sidebar-links');
-            const res = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/${encodeURIComponent(path)}`);
-            const subFolders = await res.json();
+        } catch (e) { grid.innerHTML = 'Source Link Error.'; }
+    }
+
+    function renderTopLevelFoldersInSidebar(folders) {
+        const links = document.getElementById('sidebar-links');
+        if (!links) return;
+        links.innerHTML = '';
+
+        const currentHash = window.location.hash.replace('#', '');
+
+        (folders || []).forEach((f) => {
+            if (f && f.type === 'dir') {
+                const item = document.createElement('div');
+                item.className = 'sidebar-link';
+                item.innerHTML = `<span class="orb-icon" aria-hidden="true"></span> ${f.name.replace(/-/g, ' ')}`;
+                if (currentHash && currentHash === f.name) item.classList.add('active');
+                item.onclick = () => { stashNavAnimFromElement(item, f.name); window.location.hash = f.name; };
+                links.appendChild(item);
+            }
+        });
+
+        lucide.createIcons();
+    }
+
+    // New Function: Handles reading the #hash and loading the right folder
+    function handleHashNavigation() {
+        const currentHash = window.location.hash.replace('#', '');
+        if (currentHash) {
+            document.body.classList.add('in-folder');
+            currentFolderName = currentHash;
+            // Reconstruct the path based on the hash
+            loadProjectWithIntro(currentHash);
+        } else {
+            document.body.classList.remove('in-folder');
+            currentFolderName = '';
+            // Show picker if no hash
+            document.getElementById('picker-view').style.display = 'block';
+            document.getElementById('reader-view').style.display = 'none';
+            const hero = document.getElementById('folder-hero');
+            if (hero) hero.style.display = 'none';
+            renderTopLevelFoldersInSidebar(topLevelFoldersCache);
+        }
+    }
+
+    // Listen for hash changes (e.g., when user clicks back button)
+    window.addEventListener('hashchange', handleHashNavigation);
+
+    async function fetchDescription(folderName) {
+        const descEl = document.getElementById(`desc-${folderName}`);
+        try {
+            const descBase = MANIFEST?.descriptions || DESC_FALLBACK;
+            const res = await fetch(`${descBase}/${folderName}.md`);
+            if (res.ok) {
+                const text = await res.text();
+                descEl.innerText = text.substring(0, 120) + (text.length > 120 ? '...' : '');
+            } else { descEl.innerText = "Stable Documentation Node."; }
+        } catch (e) { descEl.innerText = "Stable Documentation Node."; }
+    }
+
+
+
+
+        // 1. Create a custom renderer
+    const renderer = new marked.Renderer();
+
+    // 2. Define how code blocks should be rendered
+    renderer.code = (code) => {
+        return `
+        <div class="code-container">
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+            <pre><code>${code}</code></pre>
+        </div>`;
+    };
+
+    // 3. Tell marked to use this new renderer
+    marked.setOptions({ renderer: renderer });
+
+
+
+
+
+
+    function stashNavAnimFromElement(el, folderName) {
+        try {
+            const r = el.getBoundingClientRect();
+            sessionStorage.setItem(navAnimKey, JSON.stringify({
+                folderName,
+                rect: { x: r.x, y: r.y, w: r.width, h: r.height },
+                at: Date.now()
+            }));
+        } catch {}
+    }
+
+    function takeNavAnim() {
+        try {
+            const raw = sessionStorage.getItem(navAnimKey);
+            if (!raw) return null;
+            sessionStorage.removeItem(navAnimKey);
+            const obj = JSON.parse(raw);
+            if (!obj?.rect?.w || !obj?.rect?.h) return null;
+            if (Date.now() - (obj.at || 0) > 2500) return null;
+            return obj;
+        } catch {
+            return null;
+        }
+    }
+
+    function flyCardToHero(folderName) {
+        const hero = document.getElementById('folder-hero');
+        if (!hero) return;
+        const nav = takeNavAnim();
+        if (!nav || nav.folderName !== folderName) return;
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+        const start = nav.rect;
+        const endRect = hero.getBoundingClientRect();
+        const end = { x: endRect.x, y: endRect.y, w: endRect.width, h: Math.max(110, endRect.height * 0.62) };
+
+        const clone = document.createElement('div');
+        clone.className = 'card-fly';
+        clone.style.left = `${start.x}px`;
+        clone.style.top = `${start.y}px`;
+        clone.style.width = `${start.w}px`;
+        clone.style.height = `${start.h}px`;
+        clone.style.opacity = '0.98';
+        clone.innerHTML = `
+            <div style="padding:18px;">
+                <div style="font-weight:900; letter-spacing:-0.7px; font-size:1.05rem; color:var(--accent);">${folderName.replace(/-/g, ' ')}</div>
+                <div style="margin-top:8px; color:var(--text-dim); font-size:0.85rem; line-height:1.35;">Loading intro…</div>
+            </div>
+        `;
+        document.body.appendChild(clone);
+
+        const sx = start.w / end.w;
+        const sy = start.h / end.h;
+        const dx = start.x - end.x;
+        const dy = start.y - end.y;
+
+        clone.style.transform = `translate(0px, 0px) scale(1)`;
+        clone.getBoundingClientRect(); // force layout
+        clone.style.transition = 'transform 520ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 520ms ease';
+        clone.style.transform = `translate(${-dx}px, ${-dy}px) scale(${1 / sx}, ${1 / sy})`;
+        clone.style.opacity = '0.0';
+
+        setTimeout(() => clone.remove(), 560);
+    }
+
+    function getBasePath() {
+        return MANIFEST?.base || BASE_FALLBACK;
+    }
+
+    function getDescPath() {
+        return MANIFEST?.descriptions || DESC_FALLBACK;
+    }
+
+    function getFolderEntry(folderName) {
+        const folders = Array.isArray(MANIFEST?.folders) ? MANIFEST.folders : [];
+        return folders.find(f => f?.name === folderName) || null;
+    }
+
+    async function loadProject(folderName) {
+        document.getElementById('picker-view').style.display = 'none';
+        document.getElementById('reader-view').style.display = 'block';
+        const links = document.getElementById('sidebar-links');
+        
+        try {
+            const folder = getFolderEntry(folderName);
+            if (!folder) throw new Error("Folder not found in manifest");
+
+            const subFolders = Array.isArray(folder.groups) ? folder.groups : [];
             links.innerHTML = '';
 
             let firstFileUrl = null, firstFileEl = null;
 
             for(const sub of subFolders) {
-                if(sub.type === 'dir') {
+                if(sub?.name) {
+                    const files = Array.isArray(sub.files) ? sub.files : [];
+
+                    // determine if this dropdown should hide its leading number
+                    let hideMainNumber = false;
+                    for (const file of files) {
+                        const p = file?.path || '';
+                        if (!p.endsWith('.md')) continue;
+                        try {
+                            const fr = await fetch(p + '?peek=1');
+                            const snippet = await fr.text();
+                            if (snippet.includes('<hideMainNumber>')) {
+                                hideMainNumber = true;
+                                break;
+                            }
+                        } catch {}
+                    }
+
                     const dropdown = document.createElement('div');
                     dropdown.className = 'sidebar-dropdown active';
                     
                     const trigger = document.createElement('div');
                     trigger.className = 'dropdown-trigger';
-                    trigger.innerHTML = `<span>${sub.name.replace(/-/g, ' ')}</span><i class="drop-icon" data-lucide="chevron-down"></i>`;
+                    const rawName = sub.name.replace(/-/g, ' ');
+                    const displayName = hideMainNumber
+                        ? rawName.replace(/^\s*\d+[\.\-_\)]*\s+/, '')
+                        : rawName;
+                    trigger.innerHTML = `<span>${displayName}</span><i class="drop-icon" data-lucide="chevron-down"></i>`;
                     trigger.onclick = () => dropdown.classList.toggle('active');
                     
                     const content = document.createElement('div');
@@ -236,128 +1117,504 @@
                     dropdown.appendChild(content);
                     links.appendChild(dropdown);
 
-                    const fRes = await fetch(sub.url);
-                    const files = await fRes.json();
                     files.forEach(file => {
-                        if(file.name.endsWith('.md')) {
+                        const p = file?.path || '';
+                        if(p.endsWith('.md')) {
                             const item = document.createElement('div');
                             item.className = 'sidebar-link';
-                            item.innerText = file.name.replace('.md', '');
-                            if(!firstFileUrl) { firstFileUrl = file.download_url; firstFileEl = item; }
-                            item.onclick = (e) => { e.stopPropagation(); fetchContent(file.download_url, item); };
+                            const t = (file.title || p.split('/').pop() || '').replace('.md', '');
+                            item.innerText = t;
+                            if(!firstFileUrl) { firstFileUrl = p; firstFileEl = item; }
+                            item.onclick = (e) => { e.stopPropagation(); fetchContent(p, item); };
                             content.appendChild(item);
                         }
                     });
                 }
             }
             lucide.createIcons();
-            if(firstFileUrl) fetchContent(firstFileUrl, firstFileEl);
+            return { firstFileUrl, firstFileEl };
+        } catch (e) {
+            console.error(e);
+            location.hash = ""; // Clear bad hash
+            return { firstFileUrl: null, firstFileEl: null };
+        }
+    }
+
+    async function loadProjectWithIntro(folderName) {
+        const picker = document.getElementById('picker-view');
+        const reader = document.getElementById('reader-view');
+        const hero = document.getElementById('folder-hero');
+        const titleEl = document.getElementById('folder-title');
+        const typedEl = document.getElementById('folder-desc-typed');
+        const md = document.getElementById('md-render');
+
+        const overlay = document.getElementById('folder-intro-overlay');
+        const overlayTitle = document.getElementById('overlay-folder-title');
+        const overlayDesc = document.getElementById('overlay-folder-desc');
+
+        if (picker) picker.style.display = 'none';
+        if (reader) reader.style.display = 'block';
+
+        // Keep the in-page hero hidden; fullscreen overlay is the intro now.
+        if (hero) hero.style.display = 'none';
+
+        if (titleEl) titleEl.textContent = folderName.replace(/-/g, ' ');
+        if (typedEl) typedEl.textContent = '';
+
+        if (md) {
+            md.classList.remove('guide-shown');
+            md.classList.add('guide-hidden');
+            md.innerHTML = '';
         }
 
-        function copyCode(btn, encoded) {
-            const code = atob(encoded);
-            navigator.clipboard.writeText(code);
-            btn.innerText = "Copied!";
-            setTimeout(() => btn.innerText = "Copy", 2000);
+        // show overlay
+        if (overlay) {
+            overlay.classList.remove('dismiss');
+            overlay.classList.add('active');
+            overlay.setAttribute('aria-hidden', 'false');
+        }
+        if (overlayTitle) overlayTitle.textContent = folderName.replace(/-/g, ' ');
+        if (overlayDesc) overlayDesc.textContent = '';
+        lucide.createIcons();
+
+        // Build sidebar + determine first guide while overlay plays
+        const { firstFileUrl, firstFileEl } = await loadProject(folderName);
+
+        // Type folder description on overlay (acts as loading screen)
+        const desc = await fetchFolderDescription(folderName);
+        const descText = (desc || 'Loading guide content…').trim();
+        await typeInto(overlayDesc, descText, { cps: 36, maxMs: 4200 });
+
+        // Dismiss overlay, then reveal guides
+        if (overlay) {
+            overlay.classList.add('dismiss');
+            await new Promise(r => setTimeout(r, 420));
+            overlay.classList.remove('active');
+            overlay.classList.remove('dismiss');
+            overlay.setAttribute('aria-hidden', 'true');
         }
 
-        async function fetchContent(url, el) {
-            // New logic: Hide search bar when entering a file
-            document.querySelector('.search-container').style.display = 'none';
+        if (md) {
+            md.classList.add('guide-shown');
+            md.classList.remove('guide-hidden');
+        }
+        if (firstFileUrl && firstFileEl) fetchContent(firstFileUrl, firstFileEl);
+        lucide.createIcons();
+    }
 
-            document.querySelectorAll('.sidebar-link').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            const render = document.getElementById('md-render');
-            render.innerHTML = '<h3>Assembling Logic...</h3>';
+    async function fetchFolderDescription(folderName) {
+        try {
+            const res = await fetch(`${getDescPath()}/${folderName}.md`);
+            if (!res.ok) return '';
+            const text = await res.text();
+            const cleaned = text.replace(/\r/g, '').trim();
+            const oneLine = cleaned.split('\n').filter(Boolean).join(' ');
+            return oneLine.slice(0, 360) + (oneLine.length > 360 ? '…' : '');
+        } catch {
+            return '';
+        }
+    }
 
-            try {
-                const res = await fetch(url + '?t=' + new Date().getTime());
-                let text = await res.text();
-                const pathParts = new URL(url).pathname.split('/main/')[1].split('/');
-                pathParts.shift(); pathParts.pop();
-                const subPath = pathParts.join('/');
-                const rawBase = `https://raw.githubusercontent.com/${USER}/${REPO}/main`;
+    function typeInto(el, text, { cps = 34, maxMs = 5000 } = {}) {
+        return new Promise((resolve) => {
+            if (!el) return resolve();
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                el.textContent = text;
+                return resolve();
+            }
+            el.textContent = '';
+            const total = text.length;
+            const msPerChar = 1000 / Math.max(10, cps);
+            const start = performance.now();
+            let lastChars = 0;
 
-                // Line Break support
-                text = text.replace(/<br>/g, '<br>');
-                
-                text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
-                text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
-                    const fontSize = (1.1 - (s * 0.08)) + "rem";
-                    const weight = s <= 3 ? '800' : '600';
-                    return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${weight}; margin:1rem 0; line-height:1.2;">${c}</div>`;
-                });
-                text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
-                    return `<details class="custom-collapse" style="background:${bg || '#f1f1f1'}">
-                                <summary style="color:${c || 'black'}">${h}</summary>
-                                <div class="collapse-body">${con}</div>
-                            </details>`;
-                });
-                text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => {
-                    const b = type.includes('bold') ? 'bold' : 'normal', i = type.includes('italic') ? 'italic' : 'normal';
-                    return `<span class="tw-text tw-cursor" data-state="${state || 'continuous'}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color || 'inherit'}; font-weight:${b}; font-style:${i};"></span>`;
-                });
-                text = text.replace(/<text color="(.*?)" type="(.*?)">([\s\S]*?)<\/text>/g, (m, color, type, content) => {
-                    let s = `color:${color || 'inherit'};`;
-                    if(type.includes('bold')) s += 'font-weight:bold;';
-                    if(type.includes('italic')) s += 'font-style:italic;';
-                    if(type.includes('underline')) s += 'text-decoration:underline;';
-                    return `<span style="${s}">${content}</span>`;
-                });
-                text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
-                    const tag = type === 'number' ? 'ol' : 'ul';
-                    return `<${tag} style="margin:15px 0 15px 40px;">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
-                });
-                text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
-                text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
-                    const clean = code.trim();
-                    return `<div class="code-container"><button class="copy-btn" onclick="copyCode(this, '${btoa(clean)}')">Copy</button><pre><code>${clean}</code></pre></div>`;
-                });
-                text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'">`);
-                text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video muted playsinline loop><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`);
-                text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'"></audio>`);
-
-                render.innerHTML = marked.parse(text);
-                initTypewriters();
-                setupVideoAutoPlay();
-                
-                if(window.matchMedia("(max-aspect-ratio: 1/1)").matches) {
-                    document.getElementById('sidebar').classList.remove('active');
-                    document.getElementById('overlay-ui').classList.remove('active');
+            function frame(now) {
+                const elapsed = now - start;
+                const byRate = Math.floor(elapsed / msPerChar);
+                const byMax = Math.floor((elapsed / Math.max(1, maxMs)) * total);
+                const chars = Math.min(total, Math.max(byRate, byMax, lastChars));
+                if (chars !== lastChars) {
+                    el.textContent = text.slice(0, chars);
+                    lastChars = chars;
                 }
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } catch (e) { render.innerHTML = 'Error Loading Content.'; }
+                if (chars >= total) return resolve();
+                requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+        });
+    }
+
+    // keep the main page feeling alive (lightweight, no canvas)
+    document.addEventListener('mousemove', (e) => {
+        // tiny parallax for background blobs via CSS vars (super cheap)
+        const x = (e.clientX / window.innerWidth) - 0.5;
+        const y = (e.clientY / window.innerHeight) - 0.5;
+        document.documentElement.style.setProperty('--mx', (x * 12).toFixed(2) + 'px');
+        document.documentElement.style.setProperty('--my', (y * 12).toFixed(2) + 'px');
+    }, { passive: true });
+
+    function openSearchModal() {
+        // Only open filters when inside a folder
+        if (!document.body.classList.contains('in-folder')) return;
+
+        const modal = document.getElementById('search-modal');
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+
+        // set selected radio
+        const current = modal.querySelector(`input[name="searchMode"][value="${currentSearchMode}"]`);
+        if (current) current.checked = true;
+        syncContentSearchUI();
+    }
+
+    function closeSearchModal() {
+        const modal = document.getElementById('search-modal');
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+    }
+
+    function resetSearchFilters() {
+        currentSearchMode = 'combined';
+        const modal = document.getElementById('search-modal');
+        const combined = modal.querySelector(`input[name="searchMode"][value="combined"]`);
+        if (combined) combined.checked = true;
+        syncContentSearchUI();
+        clearContentHighlights();
+    }
+
+    function applySearchFilters() {
+        const modal = document.getElementById('search-modal');
+        const selected = modal.querySelector('input[name="searchMode"]:checked');
+        currentSearchMode = selected ? selected.value : 'combined';
+        syncContentSearchUI();
+
+        const query = (document.getElementById('node-search')?.value || '').toLowerCase();
+        if (currentSearchMode === 'content') {
+            const raw = (document.getElementById('node-search')?.value || '').trim();
+            if (raw) highlightInSelectedGuide(raw);
+            else clearContentHighlights();
+        } else {
+            clearContentHighlights();
+            applySidebarSearch(query);
         }
 
-        function initTypewriters() {
-            document.querySelectorAll('.tw-text').forEach(el => {
-                const fullText = el.getAttribute('data-fulltext');
-                const state = el.dataset.state;
-                let i = 0;
-                function type() {
-                    if (i < fullText.length) {
-                        el.innerText += fullText.charAt(i);
-                        i++;
-                        setTimeout(type, 80);
-                    } else if (state === 'continuous') {
-                        setTimeout(() => { el.innerText = ''; i = 0; type(); }, 2000);
-                    }
-                }
-                type();
+        closeSearchModal();
+    }
+
+    function syncContentSearchUI() {
+        const selected = document.querySelector('#search-modal input[name="searchMode"]:checked');
+        const input = document.getElementById('node-search');
+        if (!input) return;
+        if (selected && selected.value === 'content') {
+            input.placeholder = 'Search Text From Guide';
+        } else {
+            input.placeholder = 'Search guides...';
+        }
+    }
+
+    document.addEventListener('change', (e) => {
+        if (e.target && e.target.matches('#search-modal input[name="searchMode"]')) syncContentSearchUI();
+    });
+
+    function applySidebarSearch(query) {
+        // Mode 4 is content search; sidebar remains unchanged (so user doesn't "lose" navigation)
+        if (currentSearchMode === 'content') return;
+
+        const normalized = (query || '').trim();
+
+        const dropdowns = Array.from(document.querySelectorAll('#sidebar-links .sidebar-dropdown'));
+        const guideItems = Array.from(document.querySelectorAll('#sidebar-links .dropdown-content .sidebar-link'));
+
+        // Reset first
+        dropdowns.forEach(d => d.style.display = '');
+        guideItems.forEach(i => i.style.display = '');
+
+        if (!normalized) return;
+
+        const q = normalized.toLowerCase();
+
+        if (currentSearchMode === 'dropdowns' || currentSearchMode === 'combined') {
+            dropdowns.forEach(drop => {
+                const title = drop.querySelector('.dropdown-trigger span')?.innerText?.toLowerCase() || '';
+                const match = title.includes(q);
+                if (!match && currentSearchMode === 'dropdowns') drop.style.display = 'none';
+                // In combined mode we don't hide dropdowns yet; we compute based on guide matches too
+            });
+        } else if (currentSearchMode === 'guides') {
+            // hide only guides; keep dropdowns visible unless they end up empty
+            guideItems.forEach(item => {
+                const name = item.innerText.toLowerCase();
+                if (!name.includes(q)) item.style.display = 'none';
             });
         }
 
-        function setupVideoAutoPlay() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { entry.target.play(); } 
-                    else { entry.target.pause(); }
+        if (currentSearchMode === 'combined') {
+            // For each dropdown: show if trigger matches OR any guide matches
+            dropdowns.forEach(drop => {
+                const title = drop.querySelector('.dropdown-trigger span')?.innerText?.toLowerCase() || '';
+                const triggerMatch = title.includes(q);
+                const guides = Array.from(drop.querySelectorAll('.dropdown-content .sidebar-link'));
+                let anyGuideMatch = false;
+                guides.forEach(g => {
+                    const match = g.innerText.toLowerCase().includes(q);
+                    if (!match) g.style.display = 'none';
+                    else anyGuideMatch = true;
                 });
-            }, { threshold: 0.5 });
-            document.querySelectorAll('#md-render video').forEach(v => observer.observe(v));
+                if (!triggerMatch && !anyGuideMatch) drop.style.display = 'none';
+            });
+        } else if (currentSearchMode === 'dropdowns') {
+            // Hide guides always; only show dropdown titles that match
+            guideItems.forEach(item => item.style.display = 'none');
+            dropdowns.forEach(drop => {
+                const title = drop.querySelector('.dropdown-trigger span')?.innerText?.toLowerCase() || '';
+                if (!title.includes(q)) drop.style.display = 'none';
+            });
+        } else if (currentSearchMode === 'guides') {
+            // Hide dropdowns that have zero visible guides
+            dropdowns.forEach(drop => {
+                const guides = Array.from(drop.querySelectorAll('.dropdown-content .sidebar-link'));
+                const anyVisible = guides.some(g => g.style.display !== 'none');
+                if (!anyVisible) drop.style.display = 'none';
+            });
         }
+    }
 
-        init();
-    </script>
+    function clearContentHighlights() {
+        const container = document.getElementById('md-render');
+        if (!container) return;
+        container.querySelectorAll('mark.text-hit').forEach(m => {
+            const text = document.createTextNode(m.textContent || '');
+            m.replaceWith(text);
+        });
+        // merge adjacent text nodes for cleanliness
+        container.normalize();
+    }
+
+    function highlightInSelectedGuide(query) {
+        const container = document.getElementById('md-render');
+        if (!container) return;
+        clearContentHighlights();
+
+        const q = query.trim();
+        if (!q) return;
+
+        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+            acceptNode(node) {
+                if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+                const parent = node.parentElement;
+                if (!parent) return NodeFilter.FILTER_REJECT;
+                if (parent.closest('script, style, pre, code, button')) return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        });
+
+        const re = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        let firstHit = null;
+
+        const nodes = [];
+        while (walker.nextNode()) nodes.push(walker.currentNode);
+
+        nodes.forEach(textNode => {
+            const text = textNode.nodeValue;
+            if (!re.test(text)) return;
+            re.lastIndex = 0;
+
+            const frag = document.createDocumentFragment();
+            let last = 0;
+            let m;
+            while ((m = re.exec(text)) !== null) {
+                const start = m.index;
+                const end = start + m[0].length;
+                if (start > last) frag.appendChild(document.createTextNode(text.slice(last, start)));
+                const mark = document.createElement('mark');
+                mark.className = 'text-hit';
+                mark.textContent = text.slice(start, end);
+                if (!firstHit) firstHit = mark;
+                frag.appendChild(mark);
+                last = end;
+            }
+            if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+            textNode.replaceWith(frag);
+        });
+
+        if (firstHit) firstHit.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function copyCode(btn) {
+        // Find the <pre> element that is a sibling of the button
+        const pre = btn.nextElementSibling;
+        if (!pre) return;
+        
+        // Get only the innerText (this ignores HTML tags and gets what the user sees)
+        const textToCopy = pre.innerText;
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalText = btn.innerText;
+            btn.innerText = "Copied!";
+            btn.style.background = "#22c55e"; // Optional: Green success color
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = ""; // Reset color
+            }, 2000);
+        });
+    }
+
+    async function fetchContent(url, el) {
+        document.querySelectorAll('.sidebar-link').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        const render = document.getElementById('md-render');
+        render.innerHTML = '<div style="font-weight:900; font-size:1.1rem;">Loading…</div><div style="margin-top:10px; color:var(--text-dim);">Fetching the guide content.</div>';
+
+        try {
+            const res = await fetch(url + '?t=' + new Date().getTime());
+            let text = await res.text();
+            let hideTitleNumber = false;
+            if (text.includes('<hideTitleNumber>')) {
+                hideTitleNumber = true;
+                text = text.replace(/<hideTitleNumber>/g, '');
+            }
+            if (hideTitleNumber) {
+                text = text.replace(/^(\s*#+\s*)(\d+[\.\)]?\s+)(.*)$/gm, '$1$3');
+            }
+            const urlObj = new URL(url);
+            const pathParts = urlObj.pathname.split('/main/')[1].split('/');
+            pathParts.shift(); pathParts.pop();
+            const subPath = pathParts.join('/');
+            const rawBase = '.';
+
+            // 1. Core Layout & Headings
+            text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
+            text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
+                const sizeMap = {1: '2.8rem', 2: '2.4rem', 3: '2.0rem', 4: '1.8rem', 5: '1.6rem', 6: '1.4rem', 7: '1.2rem', 8: '1.1rem', 9: '1.05rem', 10: '1rem'};
+                const fontSize = sizeMap[s] || "1.2rem";
+                return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${s <= 3 ? '800' : '600'}; margin:1.5rem 0 0.8rem 0; line-height:1.2; color:var(--text-main);">${c}</div>`;
+            });
+
+            // 2. Original Boxed Collapse
+            text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
+                return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}15;"><summary style="color:${c}; font-weight:700;">${h}</summary><div class="collapse-body">${con}</div></details>`;
+            });
+
+            // 3. NEW COLLAPSE2
+            text = text.replace(/<collapse2 heading="(.*?)" unextendedhr="(.*?)" extendedhr="(.*?)">([\s\S]*?)<\/collapse2>/g, (m, h, uhr, exhr, con) => {
+                const uHr = uhr === 'true' ? '<hr class="collapse-hr">' : '';
+                const eHr = exhr === 'true' ? '<hr class="collapse-hr">' : '';
+                return `<div class="collapse2-container"><details class="clean-collapse"><summary><span>${h}</span><i data-lucide="chevron-down" size="18" style="opacity:0.5"></i></summary><div class="clean-body">${con}${eHr}</div></details>${uHr}</div>`;
+            });
+
+            // 4. Text Formatting
+            text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => {
+                return `<span class="tw-text tw-cursor" data-state="${state || 'continuous'}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color || 'inherit'}; font-weight:${type.includes('bold')?'bold':'normal'}; font-style:${type.includes('italic')?'italic':'normal'};"></span>`;
+            });
+            text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g, (m, h, l) => `<a href="${l.trim()}" class="custom-href" target="_blank">${h || l.trim()}</a>`);
+            
+            text = text.replace(/<text ([\s\S]*?)>([\s\S]*?)<\/text>/g, (m, attrs, content) => {
+                const getAttr = (name) => {
+                    const match = attrs.match(new RegExp(`${name}="([^"]*)"`));
+                    return match ? match[1] : null;
+                };
+                const color = getAttr('color');
+                const cLight = getAttr('color-light');
+                const cDark = getAttr('color-dark');
+                const type = getAttr('type') || '';
+                let styles = "";
+                let classAttr = "";
+                if (cLight || cDark) {
+                    styles += `--light-c: ${cLight || color || 'inherit'}; `;
+                    styles += `--dark-c: ${cDark || color || 'inherit'}; `;
+                    styles += `color: var(--light-c); `;
+                    classAttr = 'class="adaptive-text"';
+                } else if (color) {
+                    styles += `color: ${color}; `;
+                }
+                if(type.includes('bold')) styles += 'font-weight:bold; ';
+                if(type.includes('italic')) styles += 'font-style:italic; ';
+                if(type.includes('underline')) styles += 'text-decoration:underline; ';
+                return `<span ${classAttr} style="${styles.trim()}">${content}</span>`;
+            });
+            
+            text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
+                const tag = type === 'number' ? 'ol' : 'ul';
+                return `<${tag} style="margin:15px 0 15px 40px;">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
+            });
+            text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
+            
+            // 5. Media & Code
+            text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
+                return `<div class="code-container">
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                            <pre><code>${code.trim()}</code></pre>
+                        </div>`;
+            });
+            text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'">`);
+            text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video muted playsinline loop><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`);
+            text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'"></audio>`);
+
+            render.innerHTML = marked.parse(text);
+            lucide.createIcons();
+            initTypewriters();
+            setupVideoAutoPlay();
+            clearContentHighlights();
+            
+            if(window.matchMedia("(max-aspect-ratio: 1/1)").matches) {
+                document.getElementById('sidebar').classList.remove('active');
+                document.getElementById('overlay-ui').classList.remove('active');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (e) { render.innerHTML = 'Error Loading Content.'; }
+    }
+
+    function initTypewriters() {
+        const els = Array.from(document.querySelectorAll('.tw-text'));
+        if (!els.length) return;
+
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+        const startTyping = (el) => {
+            const fullText = el.getAttribute('data-fulltext') || '';
+            const state = el.dataset.state;
+            if (!fullText) return;
+            if (el.dataset.twStarted === '1') return;
+            el.dataset.twStarted = '1';
+
+            if (reduced) {
+                el.textContent = fullText;
+                return;
+            }
+
+            typeInto(el, fullText, { cps: 22, maxMs: 6500 }).then(() => {
+                if (state === 'continuous') {
+                    setTimeout(() => {
+                        el.dataset.twStarted = '0';
+                        el.textContent = '';
+                        startTyping(el);
+                    }, 1800);
+                }
+            });
+        };
+
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting) startTyping(e.target);
+            });
+        }, { threshold: 0.15 });
+
+        els.forEach(el => io.observe(el));
+    }
+
+    function setupVideoAutoPlay() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { entry.target.play(); } 
+                else { entry.target.pause(); }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('#md-render video').forEach(v => observer.observe(v));
+    }
+
+    init();
+</script>
+
 </body>
 </html>
