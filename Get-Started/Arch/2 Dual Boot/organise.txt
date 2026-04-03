@@ -1,0 +1,3 @@
+place="1.Connecting WiFi"=1
+place="2 Particianing"=2
+place="2.Particianing"=3
