@@ -1,2 +1,2 @@
-dropdown="2 Dual Boot"=1=closed
-dropdown="1.Get started"=2=open
+dropdown="1.Get started"=1=open
+dropdown="2 Dual Boot"=2=closed
