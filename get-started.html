@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Started</title>
+    <title>Get Started | Documentation</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&family=Nunito:wght@300;500;700;800;900&family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,500;12..96,700;12..96,800&family=Syne:wght@400;500;700;800&family=Figtree:wght@300;500;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    </head>
+    
     <style>
         /* ── M3 Easing vars ── */
         :root {
@@ -176,38 +179,16 @@
         ══════════════════════════════════════════════ */
         .sidebar { position:fixed; top:0; left:-320px; width:300px; height:100vh; background:var(--sidebar-bg); z-index:1000; padding:40px 20px; transition:left 0.4s var(--m3-decel), border 0.3s, background 0.3s, margin 0.3s, border-radius 0.3s, box-shadow 0.3s; border-right:1px solid var(--border); overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(var(--accent-rgb),0.2) transparent; }
         
-        /* 1: Default (Clean Bordered) applies naturally */
-
-        /* 2: Blobs (Soft floating shapes in sidebar background) */
-        body[data-sidebar="2"] .sidebar { 
-            border-right: 1px solid var(--border);
-            background-color: var(--sidebar-bg); 
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(var(--accent-rgb), 0.15) 0%, transparent 40%), 
-                radial-gradient(circle at 90% 90%, rgba(var(--accent-rgb), 0.15) 0%, transparent 40%); 
-        }
-
-        /* 3: Matrix (Floating Pill + Tech Dots) */
-        body[data-sidebar="3"] .sidebar { 
-            background-color: var(--sidebar-bg); 
-            background-image: radial-gradient(rgba(var(--accent-rgb), 0.25) 1px, transparent 1px); 
-            background-size: 14px 14px; 
-            border-right: 1px solid var(--border); 
-        }
+        body[data-sidebar="2"] .sidebar { border-right: 1px solid var(--border); background-color: var(--sidebar-bg); background-image: radial-gradient(circle at 10% 10%, rgba(var(--accent-rgb), 0.15) 0%, transparent 40%), radial-gradient(circle at 90% 90%, rgba(var(--accent-rgb), 0.15) 0%, transparent 40%); }
+        body[data-sidebar="3"] .sidebar { background-color: var(--sidebar-bg); background-image: radial-gradient(rgba(var(--accent-rgb), 0.25) 1px, transparent 1px); background-size: 14px 14px; border-right: 1px solid var(--border); }
         @media(min-aspect-ratio:1/1) {
             body[data-sidebar="3"] .sidebar { height: calc(100vh - 40px); margin: 20px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
             body[data-sidebar="3"] #reader-view, body[data-sidebar="3"] #picker-view { padding-left: 340px; }
         }
-
-        /* 4: Grid (Blueprint layout) */
         body[data-sidebar="4"] .sidebar { background-color: var(--sidebar-bg); background-image: linear-gradient(rgba(var(--accent-rgb),0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--accent-rgb),0.06) 1px, transparent 1px); background-size: 20px 20px; border-right: 2px solid var(--border); }
         body[data-sidebar="4"] .sidebar-link.active { background: var(--bg-base); color: var(--accent); border-left: 4px solid var(--accent); border-radius: 0 10px 10px 0; padding-left:18px; box-shadow: 2px 2px 10px rgba(0,0,0,0.05); }
-
-        /* 5: Organic (Soft wavy gradients) */
         body[data-sidebar="5"] .sidebar { background-color: rgba(var(--accent-rgb), 0.02); background-image: radial-gradient(ellipse at 50% -20%, rgba(var(--accent-rgb), 0.15) 0%, transparent 60%), radial-gradient(ellipse at 50% 120%, rgba(var(--accent-rgb), 0.15) 0%, transparent 60%); border-right: 1px solid rgba(var(--accent-rgb), 0.1); background-attachment: fixed; }
         body.dark-mode[data-sidebar="5"] .sidebar { background-color: rgba(var(--accent-rgb), 0.05); border-right: 1px solid rgba(var(--accent-rgb), 0.15); }
-
-        /* 6: Striped (Flat bold diagonal lines) */
         body[data-sidebar="6"] .sidebar { background-color: var(--bg-base); background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(var(--accent-rgb), 0.03) 10px, rgba(var(--accent-rgb), 0.03) 20px); border-right: 3px solid var(--border); }
         body[data-sidebar="6"] .sidebar-link.active { background: var(--text-main); color: var(--bg-base); }
 
@@ -278,9 +259,17 @@
         @keyframes headingRise { to { opacity:1; transform:translateY(0); } }
         @keyframes slideRight  { to { opacity:0.8; transform:translateX(0); } }
 
-        /* ── Cards ── */
+        /* ── Cards & Card Glassmorphism Option ── */
         .repo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; }
         .repo-card { background:var(--card-bg); border:1.5px solid var(--border); border-radius:28px; padding:36px 32px; cursor:pointer; backdrop-filter:blur(16px); text-align:left; opacity:0; transform:translateY(32px) scale(0.96); animation:cardEntrance 0.7s var(--m3-decel) var(--delay,0.5s) forwards; transition:transform 0.4s var(--spring), border-color 0.3s, box-shadow 0.3s; position:relative; overflow:hidden; }
+        
+        /* TRUE OPAQUE FIX: Overlays the card background onto the solid base background perfectly */
+        body[data-card="solid"] .repo-card, body[data-card="solid"] #reader-content { 
+            backdrop-filter:none !important; 
+            -webkit-backdrop-filter:none !important; 
+            background: linear-gradient(var(--card-bg), var(--card-bg)), linear-gradient(var(--bg-base), var(--bg-base)) !important; 
+        }
+
         .repo-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--accent1),var(--accent2),var(--accent3)); transform:scaleX(0); transform-origin:left; transition:transform 0.4s var(--spring); border-radius:3px 3px 0 0; }
         .repo-card::after { content:''; position:absolute; inset:0; border-radius:28px; background:rgba(var(--accent-rgb),0); transition:background 0.3s; pointer-events:none; }
         .repo-card:hover { transform:translateY(-10px) scale(1.015); border-color:rgba(var(--accent-rgb),0.35); box-shadow:0 16px 48px rgba(var(--accent-rgb),0.18); }
@@ -342,21 +331,15 @@
         .copy-btn:hover { transform:scale(1.06); opacity:1; background:var(--accent); }
         .copy-btn:active { transform:scale(0.94); }
 
-        /* ── Custom collapses ── */
+        /* ══════════════════════════════════════════════
+           COLLAPSES (Variants 1, 2, 3)
+        ══════════════════════════════════════════════ */
         .custom-collapse { border-radius:18px; overflow:hidden; margin:20px 0; border:2px solid; transition:box-shadow 0.3s; }
         .custom-collapse summary { padding:16px 20px; cursor:pointer; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; user-select:none; transition:opacity 0.2s; }
         .custom-collapse summary:hover { opacity:0.85; }
         .custom-collapse summary::-webkit-details-marker { display:none; }
         .custom-collapse summary::after { content:''; display:block; width:18px; height:18px; flex-shrink:0; background:currentColor; mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat; -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center/contain no-repeat; transition:transform 0.35s var(--spring); }
-        
         .custom-collapse.is-expanded summary::after { transform:rotate(180deg); }
-        
-        /* THIS NESTING FIXES THE GRID HEIGHT JUMP CLUNKINESS */
-        .collapse-anim-wrap { display:grid; grid-template-rows:0fr; transition:grid-template-rows 0.35s var(--m3-decel); }
-        .custom-collapse.is-expanded .collapse-anim-wrap { grid-template-rows:1fr; }
-        .collapse-anim-inner { min-height: 0; overflow: hidden; }
-        .collapse-body { padding:0 20px 18px; opacity:0; transform:translateY(-10px); transition:opacity 0.35s var(--m3-decel), transform 0.35s var(--m3-decel); }
-        .custom-collapse.is-expanded .collapse-body { opacity:1; transform:translateY(0); }
 
         .collapse2-container { width:100%; }
         .clean-collapse { margin:10px 0; border:none; background:transparent; }
@@ -365,15 +348,31 @@
         .clean-collapse.is-expanded summary i, .clean-collapse.is-expanded summary svg { transform:rotate(180deg)!important; }
         .clean-collapse summary:hover { opacity:0.7; }
         .clean-collapse summary::-webkit-details-marker { display:none; }
-        
-        .clean-anim-wrap { display:grid; grid-template-rows:0fr; transition:grid-template-rows 0.35s var(--m3-decel); }
-        .clean-collapse.is-expanded .clean-anim-wrap { grid-template-rows:1fr; }
-        .clean-anim-inner { min-height: 0; overflow: hidden; }
-        .clean-body { padding:6px 0 10px; color:var(--text-dim); line-height:1.7; opacity:0; transform:translateY(-8px); transition:opacity 0.35s var(--m3-decel), transform 0.35s var(--m3-decel); }
-        .clean-collapse.is-expanded .clean-body { opacity:1; transform:translateY(0); }
-        
+
+        .collapse-anim-wrap, .clean-anim-wrap { display:grid; grid-template-rows:0fr; }
+        .collapse-anim-inner, .clean-anim-inner { min-height: 0; overflow: hidden; }
+        .collapse-body { padding:0 20px 18px; }
+        .clean-body { padding:6px 0 10px; color:var(--text-dim); line-height:1.7; }
         .collapse-hr { border:0; height:1px; background:var(--border); margin:10px 0; opacity:0.5; }
 
+        /* VARIANT 1: INSTANT (Default - lag free) */
+        body[data-collapse="1"] .collapse-anim-wrap, body[data-collapse="1"] .clean-anim-wrap { transition:none; display:block; height:auto; }
+        body[data-collapse="1"] .custom-collapse:not(.is-expanded) .collapse-anim-wrap, body[data-collapse="1"] .clean-collapse:not(.is-expanded) .clean-anim-wrap { display:none; }
+        body[data-collapse="1"] .collapse-body, body[data-collapse="1"] .clean-body { opacity:1; transform:none; transition:none; padding-top:10px; display:block; }
+
+        /* VARIANT 2: SMOOTH (Grid height recalculation animation) */
+        body[data-collapse="2"] .collapse-anim-wrap, body[data-collapse="2"] .clean-anim-wrap { transition:grid-template-rows 0.35s var(--m3-decel); }
+        body[data-collapse="2"] .custom-collapse.is-expanded .collapse-anim-wrap, body[data-collapse="2"] .clean-collapse.is-expanded .clean-anim-wrap { grid-template-rows:1fr; }
+        body[data-collapse="2"] .collapse-body, body[data-collapse="2"] .clean-body { opacity:0; transform:translateY(-10px); transition:opacity 0.35s var(--m3-decel), transform 0.35s var(--m3-decel); }
+        body[data-collapse="2"] .custom-collapse.is-expanded .collapse-body, body[data-collapse="2"] .clean-collapse.is-expanded .clean-body { opacity:1; transform:translateY(0); }
+
+        /* VARIANT 3: TRUE FADE (Lag free hardware-accelerated opacity fade without height transition) */
+        body[data-collapse="3"] .collapse-anim-wrap, body[data-collapse="3"] .clean-anim-wrap { display:none; }
+        body[data-collapse="3"] .custom-collapse.is-expanded .collapse-anim-wrap, body[data-collapse="3"] .clean-collapse.is-expanded .clean-anim-wrap { display:block; animation: lagFreeFade 0.25s ease forwards; }
+        body[data-collapse="3"] .collapse-body, body[data-collapse="3"] .clean-body { padding-top:10px; display:block; }
+        @keyframes lagFreeFade { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+        /* ── Other Content Boxes ── */
         .logic-box { padding:22px 25px; margin:28px 0; border-radius:18px; border:2px solid; transition:border-color 0.3s, background 0.3s; }
         #md-render img, #md-render video, #md-render audio { width:100%; border-radius:20px; margin:20px 0; }
         #md-render img { border:none!important; display:block; }
@@ -485,197 +484,199 @@
         body.dark-mode .back-pill { box-shadow:0 4px 20px rgba(var(--accent-rgb),0.4); }
         body.dark-mode #palette-indicator { box-shadow:0 4px 20px rgba(0,0,0,0.4); }
     </style>
-</head>
-<body data-bg="1" data-sidebar="1" data-loader="1">
 
-<svg width="0" height="0" style="position:absolute">
-    <defs>
-        <clipPath id="squircle-clip" clipPathUnits="objectBoundingBox">
-            <path d="M0.5,0 C0.723,0 0.86,0 0.93,0.07 C1,0.14 1,0.277 1,0.5 C1,0.723 1,0.86 0.93,0.93 C0.86,1 0.723,1 0.5,1 C0.277,1 0.14,1 0.07,0.93 C0,0.86 0,0.723 0,0.5 C0,0.277 0,0.14 0.07,0.07 C0.14,0 0.277,0 0.5,0 Z"/>
-        </clipPath>
-    </defs>
-</svg>
+<body data-bg="1" data-sidebar="1" data-loader="1" data-collapse="1" data-card="solid">
 
-<div id="loader">
-    <div class="loader-variant loader-v1">
-        <div class="loader-squircle-wrap"><div class="loader-squircle-bg"></div><div class="loader-ring"></div><div class="loader-ring"></div><div class="loader-ring"></div><div class="loader-dot"></div></div>
-    </div>
-    <div class="loader-variant loader-v2">
-        <div class="dots"><div class="d"></div><div class="d"></div><div class="d"></div></div>
-    </div>
-    <div class="loader-variant loader-v3">
-        <div class="loader-squircle-wrap" style="transform: scale(0.8);"><div class="loader-squircle-bg"></div><div class="loader-ring"></div><div class="loader-ring"></div><div class="loader-ring"></div><div class="loader-dot"></div></div>
-        <div class="loader-m3-bar" style="width:100px;"><div class="loader-m3-bar-fill"></div></div>
-    </div>
-    <div class="loader-variant loader-v4">
-        <div class="pulse-ring"><div class="p-ring"></div><div class="p-ring"></div></div>
-    </div>
-    <div class="loader-variant loader-v5">
-        <div class="loader-m3-bar"><div class="loader-m3-bar-fill"></div></div>
-    </div>
-    <div class="loader-variant loader-v6">
-        <div class="orbit-wrap"><div class="orbit-core"></div><div class="orbit-moon"></div></div>
-    </div>
-</div>
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+            <clipPath id="squircle-clip" clipPathUnits="objectBoundingBox">
+                <path d="M0.5,0 C0.723,0 0.86,0 0.93,0.07 C1,0.14 1,0.277 1,0.5 C1,0.723 1,0.86 0.93,0.93 C0.86,1 0.723,1 0.5,1 C0.277,1 0.14,1 0.07,0.93 C0,0.86 0,0.723 0,0.5 C0,0.277 0,0.14 0.07,0.07 C0.14,0 0.277,0 0.5,0 Z"/>
+            </clipPath>
+        </defs>
+    </svg>
 
-<div id="m3-progress"><div class="m3-progress-bar1"></div><div class="m3-progress-bar2"></div></div>
-
-<div class="bg-wrapper">
-    <div class="bg-shape bg-s1  sh-a" id="s1a"></div>
-    <div class="bg-shape bg-s1r"       id="s1r"></div>
-    <div class="bg-shape bg-s2  sh-b" id="s2a"></div>
-    <div class="bg-shape bg-s2r"       id="s2r"></div>
-    <div class="bg-shape bg-s3  sh-e" id="s3a"></div>
-    <div class="bg-shape bg-s4  sh-e" id="s4a"></div>
-    <div class="bg-shape bg-s4r"       id="s4r"></div>
-    <div class="bg-shape bg-s5  sh-b" id="s5a"></div>
-    <svg class="m3-sq m3-sq-a sq-a" id="sq-a" viewBox="0 0 100 100" fill="var(--shape3)"><path d="M50 0C72.3 0 86 0 93 7C100 14 100 27.7 100 50C100 72.3 100 86 93 93C86 100 72.3 100 50 100C27.7 100 14 100 7 93C0 86 0 72.3 0 50C0 27.7 0 14 7 7C14 0 27.7 0 50 0Z"/></svg>
-    <svg class="m3-sq m3-sq-b sq-b" id="sq-b" viewBox="0 0 100 100" fill="var(--shape2)"><path d="M50 0C72.3 0 86 0 93 7C100 14 100 27.7 100 50C100 72.3 100 86 93 93C86 100 72.3 100 50 100C27.7 100 14 100 7 93C0 86 0 72.3 0 50C0 27.7 0 14 7 7C14 0 27.7 0 50 0Z"/></svg>
-    <svg class="m3-sq m3-sq-c sq-c" id="sq-c" viewBox="0 0 100 100" fill="var(--shape1)"><path d="M50 4C25.4 4 4 25.4 4 50C4 74.6 25.4 96 50 96C74.6 96 96 74.6 96 50C96 25.4 74.6 4 50 4Z"/></svg>
-</div>
-
-<div id="overlay-ui" onclick="toggleSidebar()"></div>
-<button class="menu-btn" id="menu-trigger" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
-
-<div id="search-popup">
-    <div class="sp-title">Filter Search</div>
-    <div class="sp-chips">
-        <button class="filter-chip" data-mode="text"      onclick="setSearchMode('text')">Text</button>
-        <button class="filter-chip" data-mode="dropdowns" onclick="setSearchMode('dropdowns')">Dropdowns</button>
-        <button class="filter-chip" data-mode="files"     onclick="setSearchMode('files')">Files</button>
-        <button class="filter-chip active" data-mode="combined" onclick="setSearchMode('combined')">Combined</button>
-    </div>
-</div>
-
-<div id="palette-panel">
-    <div class="pp-section-title" style="margin-top:0">Appearance</div>
-    <div class="pp-theme-row">
-        <button class="pp-theme-btn" id="theme-sys" onclick="setThemeMode('system')"><i data-lucide="monitor" size="11"></i> System</button>
-        <button class="pp-theme-btn" id="theme-light" onclick="setThemeMode('light')"><i data-lucide="sun" size="11"></i> Light</button>
-        <button class="pp-theme-btn" id="theme-dark" onclick="setThemeMode('dark')"><i data-lucide="moon" size="11"></i> Dark</button>
+    <div id="loader">
+        <div class="loader-variant loader-v1"><div class="loader-squircle-wrap"><div class="loader-squircle-bg"></div><div class="loader-ring"></div><div class="loader-ring"></div><div class="loader-ring"></div><div class="loader-dot"></div></div></div>
+        <div class="loader-variant loader-v2"><div class="dots"><div class="d"></div><div class="d"></div><div class="d"></div></div></div>
+        <div class="loader-variant loader-v3"><div class="loader-squircle-wrap" style="transform: scale(0.8);"><div class="loader-squircle-bg"></div><div class="loader-ring"></div><div class="loader-ring"></div><div class="loader-ring"></div><div class="loader-dot"></div></div><div class="loader-m3-bar" style="width:100px;"><div class="loader-m3-bar-fill"></div></div></div>
+        <div class="loader-variant loader-v4"><div class="pulse-ring"><div class="p-ring"></div><div class="p-ring"></div></div></div>
+        <div class="loader-variant loader-v5"><div class="loader-m3-bar"><div class="loader-m3-bar-fill"></div></div></div>
+        <div class="loader-variant loader-v6"><div class="orbit-wrap"><div class="orbit-core"></div><div class="orbit-moon"></div></div></div>
     </div>
 
-    <div class="pp-section-title">Background Style</div>
-    <div class="pp-opt-grid" id="bg-opts">
-        <button class="pp-opt-btn" onclick="setPref('bg',1)">Default</button>
-        <button class="pp-opt-btn" onclick="setPref('bg',2)">Blueprint</button>
-        <button class="pp-opt-btn" onclick="setPref('bg',3)">Matrix</button>
-        <button class="pp-opt-btn" onclick="setPref('bg',4)">Stripes</button>
-        <button class="pp-opt-btn" onclick="setPref('bg',5)">Minimal</button>
-        <button class="pp-opt-btn" onclick="setPref('bg',6)">Blocks</button>
+    <div id="m3-progress"><div class="m3-progress-bar1"></div><div class="m3-progress-bar2"></div></div>
+
+    <div class="bg-wrapper">
+        <div class="bg-shape bg-s1 sh-a" id="s1a"></div>
+        <div class="bg-shape bg-s1r" id="s1r"></div>
+        <div class="bg-shape bg-s2 sh-b" id="s2a"></div>
+        <div class="bg-shape bg-s2r" id="s2r"></div>
+        <div class="bg-shape bg-s3 sh-e" id="s3a"></div>
+        <div class="bg-shape bg-s4 sh-e" id="s4a"></div>
+        <div class="bg-shape bg-s4r" id="s4r"></div>
+        <div class="bg-shape bg-s5 sh-b" id="s5a"></div>
+        <svg class="m3-sq m3-sq-a sq-a" id="sq-a" viewBox="0 0 100 100" fill="var(--shape3)"><path d="M50 0C72.3 0 86 0 93 7C100 14 100 27.7 100 50C100 72.3 100 86 93 93C86 100 72.3 100 50 100C27.7 100 14 100 7 93C0 86 0 72.3 0 50C0 27.7 0 14 7 7C14 0 27.7 0 50 0Z"/></svg>
+        <svg class="m3-sq m3-sq-b sq-b" id="sq-b" viewBox="0 0 100 100" fill="var(--shape2)"><path d="M50 0C72.3 0 86 0 93 7C100 14 100 27.7 100 50C100 72.3 100 86 93 93C86 100 72.3 100 50 100C27.7 100 14 100 7 93C0 86 0 72.3 0 50C0 27.7 0 14 7 7C14 0 27.7 0 50 0Z"/></svg>
+        <svg class="m3-sq m3-sq-c sq-c" id="sq-c" viewBox="0 0 100 100" fill="var(--shape1)"><path d="M50 4C25.4 4 4 25.4 4 50C4 74.6 25.4 96 50 96C74.6 96 96 74.6 96 50C96 25.4 74.6 4 50 4Z"/></svg>
     </div>
 
-    <div class="pp-section-title">Sidebar Style</div>
-    <div class="pp-opt-grid" id="sb-opts">
-        <button class="pp-opt-btn" onclick="setPref('sidebar',1)">Default</button>
-        <button class="pp-opt-btn" onclick="setPref('sidebar',2)">Blobs</button>
-        <button class="pp-opt-btn" onclick="setPref('sidebar',3)">Matrix</button>
-        <button class="pp-opt-btn" onclick="setPref('sidebar',4)">Grid</button>
-        <button class="pp-opt-btn" onclick="setPref('sidebar',5)">Organic</button>
-        <button class="pp-opt-btn" onclick="setPref('sidebar',6)">Striped</button>
-    </div>
+    <div id="overlay-ui" onclick="toggleSidebar()"></div>
+    <button class="menu-btn" id="menu-trigger" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
 
-    <div class="pp-section-title">Loader Style</div>
-    <div class="pp-opt-grid" id="ld-opts">
-        <button class="pp-opt-btn" onclick="setPref('loader',1)">Squircle</button>
-        <button class="pp-opt-btn" onclick="setPref('loader',2)">Bounce</button>
-        <button class="pp-opt-btn" onclick="setPref('loader',3)">Combined</button>
-        <button class="pp-opt-btn" onclick="setPref('loader',4)">Pulse</button>
-        <button class="pp-opt-btn" onclick="setPref('loader',5)">Linear</button>
-        <button class="pp-opt-btn" onclick="setPref('loader',6)">Orbit</button>
-    </div>
-
-    <div class="pp-divider"></div>
-
-    <div class="pp-section-title">Typography</div>
-    <div class="pp-font-grid" id="pp-font-grid"></div>
-    <label class="pp-font-btn" style="display:block; text-align:center; width:100%">
-        <input type="file" id="custom-font-upload" hidden accept=".ttf,.otf,.woff,.woff2">
-        <i data-lucide="upload" size="14" style="vertical-align:middle;margin-right:4px"></i> Upload Custom Font (.ttf/.woff)
-    </label>
-    <div class="pp-divider"></div>
-
-    <div id="pp-categories"></div>
-    <div class="pp-divider"></div>
-
-    <div class="pp-section-title" style="margin-top:2px">Accent Colour</div>
-    <div class="pp-accents">
-        <div class="pp-accent-swatch" id="acc-sw-1" onclick="setActiveAccent(1)" title="Accent 1"></div>
-        <div class="pp-accent-swatch" id="acc-sw-2" onclick="setActiveAccent(2)" title="Accent 2"></div>
-        <div class="pp-accent-swatch" id="acc-sw-3" onclick="setActiveAccent(3)" title="Accent 3"></div>
-    </div>
-    <div class="pp-accent-label">1 &nbsp;·&nbsp; 2 &nbsp;·&nbsp; 3</div>
-    <div class="pp-divider" style="margin-top:12px"></div>
-
-    <div class="pp-section-title">Custom Accents</div>
-    <div class="pp-custom-trigger" id="pp-custom-trigger" onclick="toggleCustomBody()">
-        <div class="pp-dots"><div class="pp-dot" id="cust-d1" style="background:#888"></div><div class="pp-dot" id="cust-d2" style="background:#888"></div><div class="pp-dot" id="cust-d3" style="background:#888"></div></div>
-        <span>Customise…</span><i data-lucide="chevron-down" size="12" style="margin-left:auto;opacity:0.5;transition:transform 0.35s var(--spring)" id="custom-chevron"></i>
-    </div>
-    <div class="pp-custom-body" id="pp-custom-body">
-        <div class="pp-custom-body-inner">
-            <div class="pp-color-rows">
-                <div class="pp-color-row"><span class="pp-color-label">Accent 1</span><input type="color" class="pp-color-input" id="cp1" value="#A06800" oninput="onColorPick()"><div class="pp-color-hex" id="cp1-hex">#A06800</div></div>
-                <div class="pp-color-row"><span class="pp-color-label">Accent 2</span><input type="color" class="pp-color-input" id="cp2" value="#7EC8E3" oninput="onColorPick()"><div class="pp-color-hex" id="cp2-hex">#7EC8E3</div></div>
-                <div class="pp-color-row"><span class="pp-color-label">Accent 3</span><input type="color" class="pp-color-input" id="cp3" value="#5BAD72" oninput="onColorPick()"><div class="pp-color-hex" id="cp3-hex">#5BAD72</div></div>
-            </div>
-            <div class="pp-btn-row">
-                <button class="pp-apply-btn" onclick="applyCustomAccents()">Apply</button>
-                <button class="pp-apply-btn" style="background:var(--shape2s)" onclick="saveCustomPaletteSlot()">Save</button>
-                <button class="pp-reset-btn" onclick="resetCustomAccents()">Reset</button>
-            </div>
-            <div class="pp-saved-palettes" id="saved-palettes-list"></div>
-        </div>
-    </div>
-</div>
-
-<div id="palette-indicator" onclick="togglePalettePanel()" title="Change palette">
-    <div class="palette-dots"><div class="palette-dot" id="pd1" style="background-color:#000;"></div><div class="palette-dot" id="pd2" style="background-color:#000;"></div><div class="palette-dot" id="pd3" style="background-color:#000;"></div></div>
-    <span id="palette-name">Warm Amber</span>
-</div>
-
-<nav class="sidebar" id="sidebar">
-    <div class="search-container">
-        <div class="search-input-wrap">
-            <button class="search-icon-btn disabled" id="search-icon-btn" onclick="toggleSearchPopup(event)" title="Filter search"><i data-lucide="search" size="17"></i></button>
-            <input type="text" id="node-search" class="search-input" placeholder="Search..." oninput="runSearch()">
+    <div id="search-popup">
+        <div class="sp-title">Search Mode</div>
+        <div class="sp-chips">
+            <button class="filter-chip" data-mode="text" onclick="setSearchMode('text')">Text (In File)</button>
+            <button class="filter-chip" data-mode="dropdowns" onclick="setSearchMode('dropdowns')">Dropdowns</button>
+            <button class="filter-chip" data-mode="files" onclick="setSearchMode('files')">Files</button>
+            <button class="filter-chip active" data-mode="combined" onclick="setSearchMode('combined')">Combined</button>
         </div>
     </div>
 
-    <div class="nav-actions">
-        <div class="back-pill" onclick="window.location.hash=''; location.reload();"><i data-lucide="home" size="17"></i> Home</div>
+    <div id="palette-panel">
+        <div class="pp-section-title" style="margin-top:0">Appearance</div>
+        <div class="pp-theme-row">
+            <button class="pp-theme-btn" id="theme-sys" onclick="setThemeMode('system')"><i data-lucide="monitor" size="11"></i> System</button>
+            <button class="pp-theme-btn" id="theme-light" onclick="setThemeMode('light')"><i data-lucide="sun" size="11"></i> Light</button>
+            <button class="pp-theme-btn" id="theme-dark" onclick="setThemeMode('dark')"><i data-lucide="moon" size="11"></i> Dark</button>
+        </div>
+
+        <div class="pp-section-title">Background Style</div>
+        <div class="pp-opt-grid" id="bg-opts">
+            <button class="pp-opt-btn" onclick="setPref('bg',1)">Default</button>
+            <button class="pp-opt-btn" onclick="setPref('bg',2)">Blueprint</button>
+            <button class="pp-opt-btn" onclick="setPref('bg',3)">Matrix</button>
+            <button class="pp-opt-btn" onclick="setPref('bg',4)">Stripes</button>
+            <button class="pp-opt-btn" onclick="setPref('bg',5)">Minimal</button>
+            <button class="pp-opt-btn" onclick="setPref('bg',6)">Blocks</button>
+        </div>
+
+        <div class="pp-section-title">Sidebar Style</div>
+        <div class="pp-opt-grid" id="sb-opts">
+            <button class="pp-opt-btn" onclick="setPref('sidebar',1)">Default</button>
+            <button class="pp-opt-btn" onclick="setPref('sidebar',2)">Blobs</button>
+            <button class="pp-opt-btn" onclick="setPref('sidebar',3)">Matrix</button>
+            <button class="pp-opt-btn" onclick="setPref('sidebar',4)">Grid</button>
+            <button class="pp-opt-btn" onclick="setPref('sidebar',5)">Organic</button>
+            <button class="pp-opt-btn" onclick="setPref('sidebar',6)">Striped</button>
+        </div>
+
+        <div class="pp-section-title">Loader Style</div>
+        <div class="pp-opt-grid" id="ld-opts">
+            <button class="pp-opt-btn" onclick="setPref('loader',1)">Squircle</button>
+            <button class="pp-opt-btn" onclick="setPref('loader',2)">Bounce</button>
+            <button class="pp-opt-btn" onclick="setPref('loader',3)">Combined</button>
+            <button class="pp-opt-btn" onclick="setPref('loader',4)">Pulse</button>
+            <button class="pp-opt-btn" onclick="setPref('loader',5)">Linear</button>
+            <button class="pp-opt-btn" onclick="setPref('loader',6)">Orbit</button>
+        </div>
+
+        <div class="pp-section-title">Collapse Style</div>
+        <div class="pp-opt-grid" id="col-opts">
+            <button class="pp-opt-btn" onclick="setPref('collapse',1)">Instant</button>
+            <button class="pp-opt-btn" onclick="setPref('collapse',2)">Smooth</button>
+            <button class="pp-opt-btn" onclick="setPref('collapse',3)">Fade</button>
+        </div>
+
+        <div class="pp-section-title">Card Style</div>
+        <div class="pp-opt-grid" id="card-opts" style="grid-template-columns:1fr 1fr;">
+            <button class="pp-opt-btn" onclick="setPref('card','solid')">Opaque</button>
+            <button class="pp-opt-btn" onclick="setPref('card','glass')">Glassmorphism</button>
+        </div>
+
+        <div class="pp-divider"></div>
+        <div class="pp-section-title">Typography</div>
+        <div id="pp-font-grid" class="pp-font-grid"></div>
+        <label class="pp-font-btn" style="display:block; text-align:center; width:100%">
+            <input type="file" id="custom-font-upload" hidden accept=".ttf,.otf,.woff,.woff2">
+            <i data-lucide="upload" size="14" style="vertical-align:middle;margin-right:4px"></i> Upload Custom Font
+        </label>
+
+        <div class="pp-divider"></div>
+        <div id="pp-categories"></div>
+
+        <div class="pp-divider"></div>
+        <div class="pp-section-title">Accent Colors</div>
+        <div class="pp-accents">
+            <div class="pp-accent-swatch" id="acc-sw-1" onclick="setActiveAccent(1)"></div>
+            <div class="pp-accent-swatch" id="acc-sw-2" onclick="setActiveAccent(2)"></div>
+            <div class="pp-accent-swatch" id="acc-sw-3" onclick="setActiveAccent(3)"></div>
+        </div>
+
+        <div class="pp-divider"></div>
+        <div class="pp-custom-trigger" id="pp-custom-trigger" onclick="toggleCustomBody()">
+            <div class="pp-dots"><div class="pp-dot" id="cust-d1"></div><div class="pp-dot" id="cust-d2"></div><div class="pp-dot" id="cust-d3"></div></div>
+            <span>Customise…</span><i data-lucide="chevron-down" size="12" id="custom-chevron"></i>
+        </div>
+        <div class="pp-custom-body" id="pp-custom-body">
+            <div class="pp-custom-body-inner">
+                <div class="pp-color-rows">
+                    <div class="pp-color-row"><span class="pp-color-label">Accent 1</span><input type="color" class="pp-color-input" id="cp1" oninput="onColorPick()"><div class="pp-color-hex" id="cp1-hex">#000</div></div>
+                    <div class="pp-color-row"><span class="pp-color-label">Accent 2</span><input type="color" class="pp-color-input" id="cp2" oninput="onColorPick()"><div class="pp-color-hex" id="cp2-hex">#000</div></div>
+                    <div class="pp-color-row"><span class="pp-color-label">Accent 3</span><input type="color" class="pp-color-input" id="cp3" oninput="onColorPick()"><div class="pp-color-hex" id="cp3-hex">#000</div></div>
+                </div>
+                <div class="pp-btn-row">
+                    <button class="pp-apply-btn" onclick="applyCustomAccents()">Apply</button>
+                    <button class="pp-apply-btn" style="background:var(--shape2s)" onclick="saveCustomPaletteSlot()">Save</button>
+                    <button class="pp-reset-btn" onclick="resetCustomAccents()">Reset</button>
+                </div>
+                <div class="pp-saved-palettes" id="saved-palettes-list"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="sidebar-link static-link" onclick="window.location.href='index.html'"><i data-lucide="layout-dashboard" size="17"></i> Main</div>
-    <div class="sidebar-link static-link" onclick="window.location.href='creations.html'"><i data-lucide="sparkles" size="17"></i> Creations</div>
-
-    <hr style="opacity:0.1;margin:14px 0">
-
-    <div id="sidebar-folders-home">
-        <div class="sidebar-label">Guides</div>
-        <div id="sidebar-folder-list"></div>
+    <div id="palette-indicator" onclick="togglePalettePanel()">
+        <div class="palette-dots"><div class="palette-dot" id="pd1"></div><div class="palette-dot" id="pd2"></div><div class="palette-dot" id="pd3"></div></div>
+        <span id="palette-name">Warm Amber</span>
     </div>
 
-    <div id="sidebar-links"></div>
-</nav>
-<div class="container" id="picker-view">
-    <header class="page-header">
-        <div class="header-eyebrow">Documentation</div>
-        <h1 class="header-title">Get<br><span class="title-accent">Started</span></h1>
-        <p class="header-sub">Pick a guide to begin your journey.</p>
-    </header>
-    <div class="repo-grid" id="grid"></div>
-</div>
+    <nav class="sidebar" id="sidebar">
+        <div class="search-container">
+            <div class="search-input-wrap">
+                <button class="search-icon-btn disabled" id="search-icon-btn" onclick="toggleSearchPopup(event)"><i data-lucide="search" size="17"></i></button>
+                <input type="text" id="node-search" class="search-input" placeholder="Search..." oninput="runSearch()">
+            </div>
+        </div>
 
-<div class="container" id="reader-view">
-    <div style="max-width:900px;margin:0 auto;">
-        <div id="reader-content"><div id="md-render"></div></div>
+        <div class="nav-actions">
+            <div class="back-pill" onclick="window.location.hash=''; location.reload();"><i data-lucide="home" size="17"></i> Home</div>
+        </div>
+
+        <div class="sidebar-link static-link" onclick="window.location.href='index.html'"><i data-lucide="layout-dashboard" size="17"></i> Main</div>
+        <div class="sidebar-link static-link" onclick="window.location.href='creations.html'"><i data-lucide="sparkles" size="17"></i> Creations</div>
+
+        <hr style="opacity:0.1;margin:14px 0">
+
+        <div id="sidebar-folders-home">
+            <div class="sidebar-label">Guides</div>
+            <div id="sidebar-folder-list"></div>
+        </div>
+
+        <div id="sidebar-links"></div>
+    </nav>
+
+    <div class="container" id="picker-view">
+        <header class="page-header">
+            <div class="header-eyebrow">Documentation</div>
+            <h1 class="header-title">Get<br><span class="title-accent">Started</span></h1>
+            <p class="header-sub">Choose a guide below to explore the documentation.</p>
+        </header>
+        <div class="repo-grid" id="grid"></div>
     </div>
-</div>
 
+    <div class="container" id="reader-view">
+        <div style="max-width:900px;margin:0 auto;">
+            <div id="reader-content">
+                <div id="md-render"></div>
+            </div>
+        </div>
+    </div>
+
+    </body>
+    
 <script>
 /* ═══════════════════════════════════════════════
-   SMOOTH COLLAPSE FIX (UPGRADED)
+   SMOOTH COLLAPSE FIX (UPGRADED WITH 3 VARIANTS)
 ═══════════════════════════════════════════════ */
 document.addEventListener('click', function(e) {
     const summary = e.target.closest('summary');
@@ -684,23 +685,22 @@ document.addEventListener('click', function(e) {
     if(!details || (!details.classList.contains('custom-collapse') && !details.classList.contains('clean-collapse'))) return;
     
     e.preventDefault();
-    
+    const mode = document.body.getAttribute('data-collapse') || '1';
+    const delay = mode === '1' ? 0 : (mode === '2' ? 350 : 250); // Instant vs Smooth vs Fade
+
     if(details.open) {
-        // First remove our custom class to trigger the CSS closing transition
         details.classList.remove('is-expanded');
-        // Wait for the transition to finish before removing the native open attribute
-        setTimeout(() => details.open = false, 350); 
+        if(delay > 0) { setTimeout(() => details.open = false, delay); } 
+        else { details.open = false; }
     } else {
-        // Open the native element first
         details.open = true;
-        void details.offsetWidth; // force reflow
-        // Add our custom class to trigger the CSS opening transition
+        if(delay > 0) void details.offsetWidth; 
         details.classList.add('is-expanded');
     }
 });
 
 /* ═══════════════════════════════════════════════
-   COLOUR PALETTES
+   COLOUR PALETTES (ALL 17 RESTORED)
 ═══════════════════════════════════════════════ */
 const PALETTES = [
     { name:'Warm Amber', cat:'Warm Tones', light:{ bg:'#FFF8EE', card:'rgba(255,251,235,0.78)', text:'#1E1200', dim:'#6B4A1A', sidebar:'rgba(255,252,240,0.98)', border:'rgba(160,104,0,0.13)', a1:'#A06800', a1rgb:'160,104,0', a2:'#7EC8E3', a3:'#5BAD72', s1:'#F2C94C', s1h:'#F7D96A', s1s:'#D4A800', s2:'#7EC8E3', s2h:'#A8DCF0', s2s:'#4FA8C8', s3:'#5BAD72', s3s:'#3D9050' }, dark:{ bg:'#18110A', card:'rgba(32,22,8,0.72)', text:'#F5E8C8', dim:'#C8A070', sidebar:'rgba(22,15,5,0.98)', border:'rgba(242,201,76,0.14)', a1:'#F2C94C', a1rgb:'242,201,76', a2:'#7EC8E3', a3:'#5BAD72', s1:'#F2C94C', s1h:'#F7D96A', s1s:'#D4A800', s2:'#7EC8E3', s2h:'#A8DCF0', s2s:'#4FA8C8', s3:'#5BAD72', s3s:'#3D9050' } },
@@ -739,7 +739,7 @@ const REPO      = "sd6387400-lang.github.io";
 const BASE      = "Get-Started";
 const DESC_PATH = "Descriptions";
 const RAW_BASE  = `https://raw.githubusercontent.com/${USER}/${REPO}/main`;
-const CACHE_NS  = 'gs_cache_v5:';
+const CACHE_NS  = 'gs_cache_v7:'; // Bumping cache ns
 
 let currentFolder = null;
 const fileItemMap = {};
@@ -754,23 +754,65 @@ try { customAccents = JSON.parse(localStorage.getItem('custom_palette')); } catc
 try { savedPalettes = JSON.parse(localStorage.getItem('saved_palettes') || '[]'); } catch(e){}
 let activeFontId   = localStorage.getItem('fontId') || 'nunito';
 
-let prefBg = localStorage.getItem('prefBg') || 1;
-let prefSidebar = localStorage.getItem('prefSidebar') || 1;
-let prefLoader = localStorage.getItem('prefLoader') || 1;
+/* ═══════════════════════════════════════════════
+   FIXED STATE & PREFERENCES
+═══════════════════════════════════════════════ */
+// Convert storage strings to Numbers immediately to fix the highlight bug
+let prefBg = Number(localStorage.getItem('prefBg')) || 1;
+let prefSidebar = Number(localStorage.getItem('prefSidebar')) || 1;
+let prefLoader = Number(localStorage.getItem('prefLoader')) || 1;
+let prefCollapse = Number(localStorage.getItem('prefCollapse')) || 1;
+let prefCard = localStorage.getItem('prefCard') || 'solid';
 
 function setPref(type, val) {
+    // Store correctly
     localStorage.setItem('pref' + type.charAt(0).toUpperCase() + type.slice(1), val);
     document.body.setAttribute(`data-${type}`, val);
-    if(type==='bg') prefBg = val;
-    if(type==='sidebar') prefSidebar = val;
-    if(type==='loader') prefLoader = val;
+    
+    // Update local variables
+    if(type==='bg') prefBg = Number(val);
+    if(type==='sidebar') prefSidebar = Number(val);
+    if(type==='loader') prefLoader = Number(val);
+    if(type==='collapse') prefCollapse = Number(val);
+    if(type==='card') prefCard = val;
+    
     updatePrefUI();
 }
+
 function updatePrefUI() {
-    const act = (id, v) => { document.querySelectorAll(`#${id} .pp-opt-btn`).forEach((b,i) => b.classList.toggle('active', i+1 == v)); };
-    act('bg-opts', prefBg); act('sb-opts', prefSidebar); act('ld-opts', prefLoader);
+    const act = (id, v) => { 
+        const buttons = document.querySelectorAll(`#${id} .pp-opt-btn`);
+        buttons.forEach((b, i) => {
+            // Check if the value matches the index+1 (for numbers) OR matches the text (for strings)
+            const isMatch = (i + 1 == v) || (typeof v === 'string' && b.innerText.toLowerCase().includes(v.toLowerCase()));
+            b.classList.toggle('active', isMatch);
+        }); 
+    };
+
+    // Trigger highlights for the grids
+    act('bg-opts', prefBg); 
+    act('sb-opts', prefSidebar); 
+    act('ld-opts', prefLoader); 
+    act('col-opts', prefCollapse);
+    
+    // Special handling for Card Style (Solid vs Glass)
+    document.querySelectorAll('#card-opts .pp-opt-btn').forEach((b) => {
+        const isGlassBtn = b.innerText.toLowerCase().includes('glass');
+        const activeState = (prefCard === 'glass' && isGlassBtn) || (prefCard === 'solid' && !isGlassBtn);
+        b.classList.toggle('active', activeState);
+    });
 }
-setPref('bg', prefBg); setPref('sidebar', prefSidebar); setPref('loader', prefLoader);
+
+// Ensure the UI is highlighted as soon as the script runs
+updatePrefUI();
+// Set initial body attributes
+document.body.setAttribute('data-bg', prefBg);
+document.body.setAttribute('data-sidebar', prefSidebar);
+document.body.setAttribute('data-loader', prefLoader);
+document.body.setAttribute('data-collapse', prefCollapse);
+document.body.setAttribute('data-card', prefCard);
+
+setPref('bg', prefBg); setPref('sidebar', prefSidebar); setPref('loader', prefLoader); setPref('collapse', prefCollapse); setPref('card', prefCard);
 
 function computeIsDark() {
     if (themeMode === 'dark')  return true;
@@ -782,61 +824,34 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
 });
 
 /* ═══════════════════════════════════════════════
-   PALETTE + THEME + CUSTOM FONT (UPDATED 2 AND 3 OVERRIDE)
+   PALETTE + THEME + CUSTOM FONT
 ═══════════════════════════════════════════════ */
 function applyPalette(idx) {
     const p = PALETTES[idx]; const v = isDark ? p.dark : p.light; const r = document.documentElement.style;
     r.setProperty('--bg-base', v.bg); r.setProperty('--card-bg', v.card); r.setProperty('--text-main', v.text); r.setProperty('--text-dim', v.dim); r.setProperty('--sidebar-bg', v.sidebar); r.setProperty('--border', v.border);
     
-    // OVERRIDE ALL VARIABLES USING CUSTOM ACCENTS 1, 2 AND 3 IF ACTIVE
-    const a1 = customAccents ? customAccents.a1 : v.a1; 
-    const a2 = customAccents ? customAccents.a2 : v.a2; 
-    const a3 = customAccents ? customAccents.a3 : v.a3;
-    
+    const a1 = customAccents ? customAccents.a1 : v.a1; const a2 = customAccents ? customAccents.a2 : v.a2; const a3 = customAccents ? customAccents.a3 : v.a3;
     r.setProperty('--accent1', a1); r.setProperty('--accent2', a2); r.setProperty('--accent3', a3);
-
-    r.setProperty('--shape1', customAccents ? a1 : v.s1); 
-    r.setProperty('--shape1h', customAccents ? a1 : (v.s1h || v.s1)); 
-    r.setProperty('--shape1s', customAccents ? a1 : (v.s1s || v.s1));
-    
-    r.setProperty('--shape2', customAccents ? a2 : v.s2); 
-    r.setProperty('--shape2h', customAccents ? a2 : (v.s2h || v.s2)); 
-    r.setProperty('--shape2s', customAccents ? a2 : (v.s2s || v.s2));
-    
-    r.setProperty('--shape3', customAccents ? a3 : v.s3); 
-    r.setProperty('--shape3s', customAccents ? a3 : (v.s3s || v.s3));
+    r.setProperty('--shape1', customAccents ? a1 : v.s1); r.setProperty('--shape1h', customAccents ? a1 : (v.s1h || v.s1)); r.setProperty('--shape1s', customAccents ? a1 : (v.s1s || v.s1));
+    r.setProperty('--shape2', customAccents ? a2 : v.s2); r.setProperty('--shape2h', customAccents ? a2 : (v.s2h || v.s2)); r.setProperty('--shape2s', customAccents ? a2 : (v.s2s || v.s2));
+    r.setProperty('--shape3', customAccents ? a3 : v.s3); r.setProperty('--shape3s', customAccents ? a3 : (v.s3s || v.s3));
 
     const set = (id, col) => { const el=document.getElementById(id); if(el) el.style.background=col; };
-    set('s1a', customAccents ? a1 : v.s1); 
-    set('s2a', customAccents ? a2 : v.s2); 
-    set('s3a', customAccents ? a3 : v.s3); 
-    set('s4a', customAccents ? a1 : v.s1); 
-    set('s5a', customAccents ? a2 : v.s2);
+    set('s1a', customAccents ? a1 : v.s1); set('s2a', customAccents ? a2 : v.s2); set('s3a', customAccents ? a3 : v.s3); set('s4a', customAccents ? a1 : v.s1); set('s5a', customAccents ? a2 : v.s2);
     
     const setB = (id, col) => { const el=document.getElementById(id); if(el) el.style.borderColor=col; };
-    setB('s1r', customAccents ? a1 : (v.s1s||v.s1)); 
-    setB('s2r', customAccents ? a2 : (v.s2s||v.s2)); 
-    setB('s4r', customAccents ? a1 : (v.s1s||v.s1));
+    setB('s1r', customAccents ? a1 : (v.s1s||v.s1)); setB('s2r', customAccents ? a2 : (v.s2s||v.s2)); setB('s4r', customAccents ? a1 : (v.s1s||v.s1));
     
     const setSvg = (id, col) => { const el=document.getElementById(id); if(el) el.style.fill=col; };
-    setSvg('sq-a', customAccents ? a3 : (v.s3||v.s1)); 
-    setSvg('sq-b', customAccents ? a2 : (v.s2||v.s2)); 
-    setSvg('sq-c', customAccents ? a1 : (v.s1||v.s3));
+    setSvg('sq-a', customAccents ? a3 : (v.s3||v.s1)); setSvg('sq-b', customAccents ? a2 : (v.s2||v.s2)); setSvg('sq-c', customAccents ? a1 : (v.s1||v.s3));
 
     document.body.classList.toggle('dark-mode', isDark); applyActiveAccent(activeAccentN, a1, a2, a3);
 
     const d=[document.getElementById('pd1'),document.getElementById('pd2'),document.getElementById('pd3')];
     if(d[0]) d[0].style.backgroundColor=a1; if(d[1]) d[1].style.backgroundColor=a2; if(d[2]) d[2].style.backgroundColor=a3;
     
-    // Dynamically show Custom or Slot X based on what is active
     const pn = document.getElementById('palette-name'); 
-    if(pn) {
-        if (customAccents) {
-            pn.textContent = (customAccents.slot !== undefined && customAccents.slot !== -1) ? `Slot ${customAccents.slot + 1}` : 'Custom';
-        } else {
-            pn.textContent = p.name;
-        }
-    }
+    if(pn) { pn.textContent = customAccents ? ((customAccents.slot !== undefined && customAccents.slot !== -1) ? `Slot ${customAccents.slot + 1}` : 'Custom') : p.name; }
 
     document.getElementById('acc-sw-1').style.background = a1; document.getElementById('acc-sw-2').style.background = a2; document.getElementById('acc-sw-3').style.background = a3;
     ['acc-sw-1','acc-sw-2','acc-sw-3'].forEach((id,i) => document.getElementById(id).classList.toggle('active', i+1 === activeAccentN));
@@ -858,41 +873,29 @@ function setActiveAccent(n) {
     applyActiveAccent(n, a1, a2, a3);
 }
 function setThemeMode(mode) { themeMode = mode; localStorage.setItem('themeMode', mode); isDark = computeIsDark(); applyPalette(palIdx); }
-function hexToRgb(hex) {
-    hex = hex.replace('#',''); if(hex.length === 3) hex = hex.split('').map(c=>c+c).join('');
-    const i = parseInt(hex, 16); return [(i>>16)&255, (i>>8)&255, i&255];
-}
+function hexToRgb(hex) { hex = hex.replace('#',''); if(hex.length === 3) hex = hex.split('').map(c=>c+c).join(''); const i = parseInt(hex, 16); return [(i>>16)&255, (i>>8)&255, i&255]; }
 
 /* ── Custom Font Upload ── */
 document.getElementById('custom-font-upload').addEventListener('change', async (e) => {
     const file = e.target.files[0]; if(!file) return;
     try {
-        const buffer = await file.arrayBuffer();
-        const font = new FontFace('CustomUserFont', buffer);
-        await font.load(); document.fonts.add(font);
-        document.documentElement.style.setProperty('--font-main', 'CustomUserFont');
-        activeFontId = 'custom';
+        const buffer = await file.arrayBuffer(); const font = new FontFace('CustomUserFont', buffer);
+        await font.load(); document.fonts.add(font); document.documentElement.style.setProperty('--font-main', 'CustomUserFont'); activeFontId = 'custom';
         const reader = new FileReader();
-        reader.onload = function(evt) {
-            try { localStorage.setItem('customFontBase64', evt.target.result); localStorage.setItem('fontId', 'custom'); buildFontPicker(); } catch(err) { console.warn("Font too large for localStorage."); }
-        };
+        reader.onload = function(evt) { try { localStorage.setItem('customFontBase64', evt.target.result); localStorage.setItem('fontId', 'custom'); buildFontPicker(); } catch(err) {} };
         reader.readAsDataURL(file);
-    } catch(err) { console.error('Font load failed', err); }
+    } catch(err) {}
 });
 
 function restoreCustomFont() {
     const base64 = localStorage.getItem('customFontBase64');
-    if(base64 && activeFontId === 'custom') {
-        const font = new FontFace('CustomUserFont', `url(${base64})`);
-        font.load().then(f => { document.fonts.add(f); document.documentElement.style.setProperty('--font-main', 'CustomUserFont'); }).catch(e=>{});
-    }
+    if(base64 && activeFontId === 'custom') { const font = new FontFace('CustomUserFont', `url(${base64})`); font.load().then(f => { document.fonts.add(f); document.documentElement.style.setProperty('--font-main', 'CustomUserFont'); }).catch(e=>{}); }
 }
 
 function setFont(id) {
     if(id === 'custom') { restoreCustomFont(); activeFontId = id; localStorage.setItem('fontId', id); buildFontPicker(); return; }
     const f = FONTS.find(f => f.id === id); if(!f) return;
-    document.documentElement.style.setProperty('--font-main', f.family);
-    activeFontId = id; localStorage.setItem('fontId', id); buildFontPicker();
+    document.documentElement.style.setProperty('--font-main', f.family); activeFontId = id; localStorage.setItem('fontId', id); buildFontPicker();
 }
 
 function buildFontPicker() {
@@ -902,11 +905,7 @@ function buildFontPicker() {
         btn.innerHTML = `<span class="pp-font-preview" style="font-family:${f.family}">${f.preview}</span>${f.name}`;
         btn.onclick = () => setFont(f.id); grid.appendChild(btn);
     });
-    if(activeFontId === 'custom') {
-        const cBtn = document.createElement('button'); cBtn.className = 'pp-font-btn active';
-        cBtn.innerHTML = `<span class="pp-font-preview" style="font-family:CustomUserFont">Aa</span>Custom`;
-        cBtn.onclick = () => setFont('custom'); grid.appendChild(cBtn);
-    }
+    if(activeFontId === 'custom') { const cBtn = document.createElement('button'); cBtn.className = 'pp-font-btn active'; cBtn.innerHTML = `<span class="pp-font-preview" style="font-family:CustomUserFont">Aa</span>Custom`; cBtn.onclick = () => setFont('custom'); grid.appendChild(cBtn); }
 }
 
 function buildPalettePanel() {
@@ -920,17 +919,11 @@ function buildPalettePanel() {
             const a1 = customAccents && i === palIdx ? customAccents.a1 : v.a1; const a2 = customAccents && i === palIdx ? customAccents.a2 : v.a2; const a3 = customAccents && i === palIdx ? customAccents.a3 : v.a3;
             const el = document.createElement('div'); el.className = 'pp-item' + (i === palIdx ? ' active' : '');
             el.innerHTML = `<div class="pp-dots"><div class="pp-dot" style="background:${a1}"></div><div class="pp-dot" style="background:${a2}"></div><div class="pp-dot" style="background:${a3}"></div></div><span>${p.name}</span>`;
-            el.onclick = () => {
-                palIdx = i; sessionStorage.setItem('palIdx', palIdx);
-                if(customAccents) { customAccents = null; localStorage.removeItem('custom_palette'); document.getElementById('pp-custom-trigger').classList.remove('active'); document.getElementById('cust-d1').style.background = '#888'; document.getElementById('cust-d2').style.background = '#888'; document.getElementById('cust-d3').style.background = '#888'; }
-                applyPalette(palIdx);
-            };
+            el.onclick = () => { palIdx = i; sessionStorage.setItem('palIdx', palIdx); if(customAccents) { customAccents = null; localStorage.removeItem('custom_palette'); document.getElementById('pp-custom-trigger').classList.remove('active'); } applyPalette(palIdx); };
             grid.appendChild(el);
         });
     });
-    if(customAccents) {
-        document.getElementById('cust-d1').style.background = customAccents.a1; document.getElementById('cust-d2').style.background = customAccents.a2; document.getElementById('cust-d3').style.background = customAccents.a3; document.getElementById('pp-custom-trigger').classList.add('active');
-    }
+    if(customAccents) { document.getElementById('cust-d1').style.background = customAccents.a1; document.getElementById('cust-d2').style.background = customAccents.a2; document.getElementById('cust-d3').style.background = customAccents.a3; document.getElementById('pp-custom-trigger').classList.add('active'); }
     buildFontPicker(); renderSavedPalettes();
 }
 
@@ -954,105 +947,15 @@ function toggleCustomBody() {
     }
 }
 
-// When user manually picks colors, it becomes "Custom" (slot = -1) again
-function onColorPick() { 
-    ['1','2','3'].forEach(n => { const v = document.getElementById('cp'+n).value; document.getElementById('cp'+n+'-hex').textContent = v; }); 
-}
+function onColorPick() { ['1','2','3'].forEach(n => { const v = document.getElementById('cp'+n).value; document.getElementById('cp'+n+'-hex').textContent = v; }); }
+function applyCustomAccents(slotIdx = -1) { customAccents = { a1: document.getElementById('cp1').value, a2: document.getElementById('cp2').value, a3: document.getElementById('cp3').value, slot: slotIdx }; localStorage.setItem('custom_palette', JSON.stringify(customAccents)); applyPalette(palIdx); renderSavedPalettes(); }
+function resetCustomAccents() { customAccents = null; localStorage.removeItem('custom_palette'); applyPalette(palIdx); document.getElementById('pp-custom-trigger').classList.remove('active'); renderSavedPalettes(); }
+function ensureFullHex(hex) { if(!hex) return '#000000'; hex = hex.trim(); if(!hex.startsWith('#')) hex = '#' + hex; if(hex.length === 4) hex = '#' + hex[1]+hex[1] + hex[2]+hex[2] + hex[3]+hex[3]; return hex.length === 7 ? hex : '#000000'; }
+function saveCustomPaletteSlot() { if(savedPalettes.length >= 10) { alert("Maximum 10 custom palettes saved. Delete one first."); return; } const p = { a1: document.getElementById('cp1').value, a2: document.getElementById('cp2').value, a3: document.getElementById('cp3').value, id: Date.now() }; savedPalettes.push(p); localStorage.setItem('saved_palettes', JSON.stringify(savedPalettes)); applyCustomAccents(savedPalettes.length - 1); }
+function loadSavedPalette(idx) { const p = savedPalettes[idx]; if(!p) return; document.getElementById('cp1').value = ensureFullHex(p.a1); document.getElementById('cp2').value = ensureFullHex(p.a2); document.getElementById('cp3').value = ensureFullHex(p.a3); onColorPick(); applyCustomAccents(idx); }
+window.delSavedPalette = function(e, idx) { e.stopPropagation(); savedPalettes.splice(idx,1); localStorage.setItem('saved_palettes', JSON.stringify(savedPalettes)); if (customAccents && customAccents.slot === idx) { applyCustomAccents(-1); } else if (customAccents && customAccents.slot > idx) { applyCustomAccents(customAccents.slot - 1); } else { renderSavedPalettes(); } };
+function renderSavedPalettes() { const list = document.getElementById('saved-palettes-list'); list.innerHTML = ''; savedPalettes.forEach((p, idx) => { const isActive = customAccents && customAccents.slot === idx; const item = document.createElement('div'); item.className = 'pp-saved-item' + (isActive ? ' active' : ''); if(isActive) { item.style.borderColor = 'var(--accent)'; item.style.color = 'var(--accent)'; item.style.background = 'rgba(var(--accent-rgb),0.1)'; } item.innerHTML = `<div style="display:flex;gap:4px;align-items:center"><div class="pp-dots"><div class="pp-dot" style="background:${p.a1}"></div><div class="pp-dot" style="background:${p.a2}"></div><div class="pp-dot" style="background:${p.a3}"></div></div> Slot ${idx+1}</div><div class="del-btn-wrap" onclick="delSavedPalette(event, ${idx})"><i data-lucide="x" size="12"></i></div>`; item.onclick = () => loadSavedPalette(idx); list.appendChild(item); }); lucide.createIcons(); }
 
-// Passing the slot index allows us to track which slot is currently loaded
-function applyCustomAccents(slotIdx = -1) {
-    customAccents = { 
-        a1: document.getElementById('cp1').value, 
-        a2: document.getElementById('cp2').value, 
-        a3: document.getElementById('cp3').value,
-        slot: slotIdx
-    };
-    localStorage.setItem('custom_palette', JSON.stringify(customAccents)); 
-    applyPalette(palIdx);
-    renderSavedPalettes(); // Re-render to update the highlight state
-}
-
-function resetCustomAccents() {
-    customAccents = null; localStorage.removeItem('custom_palette'); applyPalette(palIdx);
-    document.getElementById('pp-custom-trigger').classList.remove('active'); document.getElementById('cust-d1').style.background = '#888'; document.getElementById('cust-d2').style.background = '#888'; document.getElementById('cust-d3').style.background = '#888';
-    renderSavedPalettes();
-}
-
-/* HELPER: Ensures Hex codes are strictly 7 chars to prevent color input breaking */
-function ensureFullHex(hex) {
-    if(!hex) return '#000000';
-    hex = hex.trim();
-    if(!hex.startsWith('#')) hex = '#' + hex;
-    if(hex.length === 4) hex = '#' + hex[1]+hex[1] + hex[2]+hex[2] + hex[3]+hex[3];
-    return hex.length === 7 ? hex : '#000000';
-}
-
-function saveCustomPaletteSlot() {
-    if(savedPalettes.length >= 10) { alert("Maximum 10 custom palettes saved. Delete one first."); return; }
-    const p = { a1: document.getElementById('cp1').value, a2: document.getElementById('cp2').value, a3: document.getElementById('cp3').value, id: Date.now() };
-    savedPalettes.push(p); 
-    localStorage.setItem('saved_palettes', JSON.stringify(savedPalettes)); 
-    
-    // Apply the slot we just saved so it visually highlights as active immediately
-    applyCustomAccents(savedPalettes.length - 1);
-}
-
-function loadSavedPalette(idx) {
-    const p = savedPalettes[idx]; if(!p) return;
-    
-    // Correctly load all 3 properties into their respective inputs
-    document.getElementById('cp1').value = ensureFullHex(p.a1); 
-    document.getElementById('cp2').value = ensureFullHex(p.a2); 
-    document.getElementById('cp3').value = ensureFullHex(p.a3);
-    
-    onColorPick(); 
-    applyCustomAccents(idx); // Pass idx to register it as an active slot
-}
-
-window.delSavedPalette = function(e, idx) { 
-    e.stopPropagation(); 
-    savedPalettes.splice(idx,1); 
-    localStorage.setItem('saved_palettes', JSON.stringify(savedPalettes)); 
-    
-    // Safely update the active slot reference if we delete the active one or one above it
-    if (customAccents && customAccents.slot === idx) {
-        applyCustomAccents(-1); // Reverts back to generic "Custom"
-    } else if (customAccents && customAccents.slot > idx) {
-        applyCustomAccents(customAccents.slot - 1); // Shift the reference down one
-    } else {
-        renderSavedPalettes(); 
-    }
-};
-
-function renderSavedPalettes() {
-    const list = document.getElementById('saved-palettes-list'); list.innerHTML = '';
-    savedPalettes.forEach((p, idx) => {
-        // Check if this slot is currently the active custom palette
-        const isActive = customAccents && customAccents.slot === idx;
-        
-        const item = document.createElement('div'); 
-        item.className = 'pp-saved-item' + (isActive ? ' active' : '');
-        
-        // Ensure robust active styling
-        if(isActive) {
-            item.style.borderColor = 'var(--accent)';
-            item.style.color = 'var(--accent)';
-            item.style.background = 'rgba(var(--accent-rgb),0.1)';
-        }
-        
-        item.innerHTML = `
-            <div style="display:flex;gap:4px;align-items:center">
-                <div class="pp-dots"><div class="pp-dot" style="background:${p.a1}"></div><div class="pp-dot" style="background:${p.a2}"></div><div class="pp-dot" style="background:${p.a3}"></div></div> Slot ${idx+1}
-            </div>
-            <div class="del-btn-wrap" onclick="delSavedPalette(event, ${idx})"><i data-lucide="x" size="12"></i></div>
-        `;
-        item.onclick = () => loadSavedPalette(idx);
-        list.appendChild(item);
-    });
-    lucide.createIcons();
-}
-
-// Initial apply
 setFont(activeFontId); applyPalette(palIdx);
 
 /* ═══════════════════════════════════════════════
@@ -1066,8 +969,6 @@ function resolveColor(val) {
     if(t === 'accent-soft')                 return 'rgba(var(--accent-rgb),0.5)';
     if(t === 'accent-dim')                  return 'rgba(var(--accent-rgb),0.25)';
     if(t === 'accent-vivid')                return 'var(--accent1)';
-    if(t === 'accent-secondary')            return 'var(--accent2)';
-    if(t === 'accent-tertiary')             return 'var(--accent3)';
     if(t === 'shape1' || t === 'primary')   return 'var(--shape1)';
     if(t === 'shape2' || t === 'secondary') return 'var(--shape2)';
     if(t === 'shape3' || t === 'tertiary')  return 'var(--shape3)';
@@ -1092,24 +993,9 @@ function resolveColorBg(val, alpha) {
 /* ═══════════════════════════════════════════════
    LOADING & CACHE WITH JSON TREE FALLBACK
 ═══════════════════════════════════════════════ */
-function showFullScreenLoader() { 
-    const l = document.getElementById('loader'); 
-    l.style.display = 'flex'; 
-    l.style.opacity = '1'; 
-    l.classList.remove('fade-out'); 
-}
-function hideLoader() { 
-    const l = document.getElementById('loader'); 
-    l.classList.add('fade-out'); 
-    setTimeout(() => l.style.display = 'none', 450); 
-}
-function triggerBarAnim() { 
-    const bar = document.getElementById('m3-progress'); 
-    bar.classList.remove('active'); 
-    bar.offsetHeight; 
-    bar.classList.add('active'); 
-    setTimeout(() => bar.classList.remove('active'), 700); 
-}
+function showFullScreenLoader() { const l = document.getElementById('loader'); l.style.display = 'flex'; l.style.opacity = '1'; l.classList.remove('fade-out'); }
+function hideLoader() { const l = document.getElementById('loader'); l.classList.add('fade-out'); setTimeout(() => l.style.display = 'none', 450); }
+function triggerBarAnim() { const bar = document.getElementById('m3-progress'); bar.classList.remove('active'); bar.offsetHeight; bar.classList.add('active'); setTimeout(() => bar.classList.remove('active'), 700); }
 
 async function cacheSet(key, val) { try { localStorage.setItem(CACHE_NS + key, JSON.stringify({v:val, t:Date.now()})); } catch(e){} }
 async function cacheGet(key, maxAge) { try { const raw = localStorage.getItem(CACHE_NS + key); if(!raw) return null; const d = JSON.parse(raw); if(maxAge && (Date.now() - d.t) > maxAge) return null; return d.v; } catch(e) { return null; } }
@@ -1118,49 +1004,30 @@ async function smartFetch(url, localPath, cacheKey) {
     try { const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now()); if(res.ok) { const text = await res.text(); await cacheSet(cacheKey, text); return text; } } catch(e) {}
     if(localPath) { try { const res2 = await fetch(localPath + '?t=' + Date.now()); if(res2.ok) { const text = await res2.text(); await cacheSet(cacheKey, text); return text; } } catch(e) {} }
     const cached = await cacheGet(cacheKey); if(cached) return cached;
-    throw new Error('All fetch methods failed: ' + url);
+    throw new Error('All fetch methods failed');
 }
 
-// Upgraded API fetcher with permanent tree.json fallback
 async function smartFetchJSON(url, _cacheKey) {
     try { 
         const res = await fetch(url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now()); 
         if(res.ok) {
             const data = await res.json();
-            
-            // Build the global permanent fallback tree
-            let fallbackTree = {};
-            try { fallbackTree = JSON.parse(localStorage.getItem('tree_fallback') || '{}'); } catch(e){}
-            fallbackTree[_cacheKey] = data;
-            localStorage.setItem('tree_fallback', JSON.stringify(fallbackTree));
-            
-            await cacheSet(_cacheKey, data);
-            return data;
-        } else {
-            throw new Error('API limit or bad response');
-        }
+            let fallbackTree = {}; try { fallbackTree = JSON.parse(localStorage.getItem('tree_fallback') || '{}'); } catch(e){}
+            fallbackTree[_cacheKey] = data; localStorage.setItem('tree_fallback', JSON.stringify(fallbackTree));
+            await cacheSet(_cacheKey, data); return data;
+        } else { throw new Error('API limit'); }
     } catch(e) {
-        // Try to recover from immediate cache
-        const cached = await cacheGet(_cacheKey); 
-        if(cached) return cached;
-        
-        // Recover from permanent fallback tree (API limits handler)
-        try {
-            const fallbackTree = JSON.parse(localStorage.getItem('tree_fallback') || '{}');
-            if(fallbackTree[_cacheKey]) {
-                console.warn('GitHub API limit reached. Using local tree.json fallback.');
-                return fallbackTree[_cacheKey];
-            }
-        } catch(err) {}
-        
-        throw new Error('Cannot fetch JSON and no fallback available.');
+        const cached = await cacheGet(_cacheKey); if(cached) return cached;
+        try { const fallbackTree = JSON.parse(localStorage.getItem('tree_fallback') || '{}'); if(fallbackTree[_cacheKey]) return fallbackTree[_cacheKey]; } catch(err) {}
+        throw new Error('Fetch failed');
     }
 }
 
 /* ═══════════════════════════════════════════════
-   SEARCH POPUP
+   ADVANCED SEARCH ENGINE (Text, Dropdown, Files)
 ═══════════════════════════════════════════════ */
 let searchMode = 'combined'; let searchPopupOpen = false;
+let originalMarkdownContent = ""; 
 
 function toggleSearchPopup(e) {
     e.stopPropagation(); const btn = document.getElementById('search-icon-btn'); if(btn.classList.contains('disabled')) return;
@@ -1168,51 +1035,105 @@ function toggleSearchPopup(e) {
     popup.style.top = (rect.bottom + 6) + 'px'; popup.style.left = rect.left + 'px';
     searchPopupOpen = !searchPopupOpen; popup.classList.toggle('open', searchPopupOpen);
 }
-function setSearchMode(mode) { searchMode = mode; document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.mode === mode)); runSearch(); searchPopupOpen = false; document.getElementById('search-popup').classList.remove('open'); }
+
+function setSearchMode(mode) { 
+    searchMode = mode; 
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.mode === mode)); 
+    runSearch(); 
+    searchPopupOpen = false; document.getElementById('search-popup').classList.remove('open'); 
+}
+
+function highlightInTextNodes(node, query) {
+    if (node.nodeType === 3) { 
+        const lowerVal = node.nodeValue.toLowerCase();
+        const idx = lowerVal.indexOf(query);
+        if (idx >= 0 && node.parentElement && !node.parentElement.classList.contains('search-hl') && node.parentElement.tagName !== 'CODE' && node.parentElement.tagName !== 'SCRIPT') {
+            const matchText = node.nodeValue.substring(idx, idx + query.length);
+            const beforeText = node.nodeValue.substring(0, idx);
+            const afterText = node.nodeValue.substring(idx + query.length);
+
+            const wrapper = document.createElement('span');
+            wrapper.innerHTML = `${beforeText}<mark class="search-hl">${matchText}</mark>${afterText}`;
+            node.replaceWith(...wrapper.childNodes);
+        }
+    } else if (node.nodeType === 1 && node.childNodes && !/(script|style|mark|code|pre)/i.test(node.tagName)) {
+        for (let i = 0; i < node.childNodes.length; i++) {
+            highlightInTextNodes(node.childNodes[i], query);
+        }
+    }
+}
 
 function runSearch() {
     const q = document.getElementById('node-search').value.toLowerCase().trim();
+    
+    // Grid View Search
     if(document.getElementById('picker-view').style.display !== 'none') {
-        document.querySelectorAll('.repo-card').forEach(card => { card.style.display = card.querySelector('.repo-name').innerText.toLowerCase().includes(q) ? '' : 'none'; });
+        document.querySelectorAll('.repo-card').forEach(card => { 
+            card.style.display = card.querySelector('.repo-name').innerText.toLowerCase().includes(q) ? '' : 'none'; 
+        });
         return;
     }
     
+    // Clean up all sidebar UI
     document.querySelectorAll('.sidebar-link:not(.static-link)').forEach(l => { l.style.display=''; removeHighlights(l); });
     document.querySelectorAll('.sidebar-dropdown').forEach(d => { d.style.display = ''; d.classList.remove('active'); });
+    
+    // Clean up document highlights
+    const render = document.getElementById('md-render');
+    if (originalMarkdownContent) {
+        render.innerHTML = originalMarkdownContent; 
+        lucide.createIcons(); initTypewriters(); 
+    }
 
     if(!q) return;
 
-    document.querySelectorAll('.sidebar-dropdown').forEach(dd => {
-        const trigText = dd.querySelector('.dropdown-trigger span')?.innerText.toLowerCase() || '';
-        const triggerMatch = trigText.includes(q) && (searchMode === 'dropdowns' || searchMode === 'combined');
-        let hasVisibleChild = false;
+    // --- SIDEBAR FILTERING (Dropdowns, Files, Combined) ---
+    if (searchMode === 'dropdowns' || searchMode === 'files' || searchMode === 'combined') {
+        document.querySelectorAll('.sidebar-dropdown').forEach(dd => {
+            const trigText = dd.querySelector('.dropdown-trigger span')?.innerText.toLowerCase() || '';
+            const triggerMatch = trigText.includes(q) && (searchMode === 'dropdowns' || searchMode === 'combined');
+            let hasVisibleChild = false;
 
-        dd.querySelectorAll('.sidebar-link:not(.static-link)').forEach(l => {
-            const spanText = l.querySelector('.link-text')?.innerText || l.innerText;
-            const childMatch = spanText.toLowerCase().includes(q) && (searchMode === 'files' || searchMode === 'combined');
-            if(childMatch || triggerMatch || searchMode === 'text') {
-                l.style.display = '';
-                if(childMatch) highlightText(l, q);
-                hasVisibleChild = true;
+            dd.querySelectorAll('.sidebar-link:not(.static-link)').forEach(l => {
+                const spanText = l.querySelector('.link-text')?.innerText || l.innerText;
+                const childMatch = spanText.toLowerCase().includes(q) && (searchMode === 'files' || searchMode === 'combined');
+                if(childMatch || triggerMatch) {
+                    l.style.display = '';
+                    if(childMatch) highlightText(l, q);
+                    hasVisibleChild = true;
+                } else {
+                    l.style.display = 'none';
+                }
+            });
+
+            if(triggerMatch || hasVisibleChild) {
+                dd.style.display = '';
+                if(triggerMatch || hasVisibleChild) dd.classList.add('active');
             } else {
-                l.style.display = 'none';
+                dd.style.display = 'none';
             }
         });
 
-        if(triggerMatch || hasVisibleChild || searchMode === 'text') {
-            dd.style.display = '';
-            if(triggerMatch || hasVisibleChild) dd.classList.add('active');
-        } else {
-            dd.style.display = 'none';
-        }
-    });
+        document.querySelectorAll('#sidebar-links > .sidebar-link:not(.static-link)').forEach(l => {
+            const spanText = l.querySelector('.link-text')?.innerText || l.innerText;
+            if(spanText.toLowerCase().includes(q) && (searchMode === 'files' || searchMode === 'combined')) {
+                l.style.display = ''; highlightText(l, q);
+            } else { l.style.display = 'none'; }
+        });
+    } 
+    
+    // If strict Text mode, hide unmatched sidebar UI entirely so user focuses on text
+    if (searchMode === 'text') {
+        document.querySelectorAll('.sidebar-dropdown').forEach(dd => dd.style.display = 'none');
+        document.querySelectorAll('#sidebar-links > .sidebar-link:not(.static-link)').forEach(l => {
+            if(!l.classList.contains('active')) l.style.display = 'none';
+        });
+    }
 
-    document.querySelectorAll('#sidebar-links > .sidebar-link:not(.static-link)').forEach(l => {
-        const spanText = l.querySelector('.link-text')?.innerText || l.innerText;
-        if(spanText.toLowerCase().includes(q) && (searchMode === 'files' || searchMode === 'combined' || searchMode === 'text')) {
-            l.style.display = ''; highlightText(l, q);
-        } else { l.style.display = 'none'; }
-    });
+    // --- TEXT HIGHLIGHTING IN DOCUMENT (Text, Combined) ---
+    if (searchMode === 'text' || searchMode === 'combined') {
+        if (originalMarkdownContent) { highlightInTextNodes(render, q); }
+    }
 }
 
 function highlightText(el, q) {
@@ -1226,96 +1147,149 @@ function removeHighlights(el) {
 }
 
 /* ═══════════════════════════════════════════════
-   ORGANISE LOGIC (Upgraded for Dropdown State)
+   ORGANISE LOGIC
 ═══════════════════════════════════════════════ */
 async function fetchOrganise(folderPath) {
     try {
-        const url = `${RAW_BASE}/${folderPath}/organise.txt`;
-        const local = `${folderPath}/organise.txt`;
-        const raw = await smartFetch(url, local, `org_${folderPath}`);
+        const raw = await smartFetch(`${RAW_BASE}/${folderPath}/organise.txt`, `${folderPath}/organise.txt`, `org_${folderPath}`);
         const map = {};
         if(raw) {
-            const lines = raw.split('\n');
-            lines.forEach(l => {
+            raw.split('\n').forEach(l => {
                 const m = l.match(/(?:dropdown|dropdowns|place)="([^"]+)"=(\d+)(?:=(open|closed))?/);
-                if(m) {
-                    map[m[1]] = { 
-                        pos: parseInt(m[2]), 
-                        state: m[3] || 'closed' 
-                    };
-                }
+                if(m) map[m[1]] = { pos: parseInt(m[2]), state: m[3] || 'closed' };
             });
         }
         return map;
     } catch(e) { return {}; }
 }
-
 /* ═══════════════════════════════════════════════
    INIT & NAVIGATION
 ═══════════════════════════════════════════════ */
 lucide.createIcons();
-function toggleSidebar() { const sidebar = document.getElementById('sidebar'); const overlay = document.getElementById('overlay-ui'); const btnIcon = document.querySelector('.menu-btn i'); sidebar.classList.toggle('active'); overlay.classList.toggle('active'); btnIcon.setAttribute('data-lucide', sidebar.classList.contains('active') ? 'x' : 'menu'); lucide.createIcons(); }
+function toggleSidebar() { 
+    const sidebar = document.getElementById('sidebar'); 
+    const overlay = document.getElementById('overlay-ui'); 
+    const btnIcon = document.querySelector('.menu-btn i'); 
+    sidebar.classList.toggle('active'); 
+    overlay.classList.toggle('active'); 
+    btnIcon.setAttribute('data-lucide', sidebar.classList.contains('active') ? 'x' : 'menu'); 
+    lucide.createIcons(); 
+}
 
 async function init() {
-    const grid = document.getElementById('grid'); const folderList = document.getElementById('sidebar-folder-list');
+    const grid = document.getElementById('grid'); 
+    const folderList = document.getElementById('sidebar-folder-list');
     try {
         const folders = await smartFetchJSON(`https://api.github.com/repos/${USER}/${REPO}/contents/${BASE}`, `folders_root`);
         grid.innerHTML = ''; folderList.innerHTML = ''; let cardIndex = 0;
+        
         for(const f of folders) {
             if(f.type === 'dir') {
-                const card = document.createElement('div'); card.className = 'repo-card'; card.style.setProperty('--delay', (0.55 + cardIndex * 0.14) + 's'); cardIndex++;
+                const card = document.createElement('div'); 
+                card.className = 'repo-card'; 
+                card.style.setProperty('--delay', (0.55 + cardIndex * 0.14) + 's'); 
+                cardIndex++;
+                
                 card.innerHTML = `<div class="repo-name">${f.name.replace(/-/g,' ')}</div><div class="card-desc" id="desc-${f.name}">Loading…</div><div class="card-arrow"><i data-lucide="arrow-right" size="13"></i> Open guide</div>`;
                 card.onclick = () => { showFullScreenLoader(); window.location.hash = f.name; }; 
-                grid.appendChild(card); fetchDescription(f.name);
+                grid.appendChild(card); 
+                fetchDescription(f.name);
                 
-                const sItem = document.createElement('div'); sItem.className = 'sidebar-folder-item'; sItem.innerHTML = `<div class="sidebar-folder-dot"></div>${f.name.replace(/-/g,' ')}`;
+                const sItem = document.createElement('div'); 
+                sItem.className = 'sidebar-folder-item'; 
+                sItem.innerHTML = `<div class="sidebar-folder-dot"></div>${f.name.replace(/-/g,' ')}`;
                 sItem.onclick = () => { showFullScreenLoader(); window.location.hash = f.name; }; 
                 folderList.appendChild(sItem);
             }
         }
-        lucide.createIcons(); handleHashNavigation();
-    } catch(e) { grid.innerHTML = '<div style="padding:40px;opacity:0.5;font-weight:600">Could not load guides. Check your connection or API limits.</div>'; }
-    
-    // Hide loader only if we aren't opening a specific file hash immediately
+        lucide.createIcons(); 
+        handleHashNavigation();
+    } catch(e) { 
+        grid.innerHTML = '<div style="padding:40px;opacity:0.5;font-weight:600">Could not load guides.</div>'; 
+    }
     if(!window.location.hash.replace('#', '')) hideLoader();
-    
     applyActiveAccent(activeAccentN, getComputedStyle(document.body).getPropertyValue('--accent1'), getComputedStyle(document.body).getPropertyValue('--accent2'), getComputedStyle(document.body).getPropertyValue('--accent3'));
 }
 
 function handleHashNavigation() {
-    const raw = window.location.hash.replace('#', ''); const searchBtn = document.getElementById('search-icon-btn');
-    if(!raw) { document.getElementById('picker-view').style.display = 'block'; document.getElementById('reader-view').style.display = 'none'; document.getElementById('sidebar-folders-home').style.display = 'block'; searchBtn.classList.add('disabled'); currentFolder = null; return; }
-    document.getElementById('sidebar-folders-home').style.display = 'none'; searchBtn.classList.remove('disabled');
-    const parts = raw.split('~'); const folderName = parts[0]; let targetFile = null;
-    if(parts.length === 3) targetFile = parts[1] + '/' + parts[2]; else if(parts.length === 2) targetFile = parts[1];
-    if(folderName === currentFolder && targetFile) { openFileByKey(targetFile); } else { loadProject(`${BASE}/${folderName}`, targetFile); }
+    const raw = window.location.hash.replace('#', ''); 
+    const searchBtn = document.getElementById('search-icon-btn');
+    
+    if(!raw) { 
+        document.getElementById('picker-view').style.display = 'block'; 
+        document.getElementById('reader-view').style.display = 'none'; 
+        document.getElementById('sidebar-folders-home').style.display = 'block'; 
+        searchBtn.classList.add('disabled'); 
+        currentFolder = null; 
+        return; 
+    }
+    
+    document.getElementById('sidebar-folders-home').style.display = 'none'; 
+    searchBtn.classList.remove('disabled');
+    
+    const parts = raw.split('~'); 
+    const folderName = parts[0]; 
+    let targetFile = null;
+    
+    if(parts.length === 3) targetFile = parts[1] + '/' + parts[2]; 
+    else if(parts.length === 2) targetFile = parts[1];
+    
+    if(folderName === currentFolder && targetFile) { 
+        openFileByKey(targetFile); 
+    } else { 
+        loadProject(`${BASE}/${folderName}`, targetFile); 
+    }
 }
-function openFileByKey(key) { let e = fileItemMap[key]; if(!e) { const filename = key.includes('/') ? key.split('/').pop() : key; e = fileItemMap[filename]; } if(e) fetchContent(e.url, e.localPath, e.el, true); }
-window.addEventListener('hashchange', handleHashNavigation); window.addEventListener('popstate', handleHashNavigation);
+
+function openFileByKey(key) { 
+    let e = fileItemMap[key]; 
+    if(!e) { 
+        const filename = key.includes('/') ? key.split('/').pop() : key; 
+        e = fileItemMap[filename]; 
+    } 
+    if(e) fetchContent(e.url, e.localPath, e.el, true); 
+}
+
+window.addEventListener('hashchange', handleHashNavigation); 
+window.addEventListener('popstate', handleHashNavigation);
 
 async function fetchDescription(folderName) {
-    const el = document.getElementById(`desc-${folderName}`); const url = `${RAW_BASE}/${DESC_PATH}/${folderName}.md`; const local = `${DESC_PATH}/${folderName}.md`;
-    try { const t = await smartFetch(url, local, `desc_${folderName}`); el.innerText = t.substring(0, 120) + (t.length > 120 ? '…' : ''); } catch { el.innerText = 'Stable Documentation Node.'; }
+    const el = document.getElementById(`desc-${folderName}`); 
+    try { 
+        const t = await smartFetch(`${RAW_BASE}/${DESC_PATH}/${folderName}.md`, `${DESC_PATH}/${folderName}.md`, `desc_${folderName}`); 
+        el.innerText = t.substring(0, 120) + (t.length > 120 ? '…' : ''); 
+    } catch { 
+        el.innerText = 'Stable Documentation Node.'; 
+    }
 }
 
+/* ═══════════════════════════════════════════════
+   MARKDOWN RENDERER & LOGIC
+═══════════════════════════════════════════════ */
 const renderer = new marked.Renderer();
-renderer.code = (code, lang) => { const escaped = String(code).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); return `<div class="code-container"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>${escaped}</code></pre></div>`; };
+renderer.code = (code, lang) => { 
+    const escaped = String(code).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
+    return `<div class="code-container"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>${escaped}</code></pre></div>`; 
+};
 marked.setOptions({ renderer });
 
-/* ── Load project (folder) & Duplicate fix & Organise feature ── */
 let currentLoadId = 0; 
-
 async function loadProject(path, targetFile = null) {
     const loadId = ++currentLoadId;
-    document.getElementById('picker-view').style.display = 'none'; document.getElementById('reader-view').style.display = 'block'; document.getElementById('sidebar-folders-home').style.display = 'none';
-    const links = document.getElementById('sidebar-links'); currentFolder = path.replace(BASE + '/', '');
+    document.getElementById('picker-view').style.display = 'none'; 
+    document.getElementById('reader-view').style.display = 'block'; 
+    document.getElementById('sidebar-folders-home').style.display = 'none';
+    const links = document.getElementById('sidebar-links'); 
+    currentFolder = path.replace(BASE + '/', '');
+    
     for(const k in fileItemMap) delete fileItemMap[k];
 
     try {
         let subFolders = await smartFetchJSON(`https://api.github.com/repos/${USER}/${REPO}/contents/${encodeURIComponent(path)}`, `folder_${path}`);
         if(loadId !== currentLoadId) return; 
 
-        links.innerHTML = ''; let firstUrl = null, firstLocal = null, firstEl = null;
+        links.innerHTML = ''; 
+        let firstUrl = null, firstLocal = null, firstEl = null;
 
         const folderOrg = await fetchOrganise(path);
         subFolders.sort((a,b) => {
@@ -1330,21 +1304,26 @@ async function loadProject(path, targetFile = null) {
         for(const sub of subFolders) {
             if(sub.type === 'dir' && !seenDropdowns.has(sub.name)) {
                 seenDropdowns.add(sub.name);
-                
-                // Get defined state for dropdown (defaults to closed via fetchOrganise)
                 const folderData = folderOrg[sub.name] || { state: 'closed' };
                 const isDefaultOpen = folderData.state === 'open';
                 
                 const dd = document.createElement('div'); 
                 dd.className = 'sidebar-dropdown' + (isDefaultOpen ? ' active' : '');
                 
-                const trigger = document.createElement('div'); trigger.className = 'dropdown-trigger';
+                const trigger = document.createElement('div'); 
+                trigger.className = 'dropdown-trigger';
                 trigger.innerHTML = `<span>${sub.name.replace(/-/g,' ')}</span><i class="drop-icon" data-lucide="chevron-down" size="14"></i>`;
                 trigger.onclick = () => dd.classList.toggle('active');
                 
-                const contentWrap = document.createElement('div'); contentWrap.className = 'dropdown-content';
-                const contentInner = document.createElement('div'); contentInner.className = 'dropdown-content-inner';
-                contentWrap.appendChild(contentInner); dd.appendChild(trigger); dd.appendChild(contentWrap); links.appendChild(dd);
+                const contentWrap = document.createElement('div'); 
+                contentWrap.className = 'dropdown-content';
+                const contentInner = document.createElement('div'); 
+                contentInner.className = 'dropdown-content-inner';
+                
+                contentWrap.appendChild(contentInner); 
+                dd.appendChild(trigger); 
+                dd.appendChild(contentWrap); 
+                links.appendChild(dd);
 
                 let files = await smartFetchJSON(sub.url + (sub.url.includes('?') ? '&' : '?') + '_t=' + Date.now(), `subdir_${sub.url}`);
                 if(loadId !== currentLoadId) return; 
@@ -1362,13 +1341,17 @@ async function loadProject(path, targetFile = null) {
                 files.forEach(file => {
                     if(file.name.endsWith('.md') && !seenFiles.has(file.name)) {
                         seenFiles.add(file.name);
-                        const item = document.createElement('div'); item.className = 'sidebar-link doc-link';
+                        const item = document.createElement('div'); 
+                        item.className = 'sidebar-link doc-link';
                         const name = file.name.replace('.md', ''); 
                         item.innerHTML = `<span class="link-text">${name}</span>`; 
                         
-                        const localPath = `${BASE}/${currentFolder}/${sub.name}/${file.name}`; const mapKey = sub.name + '/' + name;
+                        const localPath = `${BASE}/${currentFolder}/${sub.name}/${file.name}`; 
+                        const mapKey = sub.name + '/' + name;
+                        
                         fileItemMap[mapKey] = { url: file.download_url, localPath, el: item };
                         if(!firstUrl) { firstUrl = file.download_url; firstLocal = localPath; firstEl = item; }
+                        
                         item.onclick = (e) => { 
                             e.stopPropagation(); 
                             history.pushState(null, '', '#' + currentFolder + '~' + sub.name + '~' + name); 
@@ -1384,37 +1367,68 @@ async function loadProject(path, targetFile = null) {
             openFileByKey(targetFile); 
         } else if(firstUrl) { 
             fetchContent(firstUrl, firstLocal, firstEl, true); 
-        } else {
-            hideLoader(); // Fallback if the folder is completely empty
+        } else { 
+            hideLoader(); 
         }
-    } catch(e) { console.error(e); location.hash = ''; hideLoader(); }
+    } catch(e) { 
+        location.hash = ''; 
+        hideLoader(); 
+    }
 }
 
 function copyCode(btn) {
     const pre = btn.parentElement ? btn.parentElement.querySelector('pre') : null; if(!pre) return;
     const text = pre.innerText || pre.textContent || '';
-    const doSuccess = () => { btn.textContent = '✓ Copied!'; btn.style.background = '#22c55e'; btn.style.transform = 'scale(1.08)'; setTimeout(() => { btn.textContent = 'Copy'; btn.style.background = ''; btn.style.transform = ''; }, 2000); };
-    if(navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(doSuccess).catch(() => fallbackCopy(text, doSuccess)); } else { fallbackCopy(text, doSuccess); }
+    const doSuccess = () => { 
+        btn.textContent = '✓ Copied!'; 
+        btn.style.background = '#22c55e'; 
+        btn.style.transform = 'scale(1.08)'; 
+        setTimeout(() => { btn.textContent = 'Copy'; btn.style.background = ''; btn.style.transform = ''; }, 2000); 
+    };
+    if(navigator.clipboard && window.isSecureContext) { 
+        navigator.clipboard.writeText(text).then(doSuccess).catch(() => fallbackCopy(text, doSuccess)); 
+    } else { 
+        fallbackCopy(text, doSuccess); 
+    }
 }
-function fallbackCopy(text, cb) { const ta = document.createElement('textarea'); ta.value = text; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); cb(); } catch(e){} document.body.removeChild(ta); }
+
+function fallbackCopy(text, cb) { 
+    const ta = document.createElement('textarea'); 
+    ta.value = text; 
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0'; 
+    document.body.appendChild(ta); 
+    ta.select(); 
+    try { document.execCommand('copy'); cb(); } catch(e){} 
+    document.body.removeChild(ta); 
+}
 
 async function fetchContent(url, localPath, el, skipHash = false) {
-    document.querySelectorAll('.sidebar-link.doc-link').forEach(i => i.classList.remove('active')); el.classList.add('active'); triggerBarAnim();
+    document.querySelectorAll('.sidebar-link.doc-link').forEach(i => i.classList.remove('active')); 
+    el.classList.add('active'); 
+    triggerBarAnim();
+    
     const render = document.getElementById('md-render');
     
     try {
-        let relLocal = localPath; if(!relLocal && url) { try { const u = new URL(url); const parts = u.pathname.split('/main/'); relLocal = parts[1] || null; } catch(e){} }
+        let relLocal = localPath; 
+        if(!relLocal && url) { 
+            try { const u = new URL(url); const parts = u.pathname.split('/main/'); relLocal = parts[1] || null; } catch(e){} 
+        }
+        
         const cacheKey = 'file_' + url.replace(/[^a-z0-9]/gi,'_').substring(0,120);
         let text = await smartFetch(url, relLocal, cacheKey);
-        const urlObj = new URL(url); const pathParts = urlObj.pathname.split('/main/')[1].split('/'); pathParts.shift(); pathParts.pop(); const subPath = pathParts.join('/');
+        
+        const urlObj = new URL(url); 
+        const pathParts = urlObj.pathname.split('/main/')[1].split('/'); 
+        pathParts.shift(); 
+        pathParts.pop(); 
+        const subPath = pathParts.join('/');
 
-        // ADDED: The new HTML Symbol Parser Tag <sym>...</sym>
+        // CUSTOM TAG REPLACEMENTS
         text = text.replace(/<sym>([\s\S]*?)<\/sym>/g, '<span class="html-sym">$1</span>');
-
         text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
         text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m,s,a,c) => { const sz={1:'2.8rem',2:'2.4rem',3:'2.0rem',4:'1.8rem',5:'1.6rem',6:'1.4rem',7:'1.2rem',8:'1.1rem',9:'1.05rem',10:'1rem'}; return `<div style="font-size:${sz[s]||'1.2rem'};text-align:${a};font-weight:${s<=3?'800':'600'};margin:1.5rem 0 0.8rem;line-height:1.2;color:var(--text-main);">${c}</div>`; });
         
-        // FIXED: The new inner-wrap layers for perfectly smooth collapses!
         text = text.replace(/<collapse heading="(.*?)"([^>]*)>([\s\S]*?)<\/collapse>/g,(m,h,attrs,con)=>{ const ga = (n) => { const match=attrs.match(new RegExp(`${n}="([^"]*)"`)); return match?match[1]:null; }; const color = ga('color') || 'accent'; const bgColor = ga('bg-color') || 'accent'; const cc = resolveColor(color); const bgc = resolveColorBg(bgColor, 0.07); return `<details class="custom-collapse" style="border:2px solid ${cc};background:${bgc}"><summary style="color:${cc};font-weight:700">${h}</summary><div class="collapse-anim-wrap"><div class="collapse-anim-inner"><div class="collapse-body">${con}</div></div></div></details>`; });
         text = text.replace(/<collapse2 heading="(.*?)" unextendedhr="(.*?)" extendedhr="(.*?)">([\s\S]*?)<\/collapse2>/g,(m,h,uhr,exhr,con)=>{ return `<div class="collapse2-container"><details class="clean-collapse"><summary><span>${h}</span><i data-lucide="chevron-down" size="18" style="opacity:0.5"></i></summary><div class="clean-anim-wrap"><div class="clean-anim-inner"><div class="clean-body">${con}${exhr==='true'?'<hr class="collapse-hr">':''}</div></div></div></details>${uhr==='true'?'<hr class="collapse-hr">':''}</div>`; });
         
@@ -1428,30 +1442,63 @@ async function fetchContent(url, localPath, el, skipHash = false) {
         text = text.replace(/<video>(.*?)<\/video>/g,(m,n)=>`<video muted playsinline loop><source src="${RAW_BASE}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`);
         text = text.replace(/<audio>(.*?)<\/audio>/g,(m,n)=>`<audio controls src="${RAW_BASE}/audio/${subPath}/${n.trim()}" onerror="this.src='${RAW_BASE}/audio/${n.trim()}'"></audio>`);
 
-        render.innerHTML = marked.parse(text); lucide.createIcons(); initTypewriters(); setupVideoAutoPlay();
-        render.style.opacity = '0'; render.style.transform = 'translateY(12px)';
+        // Cache Original Markdown HTML for fast Search Text Re-rendering
+        originalMarkdownContent = marked.parse(text);
+        render.innerHTML = originalMarkdownContent; 
+        
+        lucide.createIcons(); 
+        initTypewriters(); 
+        setupVideoAutoPlay();
+        
+        render.style.opacity = '0'; 
+        render.style.transform = 'translateY(12px)';
         
         requestAnimationFrame(() => { 
             render.style.transition = 'opacity 0.4s var(--m3-decel), transform 0.45s var(--spring)'; 
             render.style.opacity = '1'; 
             render.style.transform = 'translateY(0)'; 
-            
-            // HIDE LOADER ONLY ONCE DOCUMENT IS RENDERED AND ANIMATED
             hideLoader(); 
+            // Re-run search if text is typed so text gets highlighted in new document
+            if (document.getElementById('node-search').value.trim()) runSearch();
         });
         
-        if(window.matchMedia('(max-aspect-ratio:1/1)').matches) { document.getElementById('sidebar').classList.remove('active'); document.getElementById('overlay-ui').classList.remove('active'); }
+        if(window.matchMedia('(max-aspect-ratio:1/1)').matches) { 
+            document.getElementById('sidebar').classList.remove('active'); 
+            document.getElementById('overlay-ui').classList.remove('active'); 
+        }
         window.scrollTo({top:0, behavior:'smooth'});
     } catch(e) { 
-        render.innerHTML = '<div style="padding:30px;color:var(--accent)">Error loading content. Check connection or try refreshing.</div>'; 
+        render.innerHTML = '<div style="padding:30px;color:var(--accent)">Error loading content.</div>'; 
         hideLoader(); 
     }
 }
 
-function initTypewriters() { document.querySelectorAll('.tw-text').forEach(el => { const fullText = el.getAttribute('data-fulltext'); const state = el.dataset.state; let i = 0; function type() { if(i < fullText.length) { el.innerText += fullText.charAt(i); i++; setTimeout(type, 78); } else if(state === 'continuous') { setTimeout(() => { el.innerText = ''; i = 0; type(); }, 2200); } } type(); }); }
-function setupVideoAutoPlay() { const obs = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting ? e.target.play() : e.target.pause()), {threshold:0.5}); document.querySelectorAll('#md-render video').forEach(v => obs.observe(v)); }
+function initTypewriters() { 
+    document.querySelectorAll('.tw-text').forEach(el => { 
+        const fullText = el.getAttribute('data-fulltext'); 
+        const state = el.dataset.state; 
+        let i = 0; 
+        function type() { 
+            if(i < fullText.length) { 
+                el.innerText += fullText.charAt(i); 
+                i++; 
+                setTimeout(type, 78); 
+            } else if(state === 'continuous') { 
+                setTimeout(() => { el.innerText = ''; i = 0; type(); }, 2200); 
+            } 
+        } 
+        type(); 
+    }); 
+}
 
+function setupVideoAutoPlay() { 
+    const obs = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting ? e.target.play() : e.target.pause()), {threshold:0.5}); 
+    document.querySelectorAll('#md-render video').forEach(v => obs.observe(v)); 
+}
+
+// Boot up the logic!
 init();
 </script>
-</body>
+    
+
 </html>
