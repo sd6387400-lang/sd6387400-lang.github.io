@@ -1,3 +1,0 @@
-Logic <code>
-Keepkhdnd
-</code>
