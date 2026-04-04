@@ -1,4 +1,4 @@
-place="1.Introduction"=1
-place="2.Pre Requisite"=2
-place="3.Particianing"=3
-place="4.Test"=4
+place="Introduction"=1
+place="Pre Requisite"=2
+place="Particianing"=3
+place="Test"=4
