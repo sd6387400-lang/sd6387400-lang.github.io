@@ -1,3 +1,0 @@
-# Hello
-
-Main guide description...
