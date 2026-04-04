@@ -3,249 +3,695 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logic Control | Ultimate Admin Pro</title>
+    <title>Get Started | Admin Pannel</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
     <style>
-        :root { --accent: #006494; --bg-base: #f8f9ff; --border: rgba(0, 0, 0, 0.05); }
-        @media (prefers-color-scheme: dark) {
-            :root { --bg-base: #0f1115; --accent: #ccff00; --border: rgba(255, 255, 255, 0.08); }
-            body { background-color: #0f1115; color: #e2e2e6; }
-            .glass-card { background: rgba(26, 28, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.08); }
-            input, textarea { background: #1a1c1e !important; color: white !important; border: 1px solid rgba(255,255,255,0.1) !important; }
-            /* Fixed dark mode preview breaking */
-            #preview-box { background: #0f1115 !important; color: #e2e2e6 !important; }
+        /* SUNSET PALETTE DEFAULT (LIGHT) */
+        :root {
+            --bg-base: #FFF6F0;
+            --card-bg: rgba(255, 238, 224, 0.78);
+            --text-main: #200800;
+            --text-dim: #804020;
+            --accent: #C04800;
+            --accent-rgb: 192, 72, 0;
+            --border: rgba(192, 72, 0, 0.13);
+            --blob-1: #FF9050;
+            --blob-2: #60C8D8;
+            --surface-1: rgba(255, 248, 242, 0.98);
+            --surface-2: rgba(255, 238, 224, 0.6);
         }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-base); }
-        .glass-card { backdrop-filter: blur(20px); border-radius: 24px; }
-        .btn-primary { background: var(--accent); color: #000; font-weight: 800; transition: 0.3s; cursor: pointer; border:none; }
         
-        .folder-content { display: none; margin-left: 1rem; border-left: 1px solid rgba(204,255,0,0.2); padding-left: 0.5rem; }
+        /* SUNSET PALETTE DEFAULT (DARK) */
+        html.dark {
+            --bg-base: #18080A;
+            --card-bg: rgba(32, 14, 8, 0.75);
+            --text-main: #FFE0CC;
+            --text-dim: #E09060;
+            --accent: #FF9050;
+            --accent-rgb: 255, 144, 80;
+            --border: rgba(255, 144, 80, 0.14);
+            --blob-1: #FF9050;
+            --blob-2: #60C8D8;
+            --surface-1: rgba(22, 10, 6, 0.98);
+            --surface-2: rgba(32, 14, 8, 0.5);
+        }
+
+        /* TRUE DARK MODE FIX ON BODY */
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-base); color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
+        html.dark body { background-color: #18080A; color: #FFE0CC; }
+
+        .bg-wrapper { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; width: 520px; height: 520px; border-radius: 50%; opacity: 0.99; animation: float 15s infinite ease-in-out alternate; filter: saturate(1.05); }
+        .blob-1 { background: var(--blob-1); top: -170px; left: -170px; }
+        .blob-2 { background: var(--blob-2); bottom: -170px; right: -170px; animation-delay: -7s; }
+        @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 80px) scale(1.08); } }
+
+        /* GLASSMORPHISM TOGGLE CLASSES */
+        html.no-glass .glass-card, html.no-glass #auth-layer > div { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: var(--surface-1) !important; border: 1px solid var(--border) !important; }
+        html.no-glass #auth-layer { backdrop-filter: none !important; background: var(--bg-base) !important; }
+        html.no-glass .bg-wrapper { display: none !important; } 
+
+        .glass-card { backdrop-filter: blur(20px); border-radius: 24px; background: var(--card-bg); border: 1px solid var(--border); transition: background 0.3s, border-color 0.3s; }
+        .btn-primary { background: var(--accent); color: #fff; font-weight: 900; transition: 0.3s; cursor: pointer; border:none; }
+
+        input, textarea, select {
+            background: var(--surface-2) !important;
+            color: var(--text-main) !important;
+            border: 1px solid var(--border) !important;
+        }
+        input::placeholder, textarea::placeholder { color: color-mix(in srgb, var(--text-dim) 78%, transparent); }
+
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        
+        .folder-content { display: none; margin-left: 1rem; border-left: 1px solid rgba(var(--accent-rgb),0.2); padding-left: 0.5rem; }
         .folder-content.active { display: block; }
         .chevron { transition: transform 0.2s; font-size: 8px; display: inline-block; }
         .tree-btn { opacity: 0; transition: 0.2s; padding: 4px; border-radius: 4px; font-size: 10px; }
         .group:hover .tree-btn { opacity: 1; }
-        .tag-ref { font-size: 10px; font-weight: 800; padding: 6px 10px; border-radius: 8px; background: rgba(0,0,0,0.05); color: var(--accent); cursor: pointer; }
+        
+        .tag-ref { font-size: 10px; font-weight: 900; padding: 6px 10px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(0,0,0,0.06); }
+        html.dark .tag-ref { border-color: rgba(255,255,255,0.1); }
+        .tag-ref:hover { filter: brightness(0.98); transform: translateY(-0.5px); transition: 0.15s; }
+        .tag-ref[data-tag] { background: color-mix(in srgb, var(--tag-color) 14%, transparent); color: var(--tag-color); }
+        html.dark .tag-ref[data-tag] { background: color-mix(in srgb, var(--tag-color) 22%, transparent); }
+        .tag-ref[data-tag="heading"] { --tag-color: #7c3aed; }
+        .tag-ref[data-tag="text"] { --tag-color: #06b6d4; }
+        .tag-ref[data-tag="align"] { --tag-color: #f97316; }
+        .tag-ref[data-tag="list"] { --tag-color: #22c55e; }
+        .tag-ref[data-tag="href"] { --tag-color: #3b82f6; }
+        .tag-ref[data-tag="tw"] { --tag-color: #eab308; }
+        .tag-ref[data-tag="code"] { --tag-color: #a855f7; }
+        .tag-ref[data-tag="box"] { --tag-color: #ef4444; }
+        .tag-ref[data-tag="collapse"] { --tag-color: #14b8a6; }
+        .tag-ref[data-tag="image"] { --tag-color: #ec4899; }
+        .tag-ref[data-tag="video"] { --tag-color: #f43f5e; }
+        .tag-ref[data-tag="audio"] { --tag-color: #10b981; }
+        .tag-ref[data-tag="br"] { --tag-color: #64748b; }
+        .tag-ref[data-tag="collapse2"] { --tag-color: #8b5cf6; }
+        .tag-ref[data-tag="hr"] { --tag-color: #9ca3af; }
+        .tag-ref[data-tag="sym"] { --tag-color: #f59e0b; }
+        .tag-ref[data-tag="sym-empty"] { --tag-color: #f43f5e; }
 
-        #sync-loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; color: white; }
-        .slider-container { width: 280px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-top: 20px; }
-        .slider-progress { width: 0%; height: 100%; background: #ccff00; transition: width 0.3s ease; box-shadow: 0 0 20px #ccff00; }
-
-        #preview-box { line-height: 1.6; }
-        .logic-box { padding: 25px; margin: 30px 0; border-radius: 20px; border: 2px solid; }
-        .custom-collapse { border-radius: 20px; overflow: hidden; margin: 20px 0; border: 1px solid var(--border); }
-        .custom-collapse summary { padding: 20px; cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; align-items: center; }
-        .custom-collapse summary::after { content: '+'; }
-        .custom-collapse[open] summary::after { content: '−'; }
-        .collapse-body { padding: 20px; }
-        .code-container { position: relative; background: #1a1c1e; color: #e2e2e6; padding: 25px; border-radius: 20px; margin: 25px 0; font-family: monospace; border: 1px solid var(--border); overflow-x: auto; }
-        .copy-btn { position: absolute; top: 12px; right: 12px; background: #ccff00; color: black; border: none; padding: 6px 12px; border-radius: 10px; font-size: 0.7rem; cursor: pointer; font-weight: bold; }
-        .tw-cursor::after { content: '|'; animation: blink 1s infinite; margin-left: 2px; }
-        @keyframes blink { 50% { opacity: 0; } }
-        #preview-box img, #preview-box video, #preview-box audio { width: 100%; border-radius: 25px; margin: 25px 0; border: 1px solid var(--border); }
-        /* This makes the preview container look like a real page in the admin */
-    #preview-box {
-        min-height: 500px;
-        border-radius: 12px;
-        padding: 2rem;
-        transition: all 0.3s ease;
-        border: 1px solid var(--border);
-    }
-
-    .dark #preview-box {
-        background-color: #0f1115; /* Matches your view site dark bg */
-        color: #e2e2e6;
-    }
-
-    #preview-box {
-        background-color: #f8f9ff; /* Matches your view site light bg */
-        color: #1a1c1e;
-    }
-
-    /* Style the dropdown options for dark mode */
-    #theme-selector option {
-        background: white;
-        color: black;
-    }
-    .dark #theme-selector option {
-        background: #1a1c1e;
-        color: white;
-    }
-
-    /* CLEAN COLLAPSE 2 PREVIEW STYLING */
-        .clean-collapse { margin: 10px 0; border: none; background: transparent; }
-        .clean-collapse summary { 
-            padding: 10px 0; list-style: none; cursor: pointer; font-weight: 700; 
-            display: flex; justify-content: space-between; align-items: center; 
-            transition: opacity 0.2s; font-size: 1.1rem; 
-        }
-        .clean-collapse[open] summary i { transform: rotate(180deg); }
-        .clean-collapse summary i { transition: transform 0.3s ease; }
-        .clean-collapse summary:hover { opacity: 0.7; }
-        .clean-collapse summary::-webkit-details-marker { display: none; }
-        .clean-body { padding: 10px 0 10px 0; opacity: 0.8; line-height: 1.6; }
-        .collapse-hr { border: 0; height: 1px; background: var(--border); margin: 10px 0; opacity: 0.5; }
-
-
-        /* Add this inside your <style> tag */
-        @media (prefers-color-scheme: dark) {
-            .adaptive-text { 
-                color: var(--dark-c) !important; 
-            }
+        .style-toggle-btn.active-style {
+            background: var(--accent) !important;
+            color: #fff !important;
+            border-color: var(--accent) !important;
         }
 
-        /* Also add this to support your manual "Theme Selector" dropdown in the admin */
-        .dark .adaptive-text {
-            color: var(--dark-c) !important;
+        #editor-shell { display: flex; flex-direction: column; gap: 1.5rem; }
+        #tag-toolbar { position: sticky; top: 12px; z-index: 50; }
+
+        #color-chip-wrap { display: none; align-items: center; gap: 8px; margin-left: 6px; }
+        #color-chip { width: 22px; height: 22px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.12); box-shadow: inset 0 0 0 2px rgba(255,255,255,0.55); cursor: pointer; }
+        html.dark #color-chip { border-color: rgba(255,255,255,0.15); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.35); }
+        #color-chip-label { font-size: 10px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: #64748b; }
+        html.dark #color-chip-label { color: #94a3b8; }
+        .cm-color-literal { font-weight: 900; }
+
+        .CodeMirror { height: 100%; min-height: 450px; border-radius: 1rem; font-family: "Google Sans Flex", sans-serif; font-size: 14px; background: #ffffff !important; color: #1a1c1e !important; }
+        html.dark .CodeMirror { background: #1a1c1e !important; color: #e2e2e6 !important; }
+        .CodeMirror-gutters { background: rgba(148, 163, 184, 0.10); border: none; }
+        html.dark .CodeMirror-gutters { background: rgba(255,255,255,0.06); }
+        .CodeMirror-linenumber { color: #94a3b8; }
+        .CodeMirror-selected { background: rgba(var(--accent-rgb), 0.3) !important; color: inherit !important; }
+        .CodeMirror-focused .CodeMirror-selected { background: rgba(var(--accent-rgb), 0.4) !important; }
+
+        #sync-loader { display: none; position: fixed; inset: 0; background: var(--bg-base); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: opacity 0.4s ease; }
+        .loader-squircle-wrap { position:relative; width:80px; height:80px; transform: scale(0.8); }
+        .loader-squircle-bg { position:absolute; inset:0; background:rgba(var(--accent-rgb),0.08); clip-path:url(#squircle-clip); animation:loaderSqPulse 2s ease-in-out infinite; }
+        @keyframes loaderSqPulse { 0%,100% { transform:scale(1); opacity:0.08; } 50% { transform:scale(1.1); opacity:0.15; } }
+        .loader-ring { position:absolute; inset:0; border-radius:50%; border:3px solid transparent; border-top-color:var(--accent); animation:spinRing 1s cubic-bezier(0.6,0.2,0.4,0.9) infinite; }
+        .loader-ring:nth-child(3) { inset:10px; border-top-color:transparent; border-right-color:var(--blob-2); animation-duration:1.3s; animation-direction:reverse; }
+        .loader-ring:nth-child(4) { inset:22px; border-top-color:var(--blob-1); border-right-color:transparent; animation-duration:0.8s; }
+        .loader-dot { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:10px; height:10px; border-radius:50%; background:var(--accent); animation:dotPulse 1s ease-in-out infinite alternate; }
+        @keyframes spinRing { to { transform:rotate(360deg); } }
+        @keyframes dotPulse { from{transform:translate(-50%,-50%) scale(0.7);opacity:0.5} to{transform:translate(-50%,-50%) scale(1.2);opacity:1} }
+        .loader-m3-bar { width: 280px; height: 4px; background: rgba(var(--accent-rgb), 0.15); border-radius: 2px; overflow: hidden; margin-top: 5px; }
+        .loader-m3-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5); }
+
+        @media (prefers-color-scheme: dark) { .adaptive-text { color: var(--dark-c) !important; background: var(--dark-bg, transparent) !important; } }
+        html.dark .adaptive-text { color: var(--dark-c) !important; background: var(--dark-bg, transparent) !important; }
+
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;500;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+        #preview-box, #fs-preview-box { 
+            font-family: 'Nunito', sans-serif; font-size: 1.04rem; line-height: 1.82; letter-spacing: 0.006em; font-weight: 400; 
+            min-height: 500px; border-radius: 36px; padding: 50px; transition: all 0.3s ease; border: 1.5px solid var(--border);
+            background: var(--card-bg) !important; color: var(--text-main) !important;
         }
-    
+
+        html.dark #preview-box, html.dark #fs-preview-box { 
+            background: #18080A !important; color: var(--text-main) !important; border-color: rgba(255,255,255,0.07);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 24px 64px rgba(0,0,0,0.5);
+        }
+
+        .preview-removable { 
+            position: relative; border: 2px solid transparent; transition: border-color 0.2s, opacity 0.2s; border-radius: inherit; 
+            cursor: grab; 
+        }
+        .preview-removable:active { cursor: grabbing; }
+        .preview-removable.drag-disabled { cursor: auto !important; }
+        .preview-removable.drag-disabled:active { cursor: auto !important; }
+        .preview-removable:hover { border-color: rgba(59, 130, 246, 0.4); }
+        .preview-removable:hover > .block-actions, .preview-removable:hover > .nest-actions { opacity: 1; pointer-events: auto; transform: scale(1); }
+        
+        .block-actions { position: absolute; top: -14px; right: -14px; display: flex; gap: 4px; opacity: 0; pointer-events: none; transition: 0.2s; z-index: 50; transform: scale(0.8); }
+        
+        .nest-actions { position: absolute; bottom: -14px; left: 10px; display: flex; gap: 4px; opacity: 0; pointer-events: none; transition: 0.2s; z-index: 50; transform: scale(0.8); }
+        
+        .action-btn { background: #ef4444; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.2s; }
+        .action-btn.remove { background: #ef4444; } .action-btn.remove:hover { background: #dc2626; transform: scale(1.1); }
+        .action-btn.move-up, .action-btn.move-down { background: #3b82f6; } .action-btn.move-up:hover, .action-btn.move-down:hover { background: #2563eb; transform: scale(1.1); }
+        
+        /* Nesting Arrow Colors - Dynamic red when nested */
+        .preview-removable[data-nested="true"] > .nest-actions .action-btn.nest-btn { background: #ef4444 !important; }
+        .preview-removable[data-nested="true"] > .nest-actions .action-btn.nest-btn:hover { background: #dc2626 !important; transform: scale(1.1); }
+        
+        .action-btn.nest-btn { background: #22c55e; } .action-btn.nest-btn:hover { background: #16a34a; transform: scale(1.1); }
+        .action-btn.unnest-btn { background: #3b82f6; } .action-btn.unnest-btn:hover { background: #2563eb; transform: scale(1.1); }
+
+        #preview-box h1, #fs-preview-box h1 { font-size:clamp(1.9rem,4vw,2.5rem); font-weight:800; letter-spacing:-0.04em; line-height:1.15; margin:2.5rem 0 1rem; color:var(--text-main); border-bottom:2px solid rgba(var(--accent-rgb),0.15); padding-bottom:0.5rem; }
+        #preview-box h2, #fs-preview-box h2 { font-size:1.65rem; font-weight:700; letter-spacing:-0.03em; line-height:1.25; margin:2.2rem 0 0.8rem; color:var(--text-main); }
+        #preview-box h3, #fs-preview-box h3 { font-size:1.28rem; font-weight:700; letter-spacing:-0.02em; line-height:1.3; margin:1.8rem 0 0.6rem; color:var(--text-main); }
+        #preview-box h4, #fs-preview-box h4 { font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.5rem; color:var(--text-main); }
+        #preview-box p, #fs-preview-box p { margin-bottom:1.25em; }
+        #preview-box strong, #fs-preview-box strong { font-weight:800; color:var(--accent); }
+        #preview-box em, #fs-preview-box em { font-style:italic; opacity:0.85; }
+        #preview-box ul, #preview-box ol, #fs-preview-box ul, #fs-preview-box ol { margin:0.9em 0 0.9em 2em; line-height:1.9; }
+        #preview-box li, #fs-preview-box li { margin-bottom:0.25em; }
+        #preview-box li::marker, #fs-preview-box li::marker { color:var(--accent); }
+        #preview-box blockquote, #fs-preview-box blockquote { border-left:3px solid var(--accent); padding:0.9em 1.3em; margin:1.5em 0; background:rgba(var(--accent-rgb),0.06); border-radius:0 14px 14px 0; color:var(--text-dim); }
+        html.dark #preview-box blockquote, html.dark #fs-preview-box blockquote { background:rgba(var(--accent-rgb),0.1); }
+        #preview-box hr, #fs-preview-box hr { border:none; height:1px; background:var(--border); margin:2em 0; }
+        #preview-box a, #fs-preview-box a { color:var(--accent); text-decoration:none; font-weight:600; border-bottom:1.5px solid rgba(var(--accent-rgb),0.3); transition:border-color 0.2s, opacity 0.2s; }
+        #preview-box a:hover, #fs-preview-box a:hover { border-bottom-color:var(--accent); opacity:0.8; }
+        #preview-box table, #fs-preview-box table { width:100%; border-collapse:collapse; margin:1.5em 0; border-radius:12px; overflow:hidden; }
+        #preview-box th, #fs-preview-box th { background:rgba(var(--accent-rgb),0.1); padding:11px 15px; font-weight:700; text-align:left; border-bottom:2px solid rgba(var(--accent-rgb),0.2); font-size:0.88rem; }
+        #preview-box td, #fs-preview-box td { padding:9px 15px; border-bottom:1px solid var(--border); font-size:0.9rem; }
+        #preview-box tr:nth-child(even) td, #fs-preview-box tr:nth-child(even) td { background:rgba(var(--accent-rgb),0.03); }
+        #preview-box :not(pre) > code, #fs-preview-box :not(pre) > code { background:rgba(var(--accent-rgb),0.1); color:var(--accent); padding:2px 7px; border-radius:5px; font-size:0.84em; font-family:'JetBrains Mono', monospace; font-weight:500; border:1px solid rgba(var(--accent-rgb),0.15); }
+        html.dark #preview-box :not(pre) > code, html.dark #fs-preview-box :not(pre) > code { background:rgba(var(--accent-rgb),0.15); border-color:rgba(var(--accent-rgb),0.25); }
+
+        #preview-box .logic-box, #fs-preview-box .logic-box { padding:22px 25px; margin:28px 0; border-radius:18px; border:2px solid; transition:border-color 0.3s, background 0.3s; }
+        #preview-box .custom-collapse, #fs-preview-box .custom-collapse { border-radius:18px; overflow:hidden; margin:20px 0; border:2px solid; transition:box-shadow 0.3s; }
+        #preview-box .custom-collapse summary, #fs-preview-box .custom-collapse summary { padding:16px 20px; cursor:pointer; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; user-select:none; }
+        #preview-box .custom-collapse summary::-webkit-details-marker, #fs-preview-box .custom-collapse summary::-webkit-details-marker { display:none; }
+        #preview-box .custom-collapse summary::after, #fs-preview-box .custom-collapse summary::after { content:'▼'; font-size: 0.8em; transition: transform 0.3s ease; }
+        #preview-box .custom-collapse[open] summary::after, #fs-preview-box .custom-collapse[open] summary::after { transform: rotate(180deg); }
+        #preview-box .collapse-body, #fs-preview-box .collapse-body { padding:0 20px 18px; padding-top:10px; }
+
+        #preview-box .clean-collapse, #fs-preview-box .clean-collapse { margin:10px 0; border:none; background:transparent; }
+        #preview-box .clean-collapse summary, #fs-preview-box .clean-collapse summary { padding:10px 0; list-style:none; cursor:pointer; font-weight:700; display:flex; justify-content:space-between; align-items:center; transition:opacity 0.2s; font-size:1.05rem; color:var(--text-main); }
+        #preview-box .clean-collapse summary::-webkit-details-marker, #fs-preview-box .clean-collapse summary::-webkit-details-marker { display:none; }
+        #preview-box .clean-body, #fs-preview-box .clean-body { padding:6px 0 10px; padding-top:10px; color:var(--text-dim); line-height:1.7; }
+        #preview-box .collapse-hr, #fs-preview-box .collapse-hr { border:0; height:1px; background:var(--border); margin:10px 0; opacity:0.5; }
+
+        #preview-box .code-container, #fs-preview-box .code-container { position:relative; background:#181410; color:#e8e4dc; border-radius:16px; margin:22px 0; border:1px solid rgba(255,255,255,0.08); overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.2); }
+        html.dark #preview-box .code-container, html.dark #fs-preview-box .code-container { background:#0E0C0A; border-color:rgba(255,255,255,0.06); }
+        #preview-box .code-container pre, #fs-preview-box .code-container pre { margin:0; padding:20px; padding-top:46px; overflow-x:auto; display:block; width:100%; font-family:'JetBrains Mono', monospace; font-size:0.88rem; line-height:1.7; }
+        #preview-box .copy-btn, #fs-preview-box .copy-btn { position:absolute; top:10px; right:10px; background:rgba(var(--accent-rgb),0.85); color:white; border:none; padding:6px 14px; border-radius:8px; font-size:0.68rem; cursor:pointer; font-weight:700; z-index:10; transition: transform 0.2s, background 0.2s; }
+        #preview-box .copy-btn:hover, #fs-preview-box .copy-btn:hover { background:var(--accent); transform:scale(1.05); }
+
+        #preview-box img, #fs-preview-box img { width:100%; border-radius:20px; margin:20px 0; display:block; cursor: pointer; transition: outline 0.1s; }
+        #preview-box video, #fs-preview-box video { width:100%; border-radius:20px; margin:20px 0; border:1px solid var(--border); cursor: pointer; transition: outline 0.1s; }
+        #preview-box audio, #fs-preview-box audio { width:100%; border-radius:12px; margin:20px 0; border:1px solid var(--border); cursor: pointer; transition: outline 0.1s; }
+        .tw-cursor::after { content:'|'; animation:blink 1s infinite; margin-left:2px; color:var(--accent); }
+        .custom-href { color:var(--accent); text-decoration:none; font-weight:700; border-bottom:1.5px solid rgba(var(--accent-rgb),0.35); }
+        .html-sym { display:inline-block; font-family: sans-serif; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; text-rendering: auto; line-height: 1; -webkit-font-smoothing: antialiased; }
+
+        @media (max-width: 768px) {
+            .max-w-7xl { padding: 10px !important; }
+            .glass-card { padding: 16px !important; border-radius: 18px !important; }
+            #writer-card { min-height: 450px !important; }
+            #preview-box, #fs-preview-box { padding: 20px !important; min-height: 350px !important; border-radius: 20px !important; font-size: 0.98rem; }
+            #preview-box h1, #fs-preview-box h1 { font-size: 1.8rem; margin: 1.5rem 0 0.8rem; }
+            #preview-box h2, #fs-preview-box h2 { font-size: 1.4rem; margin: 1.5rem 0 0.6rem; }
+            #preview-box .code-container pre, #fs-preview-box .code-container pre { padding: 15px !important; padding-top: 40px !important; font-size: 0.8rem; }
+            #preview-box .logic-box, #fs-preview-box .logic-box { padding: 15px 18px !important; margin: 18px 0 !important; border-radius: 12px !important; }
+            #tag-toolbar { padding: 12px !important; flex-direction: column; align-items: flex-start; }
+            #tag-toolbar .flex.bg-slate-100 { width: 100%; justify-content: space-between; }
+            #fs-sidebar { width: 100% !important; border-left: none; border-top: 1px solid var(--border); height: 40vh; }
+            #fs-preview-box { height: 60vh; }
+            /* PADDING FIX FOR MOBILE SIDEBAR */
+            #fs-sidebar-content { padding-bottom: 120px !important; overflow-y: auto; }
+        }
+
+        @media (orientation: landscape) and (max-height: 600px) {
+            #fs-easy-writer > .flex-1 { flex-direction: row !important; }
+            #fs-sidebar { display: flex !important; width: 40% !important; max-width: 350px; height: 100vh !important; border-top: none !important; border-left: 1px solid var(--border) !important; overflow-y: auto; }
+            #fs-textarea, #fs-preview-box { height: 100vh !important; flex: 1; }
+            /* PADDING FIX FOR LANDSCAPE SIDEBAR */
+            #fs-sidebar-content { padding-bottom: 120px !important; }
+        }
+        
+        /* PADDING FIX FOR DESKTOP SIDEBAR */
+        #fs-sidebar-content { padding-bottom: 80px; }
     </style>
 </head>
 <body class="min-h-screen pb-20">
 
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+            <clipPath id="squircle-clip" clipPathUnits="objectBoundingBox">
+                <path d="M0.5,0 C0.723,0 0.86,0 0.93,0.07 C1,0.14 1,0.277 1,0.5 C1,0.723 1,0.86 0.93,0.93 C0.86,1 0.723,1 0.5,1 C0.277,1 0.14,1 0.07,0.93 C0,0.86 0,0.723 0,0.5 C0,0.277 0,0.14 0.07,0.07 C0.14,0 0.277,0 0.5,0 Z"/>
+            </clipPath>
+        </defs>
+    </svg>
+
+    <div class="bg-wrapper">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
     <div id="sync-loader">
-        <p id="loader-msg" class="text-[10px] font-black uppercase tracking-[0.4em] text-white">Logic Processing</p>
-        <div class="slider-container">
-            <div id="slider-bar" class="slider-progress"></div>
+        <div class="loader-squircle-wrap">
+            <div class="loader-squircle-bg"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-dot"></div>
+        </div>
+        <p id="loader-msg" class="text-[10px] font-black uppercase tracking-[0.4em]" style="color: var(--accent);">Get-Started</p>
+        <div class="loader-m3-bar">
+            <div id="slider-bar" class="loader-m3-bar-fill"></div>
         </div>
     </div>
 
     <input type="file" id="global-uploader" class="hidden" onchange="handleFileUpload(event)">
 
-    <div id="auth-layer" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-6">
-        <div class="glass-card bg-white p-10 max-w-md w-full text-center shadow-2xl">
-            <h2 class="text-2xl font-extrabold mb-6">Logic Control</h2>
+    <div id="auth-layer" class="fixed inset-0 z-[100] flex items-center justify-center p-6 transition-colors">
+        <div class="glass-card p-10 max-w-md w-full text-center shadow-2xl">
+            <h2 class="text-2xl font-extrabold mb-6">Admin Pannel Access</h2>
             <input type="password" id="gh-token" placeholder="GitHub Token" class="w-full p-4 rounded-2xl mb-4 border outline-none text-center font-mono">
-            <button onclick="verifyAccess()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest text-sm">Initialize</button>
+            <button onclick="verifyAccess()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest text-sm">Connect</button>
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto p-4 lg:p-12">
         <header class="flex justify-between items-center mb-8">
             <div>
-                <h1 class="text-3xl font-black tracking-tighter italic">ENGINE ADMIN PRO</h1>
-                <p id="status-bar" class="text-[10px] font-black text-[#ccff00] uppercase tracking-[0.2em]">Ready for Logic</p>
+                <h1 class="text-3xl font-black tracking-tighter italic">Get Started Admin</h1>
+                <p id="status-bar" class="text-[10px] font-black uppercase tracking-[0.2em]" style="color: var(--accent);">Future is Waiting for ourself</p>
             </div>
-            <button onclick="logout()" class="p-3 bg-red-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all"><i class="fas fa-power-off"></i></button>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="toggleGlass()" id="btn-glass-toggle" class="p-3 bg-white dark:bg-white/10 rounded-xl hover:bg-slate-100 transition-all shadow-sm" title="Toggle Glassmorphism (Performance Mode)"><i class="fas fa-shapes"></i></button>
+                <div class="flex p-1 rounded-xl shadow-sm" style="background: var(--surface-2); border: 1px solid var(--border);">
+                    <button onclick="changeTheme('system')" id="btn-theme-system" class="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all"><i class="fas fa-laptop"></i></button>
+                    <button onclick="changeTheme('light')" id="btn-theme-light" class="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all"><i class="fas fa-sun"></i></button>
+                    <button onclick="changeTheme('dark')" id="btn-theme-dark" class="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all"><i class="fas fa-moon"></i></button>
+                </div>
+                <button onclick="logout()" class="p-3 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm"><i class="fas fa-power-off"></i></button>
+            </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-4 space-y-6">
-                <div class="glass-card bg-white p-6 shadow-sm border border-blue-100">
-                    <h3 class="text-[10px] font-black uppercase tracking-widest mb-4 text-slate-400">Master Architecture</h3>
+                <div class="glass-card p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Master Folder Creater</h3>
+                        <div class="flex gap-2">
+                            <button onclick="openCreateModal()" class="text-[9px] px-2 py-1 rounded bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 font-bold uppercase transition hover:scale-105"><i class="fas fa-plus mr-1"></i>Create</button>
+                            <button onclick="openWizardModal()" class="text-[9px] px-2 py-1 rounded bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 font-bold uppercase transition hover:scale-105"><i class="fas fa-magic mr-1"></i>Organise</button>
+                            <button onclick="openDeleteModal()" class="text-[9px] px-2 py-1 rounded bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400 font-bold uppercase transition hover:scale-105"><i class="fas fa-trash-alt mr-1"></i>Delete</button>
+                        </div>
+                    </div>
                     <input type="text" id="new-folder-name" placeholder="Root Folder Name..." class="w-full p-4 rounded-xl border mb-3 text-sm font-bold">
                     <button onclick="runWithLoader(createMasterFolder, 'Syncing Architecture...')" id="master-btn" class="btn-primary w-full py-3 rounded-xl text-[9px] font-black uppercase tracking-widest">Global Sync</button>
                 </div>
 
-                <div class="glass-card bg-white p-6 shadow-sm min-h-[500px]">
+                <div class="glass-card p-6 shadow-sm min-h-[500px]">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400">Project Tree</h3>
-                        <button onclick="loadRootTree()" class="text-blue-500 text-xs hover:rotate-180 transition-transform"><i class="fas fa-sync"></i></button>
+                        <button onclick="loadRootTree()" style="color: var(--accent);" class="text-xs hover:rotate-180 transition-transform"><i class="fas fa-sync"></i></button>
                     </div>
                     <div id="tree-content" class="space-y-1"></div>
                 </div>
             </div>
 
             <div class="lg:col-span-8 space-y-6">
-                <div class="glass-card bg-white p-4 shadow-sm flex flex-wrap justify-between gap-4 border border-slate-100">
-                    <div class="flex flex-wrap gap-2 items-center">
-                        <span class="tag-ref" onclick="insertTag('tw')">Typewriter</span>
-                        <span class="tag-ref" onclick="insertTag('box')">Box</span>
-                        <span class="tag-ref" onclick="insertTag('collapse')">Collapse</span>
-                        <span class="tag-ref" onclick="insertTag('heading')">Heading</span>
-                        <span class="tag-ref" onclick="insertTag('align')">Align</span>
-                        <span class="tag-ref" onclick="insertTag('code')">Code</span>
-                        <span class="tag-ref" onclick="insertTag('href')">Link</span>
-                        <span class="tag-ref" onclick="insertTag('text')">Text Style</span>
-                        <span class="tag-ref" onclick="insertTag('list')">List</span>
-                        <span class="tag-ref" onclick="insertTag('image')">Image</span>
-                        <span class="tag-ref" onclick="insertTag('video')">Video</span>
-                        <span class="tag-ref" onclick="insertTag('audio')">Audio</span>
-                        <span class="tag-ref" onclick="insertTag('br')">Break</span>
-                        <span class="tag-ref" onclick="insertTag('collapse2')">Collapse 2</span>
-                        <span class="tag-ref bg-accent text-black" onclick="document.getElementById('colorPicker').click()" style="background: var(--accent); color: #000;">
-                        <i class="fa-solid fa-palette mr-1"></i> Palette
-                        </span>
-                        <input type="color" id="colorPicker" class="hidden" onchange="handleColorSelection(this.value)">
+                <div id="editor-shell">
+                <div id="tag-toolbar" class="glass-card p-4 shadow-sm flex flex-wrap justify-between gap-4">
+                    
+                    <div id="standard-tools" class="flex flex-wrap gap-2 items-center w-full sm:w-auto flex-1 transition-opacity">
+                        <span class="tag-ref" data-tag="heading" onclick="insertTag('heading')">Heading</span>
+                        <span class="tag-ref" data-tag="text" onclick="insertTag('text')">Text Style</span>
+                        <span class="tag-ref" data-tag="align" onclick="insertTag('align')">Align</span>
+                        <span class="tag-ref" data-tag="list" onclick="insertTag('list')">List</span>
+                        <span class="tag-ref" data-tag="href" onclick="insertTag('href')">Link</span>
+                        <span class="tag-ref" data-tag="tw" onclick="insertTag('tw')">Typewriter</span>
+                        <span class="tag-ref" data-tag="code" onclick="insertTag('code')">Code</span>
+                        <span class="tag-ref" data-tag="box" onclick="insertTag('box')">Box</span>
+                        <span class="tag-ref" data-tag="collapse" onclick="insertTag('collapse')">Collapse</span>
+                        <span class="tag-ref" data-tag="image" onclick="insertTag('image')">Image</span>
+                        <span class="tag-ref" data-tag="video" onclick="insertTag('video')">Video</span>
+                        <span class="tag-ref" data-tag="audio" onclick="insertTag('audio')">Audio</span>
+                        <span class="tag-ref" data-tag="br" onclick="insertTag('br')">Break</span>
+                        <span class="tag-ref" data-tag="hr" onclick="insertTag('hr')">Divider</span>
+                        <span class="tag-ref" data-tag="collapse2" onclick="insertTag('collapse2')">Collapse 2</span>
+                        <span class="tag-ref" data-tag="sym" onclick="openSymbolModal('normal')">Symbol</span>
+                        <span class="tag-ref" data-tag="sym-empty" onclick="insertTag('symEmpty')">Empty Sym</span>
+
+                        <div id="color-chip-wrap" class="ml-1">
+                            <span id="color-chip-label">Color</span>
+                            <div id="color-chip" title="Pick color"></div>
+                            <input type="color" id="inlineColorPicker" class="hidden">
+                        </div>
+                        
+                        <button onclick="enterEasyWriter()" class="px-3 py-1 rounded-lg text-[10px] font-black uppercase shadow-sm transition-transform hover:scale-105" style="background: var(--accent); color: white;">
+                            <i class="fas fa-expand mr-1"></i> Easy Mode
+                        </button>
                     </div>
 
-                    <div class="flex bg-slate-100 p-1 rounded-xl">
-                        <button onclick="setMode('write')" id="btn-write" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase bg-white shadow-sm transition-all">Write</button>
+                    <div id="organise-tools" class="hidden w-full items-center justify-between">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-widest"><i class="fas fa-sitemap mr-2"></i> Structure Editor</span>
+                        <button onclick="openEasyMode()" class="px-6 py-2 rounded-xl text-[10px] font-black uppercase shadow-md transition-transform hover:scale-105" style="background: var(--accent); color: white;">
+                            <i class="fas fa-magic mr-1"></i> Easy Mode
+                        </button>
+                    </div>
+
+                    <div class="flex p-1 rounded-xl w-full sm:w-auto" style="background: var(--surface-2);">
+                        <button onclick="setMode('write')" id="btn-write" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase shadow-sm transition-all bg-white dark:bg-white/10" style="color: var(--text-main);">Write</button>
                         <button onclick="setMode('preview')" id="btn-preview" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all">Preview</button>
+                        <button onclick="toggleAutoBr()" id="btn-autobr" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all" title="When ON: Enter inserts &lt;br&gt;">Auto &lt;br&gt;</button>
+                        <button onclick="openSearchModal(false)" id="btn-search" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all" title="Search in editor"><i class="fa-solid fa-magnifying-glass mr-1"></i>Search</button>
                     </div>
                 </div>
 
-                <div class="glass-card bg-white p-8 shadow-xl min-h-[650px] flex flex-col relative">
+                <div id="writer-card" class="glass-card p-8 shadow-xl min-h-[650px] flex flex-col relative">
                     <div class="flex flex-wrap justify-between items-end mb-6 gap-4">
                         <div class="flex-1">
-                            <span id="editing-path-display" class="text-[9px] font-black text-blue-500 uppercase block mb-1 tracking-widest">No file selected</span>
+                            <span id="editing-path-display" class="text-[9px] font-black uppercase block mb-1 tracking-widest" style="color: var(--accent);">No file selected</span>
                             <input type="text" id="current-filename" placeholder="filename.md" class="font-black text-2xl bg-transparent border-none outline-none w-full tracking-tighter">
                         </div>
                         <button onclick="runWithLoader(saveFile, 'Committing Changes...')" id="save-btn" class="btn-primary px-8 py-4 rounded-2xl text-xs font-black flex items-center gap-3">
                             <i class="fas fa-cloud-arrow-up"></i> COMMIT
                         </button>
                     </div>
-                    <textarea id="editor" spellcheck="false" class="flex-1 w-full p-6 rounded-2xl border-none bg-slate-50 outline-none font-mono text-sm leading-relaxed mb-4 resize-none min-h-[450px]"></textarea>
-                    <div id="preview-box" class="hidden flex-1 w-full p-6 rounded-2xl bg-white border border-slate-100 overflow-y-auto min-h-[450px]"></div>
+                    <textarea id="editor" spellcheck="false" class="flex-1 w-full p-6 rounded-2xl border-none outline-none text-sm leading-relaxed mb-4 resize-none min-h-[450px]" style="background: var(--surface-2);"></textarea>
+                    <div id="preview-box" class="hidden flex-1 w-full p-6 rounded-2xl border overflow-y-auto min-h-[450px]" style="border-color: var(--border);"></div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
-    <footer class="mt-8 mb-4 flex justify-center items-center gap-4 py-6 border-t border-slate-200 dark:border-white/5">
-        <div class="flex items-center gap-2">
-            <span class="text-[10px] font-black uppercase text-slate-400">Preview Theme:</span>
-            <div class="flex bg-slate-100 dark:bg-white/5 p-1 rounded-lg border border-slate-200 dark:border-white/10">
-                <select id="theme-selector" onchange="changeTheme(this.value)" class="bg-transparent text-[10px] font-bold uppercase px-2 outline-none cursor-pointer text-slate-500 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors">
-                    <option value="system">System Default</option>
-                    <option value="light">Light Mode</option>
-                    <option value="dark">Dark Mode</option>
-                </select>
-            </div>
-        </div>
     
-        <div class="h-4 w-[1px] bg-slate-200 dark:bg-white/10"></div>
-
-        <button onclick="localStorage.removeItem('github_token'); location.reload();" class="text-[10px] font-black uppercase text-red-500/60 hover:text-red-500 transition-colors">
+    <footer class="mt-8 mb-4 flex justify-center items-center gap-4 py-6 border-t border-slate-200 dark:border-white/5">
+        <button onclick="localStorage.removeItem('github_token'); localStorage.removeItem('logic_engine_token'); location.reload();" class="text-[10px] font-black uppercase text-red-500/60 hover:text-red-500 transition-colors">
             <i class="fa-solid fa-power-off mr-1"></i> Reset Session
         </button>
     </footer>
 
+    <div id="wizard-modal" class="fixed inset-0 z-[250] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-md" onclick="closeWizardModal()"></div>
+        <div class="relative w-[min(500px,92vw)] rounded-3xl border p-8 shadow-2xl flex flex-col" style="background: var(--surface-1); border-color: var(--border);">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <div class="text-[10px] font-black uppercase tracking-[0.2em]" style="color: var(--accent);"><i class="fas fa-magic mr-1"></i> Wizard</div>
+                    <h3 class="text-2xl font-extrabold tracking-tight" id="wizard-title">Organise Structure</h3>
+                </div>
+                <button class="text-slate-400 hover:text-red-500 transition-colors" onclick="closeWizardModal()"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div id="wizard-content" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+            </div>
+        </div>
+    </div>
 
+    <div id="create-modal" class="fixed inset-0 z-[250] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-md" onclick="closeCreateModal()"></div>
+        <div class="relative w-[min(500px,92vw)] rounded-3xl border p-8 shadow-2xl flex flex-col" style="background: var(--surface-1); border-color: var(--border);">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <div class="text-[10px] font-black uppercase tracking-[0.2em]" style="color: var(--blob-2);"><i class="fas fa-plus mr-1"></i> Create</div>
+                    <h3 class="text-2xl font-extrabold tracking-tight" id="create-title">What to Create?</h3>
+                </div>
+                <button class="text-slate-400 hover:text-red-500 transition-colors" onclick="closeCreateModal()"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div id="create-content" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+            </div>
+        </div>
+    </div>
+    
+    <div id="delete-modal" class="fixed inset-0 z-[250] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-md" onclick="closeDeleteModal()"></div>
+        <div class="relative w-[min(500px,92vw)] rounded-3xl border p-8 shadow-2xl flex flex-col" style="background: var(--surface-1); border-color: var(--border);">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <div class="text-[10px] font-black uppercase tracking-[0.2em]" style="color: #ef4444;"><i class="fas fa-trash-alt mr-1"></i> Delete</div>
+                    <h3 class="text-2xl font-extrabold tracking-tight" id="delete-title">What to Delete?</h3>
+                </div>
+                <button class="text-slate-400 hover:text-red-500 transition-colors" onclick="closeDeleteModal()"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            
+            <div id="delete-content" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+            </div>
+        </div>
+    </div>
+
+    <div id="easy-mode-modal" class="fixed inset-0 z-[250] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-md" onclick="closeEasyMode()"></div>
+        <div class="relative w-[min(600px,92vw)] rounded-3xl border p-6 shadow-2xl flex flex-col max-h-[85vh]" style="background: var(--surface-1); border-color: var(--border);">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-xl font-extrabold tracking-tight">Easy Organise</h3>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1" id="em-folder-path">Folder Name</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="autoSortEasyMode()" class="px-3 py-2 rounded-xl font-black text-[10px] uppercase shadow-md transition-transform hover:scale-105" style="background: var(--blob-2); color: #fff;">Auto Sort</button>
+                    <button class="px-3 py-2 rounded-xl font-black text-[10px] uppercase border" style="border-color: var(--border); color: var(--text-main);" onclick="closeEasyMode()">Close</button>
+                </div>
+            </div>
+            
+            <div class="flex text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 px-2">
+                <div class="w-8"></div>
+                <div class="flex-1">Item Name</div>
+                <div class="w-24 text-center">Pos</div>
+                <div class="w-24 text-center">State</div>
+            </div>
+
+            <div id="easy-mode-list" class="overflow-y-auto flex-1 space-y-2 mb-6 pr-2"></div>
+            <button onclick="applyEasyMode()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest text-sm shadow-lg hover:scale-[1.02]">Apply & Generate Code</button>
+        </div>
+    </div>
+
+    <div id="search-modal" class="fixed inset-0 z-[350] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-md" onclick="closeSearchModal()"></div>
+        <div class="relative w-[min(560px,92vw)] rounded-3xl border p-5 shadow-2xl" style="background: var(--surface-1); border-color: var(--border);">
+            <div class="flex items-center justify-between gap-3 mb-3">
+                <div>
+                    <div class="text-[10px] font-black uppercase tracking-[0.3em]" style="color: var(--text-dim);">Search</div>
+                    <div class="text-lg font-extrabold tracking-tight">Find in editor</div>
+                </div>
+                <button class="px-3 py-2 rounded-xl font-black text-[10px] uppercase border" style="border-color: var(--border); color: var(--text-main);" onclick="closeSearchModal()">Close</button>
+            </div>
+            <div class="flex items-center gap-2">
+                <input id="search-query" type="text" placeholder="Type to search..." class="w-full p-3 rounded-2xl outline-none font-bold" onkeydown="if(event.key==='Enter'){ runSearch('next'); }" style="background: var(--surface-2);">
+                <button onclick="runSearch('prev')" class="px-4 py-3 rounded-2xl font-black text-[10px] uppercase border" style="border-color: var(--border); color: var(--text-main);">Prev</button>
+                <button onclick="runSearch('next')" class="px-4 py-3 rounded-2xl font-black text-[10px] uppercase" style="background: var(--accent); color: #fff;">Next</button>
+            </div>
+            <div class="mt-4 rounded-2xl border p-3" style="border-color: var(--border); background: color-mix(in srgb, var(--surface-2) 70%, transparent);">
+                <div class="text-[10px] font-black uppercase tracking-[0.25em] mb-2" style="color: var(--text-dim);">Filter</div>
+                <div class="flex flex-wrap gap-2">
+                    <label class="px-3 py-2 rounded-xl border cursor-pointer text-[11px] font-black" style="border-color: var(--border);"><input type="radio" name="search-scope" value="combined" checked class="mr-2">Combined</label>
+                    <label class="px-3 py-2 rounded-xl border cursor-pointer text-[11px] font-black" style="border-color: var(--border);"><input type="radio" name="search-scope" value="text" class="mr-2">Text only</label>
+                    <label class="px-3 py-2 rounded-xl border cursor-pointer text-[11px] font-black" style="border-color: var(--border);"><input type="radio" name="search-scope" value="heading" class="mr-2">Heading only</label>
+                </div>
+                <div id="search-status" class="mt-2 text-[11px] font-bold" style="color: var(--text-dim);"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="symbol-modal" class="fixed inset-0 z-[400] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-md" onclick="closeSymbolModal()"></div>
+        <div class="relative w-[min(700px,92vw)] rounded-3xl border p-6 shadow-2xl flex flex-col max-h-[85vh]" style="background: var(--surface-1); border-color: var(--border);">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h3 class="text-xl font-extrabold tracking-tight">Symbol Library</h3>
+                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Select an HTML Symbol to insert</p>
+                </div>
+                <button class="px-3 py-2 rounded-xl font-black text-[10px] uppercase border hover:bg-slate-100 dark:hover:bg-white/5 transition" style="border-color: var(--border); color: var(--text-main);" onclick="closeSymbolModal()">Close</button>
+            </div>
+            <div class="relative mb-4">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="symbol-search" placeholder="Search symbols (e.g. check, star, arrow)..." class="w-full p-4 pl-10 rounded-xl border text-sm font-bold outline-none" style="background: var(--surface-2); border-color: var(--border);" onkeyup="filterSymbols()">
+            </div>
+            <div id="symbol-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 overflow-y-auto flex-1 pr-2 pb-4">
+                </div>
+        </div>
+    </div>
+
+    <div id="fs-easy-writer" class="fixed inset-0 z-[300] hidden flex-col transition-colors duration-300" style="background: var(--bg-base);">
+        
+        <div class="flex flex-col border-b" style="border-color: var(--border); background: var(--surface-1);">
+            <div class="min-h-[64px] flex items-center justify-between px-4 lg:px-8 py-2 gap-4">
+                <div class="flex items-center gap-4">
+                    <button onclick="exitEasyWriter()" class="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-red-500 transition-colors">
+                        <i class="fas fa-chevron-left mr-1"></i> Back
+                    </button>
+                    <div class="h-4 w-[1px] bg-slate-300 dark:bg-slate-700"></div>
+                    <span id="fs-mode-status" class="text-[10px] font-black uppercase tracking-widest hidden sm:block transition-colors duration-300" style="color: var(--accent);">Drafting Structure...</span>
+                </div>
+                
+                <div id="fs-phase1-tools" class="flex items-center gap-3">
+                    <button onclick="openSearchModal(true)" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors hidden sm:block" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-search"></i> Search</button>
+                    <button onclick="saveFromEasyMode()" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors hidden sm:block" style="border-color: var(--border); color: var(--accent);"><i class="fas fa-save"></i> Save</button>
+                    <button onclick="toggleEmAutoBr()" id="btn-em-autobr" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors" style="border-color: var(--border); color: var(--text-dim);">Auto &lt;br&gt;</button>
+                    <button onclick="setFsPhase(2)" class="px-6 py-2 rounded-xl text-[10px] font-black uppercase shadow-lg transition-transform hover:scale-105" style="background: var(--accent); color: white;">
+                        <i class="fas fa-check mr-1"></i> Completed Structure
+                    </button>
+                </div>
+
+                <div id="fs-phase2-actions" class="hidden items-center gap-2 flex-wrap justify-end ml-auto">
+                    <button onclick="openSearchModal(true)" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase border transition-colors flex-shrink-0" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-search mr-1"></i> Search</button>
+                    <button onclick="setFsPhase(1)" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors mr-2 flex-shrink-0" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-edit mr-1"></i> Back to Editing</button>
+                    <button onclick="toggleRawMode()" id="btn-raw-toggle" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase border transition-colors flex-shrink-0" style="background: transparent; color: var(--text-dim); border-color: var(--border);"><i class="fas fa-layer-group mr-1"></i> Raw Move: OFF</button>
+                    <button onclick="toggleDragMode()" id="btn-drag-toggle" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase border transition-colors flex-shrink-0" style="background: var(--accent); color: white; border-color: var(--border);"><i class="fas fa-hand-paper mr-1"></i> Drag: ON</button>
+                    <button onclick="saveFromEasyMode()" id="btn-em-save" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase shadow-sm transition-transform hover:scale-105 flex-shrink-0" style="background: var(--surface-2); color: var(--text-main); border: 1px solid var(--border);"><i class="fas fa-save mr-1"></i> Save</button>
+                    <button onclick="saveAndCommitEasyMode()" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase shadow-sm transition-transform hover:scale-105 flex-shrink-0" style="background: var(--accent); color: white;"><i class="fas fa-cloud-arrow-up mr-1"></i> Save & Commit</button>
+                </div>
+            </div>
+
+            <div id="fs-phase2-tools" class="hidden items-center gap-2 overflow-x-auto no-scrollbar px-4 lg:px-8 py-3 border-t cursor-grab w-full select-none" style="border-color: var(--border); background: var(--surface-2);">
+                <span class="tag-ref flex-shrink-0" data-tag="heading" onclick="emInsertTag('heading')">Heading</span>
+                <span class="tag-ref flex-shrink-0" data-tag="text" onclick="emInsertTag('text')">Text</span>
+                <span class="tag-ref flex-shrink-0" data-tag="align" onclick="emInsertTag('align')">Align</span>
+                <span class="tag-ref flex-shrink-0" data-tag="list" onclick="emInsertTag('list')">List</span>
+                <span class="tag-ref flex-shrink-0" data-tag="href" onclick="emInsertTag('href')">Link</span>
+                <span class="tag-ref flex-shrink-0" data-tag="tw" onclick="emInsertTag('tw')">Typewriter</span>
+                <span class="tag-ref flex-shrink-0" data-tag="code" onclick="emInsertTag('code')">Code</span>
+                <span class="tag-ref flex-shrink-0" data-tag="box" onclick="emInsertTag('box')">Box</span>
+                <span class="tag-ref flex-shrink-0" data-tag="collapse" onclick="emInsertTag('collapse')">Collapse</span>
+                <span class="tag-ref flex-shrink-0" data-tag="collapse2" onclick="emInsertTag('collapse2')">Collapse 2</span>
+                <span class="tag-ref flex-shrink-0" data-tag="image" onclick="emInsertTag('image')">Image</span>
+                <span class="tag-ref flex-shrink-0" data-tag="video" onclick="emInsertTag('video')">Video</span>
+                <span class="tag-ref flex-shrink-0" data-tag="audio" onclick="emInsertTag('audio')">Audio</span>
+                <span class="tag-ref flex-shrink-0" data-tag="br" onclick="emInsertTag('br')">Break</span>
+                <span class="tag-ref flex-shrink-0" data-tag="hr" onclick="emInsertTag('hr')">Divider</span>
+                <span class="tag-ref flex-shrink-0" data-tag="sym" onclick="openSymbolModal('easy')">Symbol</span>
+                <span class="tag-ref flex-shrink-0" data-tag="sym-empty" onclick="emInsertTag('symEmpty')">Empty Sym</span>
+            </div>
+        </div>
+
+        <div class="flex-1 flex overflow-hidden relative flex-col lg:flex-row">
+            <textarea id="fs-textarea" class="flex-1 p-6 lg:p-12 text-lg lg:text-xl font-medium outline-none resize-none leading-relaxed transition-all" style="background: var(--bg-base); color: var(--text-main);" spellcheck="false" placeholder="Start typing your structure here..."></textarea>
+            
+            <div id="fs-preview-box" class="hidden flex-1 p-6 lg:p-12 overflow-y-auto w-full transition-all" style="background: var(--bg-base); color: var(--text-main);"></div>
+            
+            <div id="fs-sidebar" class="w-full lg:w-80 border-t lg:border-l lg:border-t-0 hidden flex-col p-6 overflow-y-auto transform transition-transform flex-shrink-0" style="border-color: var(--border); background: var(--surface-1);">
+                <div class="text-[10px] font-black uppercase tracking-[0.2em] mb-6 text-slate-400">Element Attributes</div>
+                <div id="fs-sidebar-content" class="space-y-4">
+                    <div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Select text in the preview and click a tag above to format.</div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
-    
-    function changeTheme(theme) {
-        const html = document.documentElement;
-        const previewBox = document.getElementById('preview-box');
-        
-        if (theme === 'dark') {
-            html.classList.add('dark');
-                html.style.colorScheme = 'dark';
-        } else if (theme === 'light') {
-            html.classList.remove('dark');
-            html.style.colorScheme = 'light';
-        } else {
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // =========================================================
+        // 1. THEME ENGINE & INIT
+        // =========================================================
+        function changeTheme(theme) {
+            const html = document.documentElement;
+            if (theme === 'dark') {
                 html.classList.add('dark');
-            } else {
+            } else if (theme === 'light') {
                 html.classList.remove('dark');
+            } else {
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    html.classList.add('dark');
+                } else {
+                    html.classList.remove('dark');
+                }
             }
-            html.style.colorScheme = 'normal';
+            
+            ['system', 'light', 'dark'].forEach(t => {
+                const btn = document.getElementById(`btn-theme-${t}`);
+                if (btn) {
+                    if (t === theme) {
+                        btn.style.background = 'var(--accent)';
+                        btn.style.color = '#fff';
+                    } else {
+                        btn.style.background = 'transparent';
+                        btn.style.color = 'inherit';
+                    }
+                }
+            });
+            
+            localStorage.setItem('admin-theme', theme);
         }
-        
-        localStorage.setItem('admin-theme', theme);
-    }
-    
-    // Load saved theme on startup
-    window.addEventListener('load', () => {
-        const savedTheme = localStorage.getItem('admin-theme') || 'system';
-        const selector = document.getElementById('theme-selector');
-        if(selector) {
-            selector.value = savedTheme;
+
+        window.toggleGlass = function() {
+            const html = document.documentElement;
+            html.classList.toggle('no-glass');
+            const isNoGlass = html.classList.contains('no-glass');
+            localStorage.setItem('admin-noglass', isNoGlass ? 'true' : 'false');
+            
+            const btn = document.getElementById('btn-glass-toggle');
+            if(btn) {
+                btn.style.color = isNoGlass ? 'var(--accent)' : '';
+            }
+        };
+
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('admin-theme') || 'system';
             changeTheme(savedTheme);
-        }
-    });
+            
+            if(localStorage.getItem('admin-noglass') === 'true') {
+                document.documentElement.classList.add('no-glass');
+                const btn = document.getElementById('btn-glass-toggle');
+                if(btn) btn.style.color = 'var(--accent)';
+            }
+            
+            initSymbolLibrary();
+
+            const tagsContainer = document.getElementById('fs-phase2-tools');
+            if (tagsContainer) {
+                tagsContainer.addEventListener('wheel', (evt) => {
+                    if (evt.deltaY !== 0) {
+                        evt.preventDefault();
+                        tagsContainer.scrollLeft += evt.deltaY;
+                    }
+                }, { passive: false });
+
+                let isDown = false;
+                let startX;
+                let scrollLeft;
+
+                tagsContainer.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    tagsContainer.style.cursor = 'grabbing';
+                    startX = e.pageX - tagsContainer.offsetLeft;
+                    scrollLeft = tagsContainer.scrollLeft;
+                });
+                tagsContainer.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    tagsContainer.style.cursor = 'grab';
+                });
+                tagsContainer.addEventListener('mouseup', () => {
+                    isDown = false;
+                    tagsContainer.style.cursor = 'grab';
+                });
+                tagsContainer.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - tagsContainer.offsetLeft;
+                    const walk = (x - startX) * 2;
+                    if (Math.abs(walk) > 5) window.isDraggingTags = true;
+                    tagsContainer.scrollLeft = scrollLeft - walk;
+                });
+            }
+        });
     
         const CONFIG = {
             owner: "sd6387400-lang",
@@ -258,17 +704,55 @@
         let activeFilePath = "";
         let uploadTargetPath = "";
 
+        // =========================================================
+        // 2. PARSING & COLOR RESOLUTION
+        // =========================================================
+        function hexToRgb(hex) { hex = hex.replace('#',''); if(hex.length === 3) hex = hex.split('').map(c=>c+c).join(''); const i = parseInt(hex, 16); return [(i>>16)&255, (i>>8)&255, i&255]; }
+        function resolveColor(val) {
+            if(!val) return val; const t = val.trim().toLowerCase();
+            if(t === 'accent' || t === 'accent1')   return 'var(--accent)';
+            if(t === 'bg')    return 'var(--bg-base)';
+            if(t === 'text')  return 'var(--text-main)';
+            if(t === 'dim')   return 'var(--text-dim)';
+            return val;
+        }
+        function resolveColorBg(val, alpha) {
+            alpha = alpha || 0.12; if(!val) return 'transparent'; const t = val.trim().toLowerCase();
+            if(t === 'accent' || t === 'accent1') return `rgba(var(--accent-rgb),${alpha})`;
+            if(t === 'bg') return 'var(--bg-base)';
+            if(t === 'text') return `rgba(0,0,0,${alpha})`;
+            if(t === 'dim') return `rgba(0,0,0,${alpha*0.6})`;
+            const col = resolveColor(val);
+            if(col && col.startsWith('#')) { try { const [r,g,b] = hexToRgb(col); return `rgba(${r},${g},${b},${alpha})`; } catch(e) {} }
+            if(val.startsWith('#')) { try { const [r,g,b] = hexToRgb(val); return `rgba(${r},${g},${b},${alpha})`; } catch(e) {} }
+            return val;
+        }
+
+        const renderer = new marked.Renderer();
+        renderer.code = function(code, lang) { 
+            let text = typeof code === 'object' ? code.text : code; 
+            const escaped = String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
+            return `<div class="code-container"><button class="copy-btn" onclick="copyCodePreview(this)">Copy</button><pre><code>${escaped}</code></pre></div>`; 
+        };
+        marked.setOptions({ renderer });
+
+        function copyCodePreview(btn) {
+            const pre = btn.parentElement ? btn.parentElement.querySelector('pre') : null; if(!pre) return;
+            navigator.clipboard.writeText(pre.innerText || pre.textContent).then(() => {
+                btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+
         function startSlider(msg) {
             document.getElementById('loader-msg').innerText = msg;
             const loader = document.getElementById('sync-loader');
             const bar = document.getElementById('slider-bar');
+            loader.style.opacity = '0';
             loader.style.display = 'flex';
+            requestAnimationFrame(() => { loader.style.opacity = '1'; });
             bar.style.width = '0%';
             let w = 0;
-            const interval = setInterval(() => {
-                w += (98 - w) * 0.1;
-                bar.style.width = w + '%';
-            }, 100);
+            const interval = setInterval(() => { w += (98 - w) * 0.1; bar.style.width = w + '%'; }, 100);
             return { loader, interval, bar };
         }
 
@@ -277,7 +761,10 @@
             try { await fn(); } finally {
                 clearInterval(loaderData.interval);
                 loaderData.bar.style.width = '100%';
-                setTimeout(() => { loaderData.loader.style.display = 'none'; }, 500);
+                setTimeout(() => { 
+                    loaderData.loader.style.opacity = '0';
+                    setTimeout(() => { loaderData.loader.style.display = 'none'; }, 400);
+                }, 500);
             }
         }
 
@@ -293,11 +780,16 @@
                 GITHUB_TOKEN = token;
                 document.getElementById('auth-layer').classList.add('hidden');
                 loadRootTree();
+            } else {
+                alert("Invalid Token or API Limit Reached.");
             }
         }
 
         function logout() { localStorage.removeItem('logic_engine_token'); location.reload(); }
 
+        // =========================================================
+        // 3. TREE & FILE MANAGEMENT
+        // =========================================================
         function loadRootTree() {
             const tree = document.getElementById('tree-content');
             tree.innerHTML = '';
@@ -306,13 +798,13 @@
                 const div = document.createElement('div');
                 div.className = "group";
                 div.innerHTML = `
-                    <div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer">
-                        <span onclick="toggleFolder('${subId}', '${root}', this)" class="text-[11px] font-black uppercase text-slate-600 flex items-center gap-2">
+                    <div class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer">
+                        <span onclick="toggleFolder('${subId}', '${root}', this)" class="text-[11px] font-black uppercase flex items-center gap-2" style="color: var(--text-dim);">
                             <i class="fas fa-chevron-right chevron"></i>
-                            <i class="fas fa-database text-blue-500"></i> ${root}
+                            <i class="fas fa-database" style="color: var(--accent);"></i> ${root}
                         </span>
                         <div class="flex gap-1">
-                            <button onclick="runWithLoader(() => inTreeDeepSync('${root}'), 'Deep Syncing Folder...')" class="tree-btn text-blue-400" title="Execute Sync (Deep)"><i class="fas fa-sync-alt"></i></button>
+                            <button onclick="runWithLoader(() => inTreeDeepSync('${root}'), 'Deep Syncing Folder...')" class="tree-btn" style="color: var(--accent);" title="Execute Sync (Deep)"><i class="fas fa-sync-alt"></i></button>
                             <button onclick="triggerUpload('${root}')" class="tree-btn text-orange-400" title="Upload here"><i class="fas fa-upload"></i></button>
                         </div>
                     </div>
@@ -329,17 +821,13 @@
             if (container.classList.contains('active')) {
                 chevron.style.transform = "rotate(90deg)";
                 if (container.innerHTML === '') loadDirectory(path, id);
-            } else {
-                chevron.style.transform = "rotate(0deg)";
-            }
+            } else { chevron.style.transform = "rotate(0deg)"; }
         }
 
         async function loadDirectory(path, targetId) {
             const container = document.getElementById(targetId);
-            container.innerHTML = '<div class="p-2 text-[9px] font-bold text-[#ccff00] italic">Logic Syncing...</div>';
-            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, {
-                headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
-            });
+            container.innerHTML = `<div class="p-2 text-[9px] font-bold italic" style="color: var(--accent);">Logic Syncing...</div>`;
+            const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` } });
             const items = await res.json();
             container.innerHTML = '';
             items.sort((a,b) => (a.type === 'dir' ? -1 : 1)).forEach(item => {
@@ -348,28 +836,29 @@
                 if(item.type === 'dir') {
                     const subId = `tree-${btoa(item.path).replace(/=/g,'')}`;
                     itemDiv.innerHTML = `
-                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 cursor-pointer">
-                            <span onclick="toggleFolder('${subId}', '${item.path}', this)" class="text-xs font-bold text-slate-700 flex items-center gap-2">
+                        <div class="flex items-center justify-between p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer">
+                            <span onclick="toggleFolder('${subId}', '${item.path}', this)" class="text-xs font-bold flex items-center gap-2" style="color: var(--text-dim);">
                                 <i class="fas fa-chevron-right chevron"></i>
-                                <i class="fas fa-folder text-blue-300"></i> ${item.name}
+                                <i class="fas fa-folder" style="color: var(--accent); opacity: 0.7;"></i> ${item.name}
                             </span>
                             <div class="flex gap-1">
-                                <button onclick="runWithLoader(() => inTreeDeepSync('${item.path}'), 'Deep Syncing...')" class="tree-btn text-blue-400" title="Deep Sync"><i class="fas fa-sync-alt"></i></button>
+                                <button onclick="runWithLoader(() => inTreeDeepSync('${item.path}'), 'Deep Syncing...')" class="tree-btn" style="color: var(--accent);" title="Deep Sync"><i class="fas fa-sync-alt"></i></button>
                                 <button onclick="triggerUpload('${item.path}')" class="tree-btn text-orange-400" title="Upload here"><i class="fas fa-upload"></i></button>
                                 <button onclick="renameItem('${item.path}', true)" class="tree-btn text-amber-500" title="Rename"><i class="fas fa-edit"></i></button>
                                 <button onclick="prepareNewFile('${item.path}')" class="tree-btn text-green-500" title="New File"><i class="fas fa-plus"></i></button>
-                                <button onclick="deleteItem('${item.path}', '${item.sha}', true)" class="tree-btn text-red-300" title="Delete"><i class="fas fa-trash"></i></button>
+                                <button onclick="treeDeepDeleteTrigger('${item.path}')" class="tree-btn text-red-600" title="Deep Delete across folders"><i class="fas fa-dumpster"></i></button>
+                                <button onclick="deleteItem('${item.path}', '${item.sha}', true)" class="tree-btn text-red-400" title="Normal Delete"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                         <div id="${subId}" class="folder-content"></div>
                     `;
                 } else {
                     itemDiv.innerHTML = `
-                        <div class="flex justify-between items-center p-1 px-2 rounded-lg hover:bg-blue-50">
-                            <span onclick="openFile('${item.path}', '${item.sha}')" class="text-[11px] font-medium text-slate-500 cursor-pointer truncate">
-                                <i class="far fa-file-alt mr-2 text-slate-300"></i>${item.name}
+                        <div class="flex justify-between items-center p-1 px-2 rounded-lg hover:bg-slate-100 dark:hover:bg-white/5">
+                            <span onclick="openFile('${item.path}', '${item.sha}')" class="text-[11px] font-medium cursor-pointer truncate" style="color: var(--text-dim);">
+                                <i class="far fa-file-alt mr-2 opacity-50"></i>${item.name}
                             </span>
-                            <button onclick="deleteItem('${item.path}', '${item.sha}', false)" class="tree-btn text-red-300"><i class="fas fa-times"></i></button>
+                            <button onclick="deleteItem('${item.path}', '${item.sha}', false)" class="tree-btn text-red-400"><i class="fas fa-times"></i></button>
                         </div>
                     `;
                 }
@@ -405,18 +894,26 @@
                     break;
                 }
             }
-            for(let root of CONFIG.roots) {
-                const targetPath = relativePath ? `${root}/${relativePath}/${name}/.keep` : `${root}/${name}/.keep`;
-                await saveToGithub(targetPath, btoa("Logic Keep"), `Deep Sync: ${name}`);
-            }
-            loadRootTree();
+            
+            runWithLoader(async () => {
+                for(let root of CONFIG.roots) {
+                    if (root === 'Descriptions') continue; 
+                    let targetPath = relativePath ? `${root}/${relativePath}/${name}/.keep` : `${root}/${name}/.keep`;
+                    await saveToGithub(targetPath, btoa("Logic Keep"), `Deep Sync: ${name}`);
+                }
+                loadRootTree();
+            }, "Deep Syncing...");
         }
 
         async function createMasterFolder() {
             const name = document.getElementById('new-folder-name').value;
             if(!name) return;
-            for(let root of CONFIG.roots) {
-                await saveToGithub(`${root}/${name}/.keep`, btoa("init"), `Global Sync: ${name}`);
+            for(let root of CONFIG.roots) { 
+                if (root === 'Descriptions') {
+                    await saveToGithub(`Descriptions/${name}.md`, btoa(`# ${name}\n\nMain guide description...`), `Global Sync: ${name}`);
+                } else {
+                    await saveToGithub(`${root}/${name}/.keep`, btoa("init"), `Global Sync: ${name}`); 
+                }
             }
             loadRootTree();
         }
@@ -432,7 +929,9 @@
                 if(Array.isArray(data)) {
                     for(let item of data) await moveRecursive(item, oldPath, newPath);
                 } else {
-                    await saveToGithub(newPath, data.content, `Rename ${oldPath} to ${newPath}`);
+                    let actualContent = btoa("Logic Keep");
+                    if (data.content) actualContent = data.content;
+                    await saveToGithub(newPath, actualContent, `Rename ${oldPath} to ${newPath}`);
                     await deleteItem(oldPath, data.sha, false, true);
                 }
                 loadRootTree();
@@ -446,9 +945,30 @@
                 const subItems = await res.json();
                 for(let s of subItems) await moveRecursive(s, oldBase, newBase);
             } else {
-                await saveToGithub(targetPath, item.content || btoa("Logic Keep"), `Move ${item.path}`);
+                let actualContent = btoa("Logic Keep");
+                if (item.content) {
+                    actualContent = item.content;
+                } else {
+                    try {
+                        const fileRes = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${item.path}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                        if(fileRes.ok) {
+                            const fileData = await fileRes.json();
+                            actualContent = fileData.content || actualContent;
+                        }
+                    } catch(e) {}
+                }
+                await saveToGithub(targetPath, actualContent, `Move ${item.path}`);
                 await deleteItem(item.path, item.sha, false, true);
             }
+        }
+
+        function updateToolbarForFile(filename) {
+            const isOrganise = filename === 'organise.txt';
+            document.getElementById('standard-tools').classList.toggle('hidden', isOrganise);
+            document.getElementById('standard-tools').classList.toggle('flex', !isOrganise);
+            document.getElementById('organise-tools').classList.toggle('hidden', !isOrganise);
+            document.getElementById('organise-tools').classList.toggle('flex', isOrganise);
+            document.getElementById('btn-preview').style.display = isOrganise ? 'none' : 'block';
         }
 
         function prepareNewFile(parentPath) {
@@ -456,12 +976,50 @@
             currentFileSha = null;
             document.getElementById('editing-path-display').innerText = activeFilePath;
             document.getElementById('current-filename').value = "newfile.md";
-            document.getElementById('editor').value = "";
+            updateToolbarForFile("newfile.md");
+            setEditorValue("");
             setMode('write');
         }
 
+        async function executeDeepDelete(baseName, isMainGuide) {
+            if(!confirm(`DEEP DELETE: Are you sure you want to completely erase "${baseName}" across all synced folders?`)) return;
+            if(typeof closeDeleteModal === 'function') closeDeleteModal();
+            runWithLoader(async () => {
+                for(let root of CONFIG.roots) {
+                    if (root === 'Descriptions' && !isMainGuide) continue; 
+                    
+                    let targetPath = root === 'Descriptions' ? `Descriptions/${baseName}.md` : `${root}/${baseName}`;
+                    
+                    try {
+                        const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${targetPath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                        if(res.ok) {
+                            const data = await res.json();
+                            if(Array.isArray(data)) {
+                                await deleteRecursive({type: 'dir', path: targetPath, sha: null});
+                            } else {
+                                await deleteItem(targetPath, data.sha, false, true);
+                            }
+                        }
+                    } catch(e) {}
+                }
+                loadRootTree();
+            }, "Deep Deleting Across Roots...");
+        }
+
+        function treeDeepDeleteTrigger(parentPath) {
+            let relativePath = parentPath;
+            for(let root of CONFIG.roots) {
+                if(parentPath.startsWith(root + "/")) {
+                    relativePath = parentPath.substring(root.length + 1);
+                    break;
+                }
+            }
+            let isMainGuide = relativePath.split('/').filter(x => x).length === 1;
+            executeDeepDelete(relativePath, isMainGuide);
+        }
+
         async function deleteItem(path, sha, isDir, silent = false) {
-            if(!silent && !confirm(`Delete ${path}?`)) return;
+            if(!silent && !confirm(`Normal Delete: Are you sure you want to delete ${path}?`)) return;
             if(isDir) {
                 const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
                 const items = await res.json();
@@ -495,14 +1053,15 @@
             currentFileSha = sha;
             const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
             const data = await res.json();
-            document.getElementById('editor').value = atob(data.content);
+            setEditorValue(atob(data.content));
             document.getElementById('current-filename').value = data.name;
             document.getElementById('editing-path-display').innerText = path;
+            updateToolbarForFile(data.name);
             setMode('write');
         }
 
         async function saveFile() {
-            const content = document.getElementById('editor').value;
+            const content = getEditorValue();
             const filename = document.getElementById('current-filename').value;
             const pathParts = activeFilePath.split('/'); pathParts.pop();
             const fullPath = pathParts.length > 0 ? `${pathParts.join('/')}/${filename}` : filename;
@@ -524,182 +1083,1137 @@
                 body: JSON.stringify(body)
             });
         }
-
+        // =========================================================
+        // 4. PREVIEW & TAG ENGINE (WITH TRIPLE TAP & NESTING LOGIC)
+        // =========================================================
         function insertTag(type) {
-            const editor = document.getElementById('editor');
-            const start = editor.selectionStart;
-            const end = editor.selectionEnd;
-            const selectedText = editor.value.substring(start, end) || "Content";
-    
+            const selectedText = getEditorSelectionText() || "Content";
             const tags = {
-                tw: `<tw state="active" color="#ccff00" type="bold">${selectedText}</tw>`,
-                box: `<box color="#ccff00" type="solid">\n${selectedText}\n</box>`,
+                tw: `<tw state="active" color="#C04800" type="bold">${selectedText}</tw>`,
+                box: `<box color="#C04800" type="solid">\n${selectedText}\n</box>`,
                 collapse: `<collapse heading="Title" color="white" bg-color="#1a1c1e">\n${selectedText}\n</collapse>`,
                 heading: `<heading size="1" align="left">${selectedText}</heading>`,
                 align: `<align type="center">${selectedText}</align>`,
                 code: `<code>\n${selectedText === 'Content' ? 'Code Here' : selectedText}\n</code>`,
                 href: `<href heading="Link Title">https://link-url.com</href>`,
-                text: `<text color="#ccff00" type="bold italic underline">\n${selectedText}\n</text>`,
+                text: `<text color="#C04800" type="bold italic underline">\n${selectedText}\n</text>`,
                 list: `<list type="bullet">\nItem 1\nItem 2\nItem 3\n</list>`,
                 image: `<image>filename.png</image>`,
                 video: `<video>filename.mp4</video>`,
                 audio: `<audio>filename.mp3</audio>`,
                 collapse2: `<collapse2 heading="Clean Title" unextendedhr="true" extendedhr="false">\n${selectedText}\n</collapse2>`,
-                br: '<br>'
-                
+                br: '<br>',
+                hr: '<hr>',
+                sym: `<sym>&hearts;</sym>`,
+                symEmpty: `<sym>\n${selectedText === 'Content' ? '' : selectedText}\n</sym>`
             };
-
-        const tag = tags[type];
-        editor.value = editor.value.substring(0, start) + (tag || '') + editor.value.substring(end);
-        editor.focus();
-    
-        // Set cursor position inside the tag if no text was selected
-        const newPos = start + tag.length;
-        editor.setSelectionRange(newPos, newPos);
-    }
-
-        function handleColorSelection(color) {
-            const editor = document.getElementById('editor');
-            const start = editor.selectionStart;
-            const end = editor.selectionEnd;
-
-            // 1. Insert the color code at the cursor position
-            editor.value = editor.value.substring(0, start) + color + editor.value.substring(end);
-
-            // 2. Copy the color to clipboard
-            navigator.clipboard.writeText(color).then(() => {
-                // Optional: Visual feedback that it copied
-                console.log('Color copied: ' + color);
-            });
-
-            // 3. Put focus back on the editor and place cursor after the inserted color
-            editor.focus();
-            const newPos = start + color.length;
-            editor.setSelectionRange(newPos, newPos);
+            replaceEditorSelection(tags[type] || '');
         }
 
+        function handleColorSelection(color) {
+            replaceEditorSelection(color);
+            navigator.clipboard.writeText(color);
+        }
+
+        function initTypewriters() { 
+            const previews = document.querySelectorAll('#preview-box, #fs-preview-box');
+            previews.forEach(preview => {
+                preview.querySelectorAll('.tw-text').forEach(el => { 
+                    const fullText = el.getAttribute('data-fulltext'); 
+                    const state = el.dataset.state; 
+                    let i = 0; 
+                    el.innerText = ''; 
+                    function type() { 
+                        if(i < fullText.length) { 
+                            el.innerText += fullText.charAt(i); i++; setTimeout(type, 78); 
+                        } else if(state === 'continuous') { 
+                            setTimeout(() => { el.innerText = ''; i = 0; type(); }, 2200); 
+                        } 
+                    } 
+                    type(); 
+                }); 
+            });
+        }
+
+        function getMediaSubPath() {
+            if(!activeFilePath) return "";
+            const parts = activeFilePath.split('/');
+            parts.shift(); 
+            parts.pop(); 
+            return parts.join('/');
+        }
+
+        // --- Symbols Library Logic ---
+        let SYMBOLS_DB = [];
+        let symbolTargetMode = 'normal';
+
+        async function initSymbolLibrary() {
+            try {
+                const res = await fetch('https://html.spec.whatwg.org/entities.json');
+                const data = await res.json();
+                SYMBOLS_DB = Object.keys(data)
+                    .filter(k => k.endsWith(';')) 
+                    .map(k => ({
+                        name: k.replace(/^&/, '').replace(/;$/, ''),
+                        char: data[k].characters,
+                        code: k
+                    }));
+            } catch(e) { console.error("Massive Symbol Library load failed", e); }
+        }
+
+        function openSymbolModal(mode) {
+            symbolTargetMode = mode;
+            document.getElementById('symbol-modal').classList.remove('hidden');
+            document.getElementById('symbol-modal').classList.add('flex');
+            document.getElementById('symbol-search').value = "";
+            filterSymbols(); 
+            document.getElementById('symbol-search').focus();
+        }
+
+        function closeSymbolModal() {
+            document.getElementById('symbol-modal').classList.add('hidden');
+            document.getElementById('symbol-modal').classList.remove('flex');
+        }
+
+        function filterSymbols() {
+            const q = document.getElementById('symbol-search').value.toLowerCase();
+            const grid = document.getElementById('symbol-grid');
+            let filtered = SYMBOLS_DB;
+            if (q) filtered = SYMBOLS_DB.filter(s => s.name.toLowerCase().includes(q));
+            
+            grid.innerHTML = filtered.slice(0, 200).map(s => `
+                <div onclick="insertSymbol('${s.code}')" class="flex flex-col items-center justify-center p-3 rounded-xl border cursor-pointer hover:bg-slate-100 dark:hover:bg-white/10 transition-colors" style="border-color: var(--border);">
+                    <div class="text-2xl mb-1 html-sym" style="color: var(--accent);">${s.char}</div>
+                    <div class="text-[9px] font-bold text-slate-400 uppercase truncate w-full text-center" title="${s.code}">${s.code}</div>
+                </div>
+            `).join('');
+        }
+
+        function insertSymbol(code) {
+            const tag = `<sym>${code}</sym>`; 
+            if (symbolTargetMode === 'easy' && fsPhase === 2) {
+                const ta = document.getElementById('fs-textarea');
+                const sel = currentVisualSelection;
+                if (sel && sel !== "Content" && ta.value.includes(sel)) {
+                    ta.value = ta.value.replace(sel, tag);
+                } else {
+                    ta.value += `\n${tag}`;
+                }
+                renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
+            } else if (symbolTargetMode === 'normal') {
+                replaceEditorSelection(tag);
+            }
+            closeSymbolModal();
+        }
+
+        // --- Triple Tap Media Selector ---
+        window.emSelectMedia = function(encodedRaw) {
+            if(fsPhase !== 2) return;
+            const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
+            currentVisualSelection = rawTag;
+            
+            // Highlight the sidebar so the user knows they selected it
+            const sb = document.getElementById('fs-sidebar-content');
+            sb.innerHTML = `<div class="p-4 rounded-xl border border-blue-500 bg-blue-500/10 text-center text-xs font-bold text-blue-500 transition-all"><i class="fas fa-check-circle text-lg mb-2 block"></i> Media Selected!<br>Click a tag above to wrap it.</div>`;
+            setTimeout(() => {
+                sb.innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Media loaded in memory. Select a tag to apply.</div>`;
+            }, 2500);
+        };
+
+        // --- Drag, Move, and NESTING State ---
+        let draggedRawData = null;
+        window.isDragModeEnabled = true;
+        window.isRawMoveModeEnabled = false;
+        window.isDraggingTags = false; 
+
+        window.toggleDragMode = function() {
+            window.isDragModeEnabled = !window.isDragModeEnabled;
+            const btn = document.getElementById('btn-drag-toggle');
+            if(window.isDragModeEnabled) {
+                btn.style.background = 'var(--accent)';
+                btn.style.color = 'white';
+                btn.innerHTML = '<i class="fas fa-hand-paper mr-1"></i> Drag: ON';
+            } else {
+                btn.style.background = 'transparent';
+                btn.style.color = 'var(--text-dim)';
+                btn.innerHTML = '<i class="fas fa-i-cursor mr-1"></i> Drag: OFF';
+            }
+            renderPreviewEngine(document.getElementById('fs-textarea').value, document.getElementById('fs-preview-box'), true);
+        };
+
+        window.toggleRawMode = function() {
+            window.isRawMoveModeEnabled = !window.isRawMoveModeEnabled;
+            const btn = document.getElementById('btn-raw-toggle');
+            if(window.isRawMoveModeEnabled) {
+                btn.style.background = 'var(--blob-2)';
+                btn.style.color = '#fff';
+                btn.style.borderColor = 'var(--blob-2)';
+                btn.innerHTML = '<i class="fas fa-layer-group mr-1"></i> Raw Move: ON';
+            } else {
+                btn.style.background = 'transparent';
+                btn.style.color = 'var(--text-dim)';
+                btn.style.borderColor = 'var(--border)';
+                btn.innerHTML = '<i class="fas fa-layer-group mr-1"></i> Raw Move: OFF';
+            }
+            renderPreviewEngine(document.getElementById('fs-textarea').value, document.getElementById('fs-preview-box'), true);
+        };
+
+        function vDragStart(e, encodedRaw) {
+            draggedRawData = decodeURIComponent(escape(atob(encodedRaw)));
+            e.dataTransfer.effectAllowed = "move";
+            e.dataTransfer.setData("text/plain", "moving_block");
+            setTimeout(() => e.target.style.opacity = "0.4", 0);
+        }
+        function vDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = "move"; }
+        function vDrop(e, targetEncodedRaw) {
+            e.preventDefault(); e.stopPropagation(); e.target.style.opacity = "1";
+            if (!draggedRawData) return;
+            const targetRawData = decodeURIComponent(escape(atob(targetEncodedRaw)));
+            if (draggedRawData === targetRawData) return;
+
+            const ta = document.getElementById('fs-textarea');
+            let content = ta.value;
+
+            let dragIdx = content.indexOf(draggedRawData);
+            if (dragIdx === -1) return;
+            content = content.substring(0, dragIdx) + "\n\n___DRAG_BLOCK___\n\n" + content.substring(dragIdx + draggedRawData.length);
+
+            let targetIdx = content.indexOf(targetRawData);
+            if (targetIdx === -1) return;
+            content = content.substring(0, targetIdx) + "\n\n___TARGET_BLOCK___\n\n" + content.substring(targetIdx + targetRawData.length);
+
+            let blocks = content.split(/\n+/).map(b => b.trim()).filter(b => b.length > 0);
+            let dragBlockIdx = blocks.indexOf("___DRAG_BLOCK___");
+            if (dragBlockIdx !== -1) blocks.splice(dragBlockIdx, 1);
+            let targetBlockIdx = blocks.indexOf("___TARGET_BLOCK___");
+            if (targetBlockIdx !== -1) blocks.splice(targetBlockIdx, 0, "___DRAG_BLOCK___");
+
+            content = blocks.join('\n\n').replace("___DRAG_BLOCK___", draggedRawData).replace("___TARGET_BLOCK___", targetRawData);
+            ta.value = content;
+            renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
+            draggedRawData = null;
+        }
+
+        function moveVisualTag(btn, encodedRaw, direction) {
+            event.stopPropagation();
+            const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
+            const ta = document.getElementById('fs-textarea');
+            let content = ta.value;
+
+            let idx = content.indexOf(rawTag);
+            if (idx === -1) return;
+            
+            content = content.substring(0, idx) + "\n\n___MOVING_BLOCK___\n\n" + content.substring(idx + rawTag.length);
+            let blocks = content.split(/\n+/).map(b => b.trim()).filter(b => b.length > 0);
+            let blockIndex = blocks.indexOf("___MOVING_BLOCK___");
+            if (blockIndex === -1) return;
+
+            if (direction === 'up' && blockIndex > 0) {
+                let temp = blocks[blockIndex - 1]; blocks[blockIndex - 1] = blocks[blockIndex]; blocks[blockIndex] = temp;
+            } else if (direction === 'down' && blockIndex < blocks.length - 1) {
+                let temp = blocks[blockIndex + 1]; blocks[blockIndex + 1] = blocks[blockIndex]; blocks[blockIndex] = temp;
+            }
+
+            ta.value = blocks.join('\n\n').replace("___MOVING_BLOCK___", rawTag);
+            renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
+        }
+
+        // Green Arrows: Push tag INSIDE the adjacent tag
+        window.nestVisualTag = function(btn, encodedRaw, direction) {
+            event.stopPropagation();
+            const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
+            const ta = document.getElementById('fs-textarea');
+            let content = ta.value;
+
+            let idx = content.indexOf(rawTag);
+            if (idx === -1) return;
+            
+            content = content.substring(0, idx) + "\n\n___MOVING_BLOCK___\n\n" + content.substring(idx + rawTag.length);
+            let blocks = content.split(/\n+/).map(b => b.trim()).filter(b => b.length > 0);
+            let blockIndex = blocks.indexOf("___MOVING_BLOCK___");
+            if (blockIndex === -1) return;
+
+            if (direction === 'up' && blockIndex > 0) {
+                let targetBlock = blocks[blockIndex - 1];
+                let closeTagMatch = targetBlock.match(/<\/[a-zA-Z0-9]+>$/);
+                if (closeTagMatch) {
+                    blocks[blockIndex - 1] = targetBlock.substring(0, targetBlock.lastIndexOf(closeTagMatch[0])) + "\n" + rawTag + "\n" + closeTagMatch[0];
+                } else {
+                    blocks[blockIndex - 1] = targetBlock + "\n" + rawTag;
+                }
+                blocks.splice(blockIndex, 1);
+            } else if (direction === 'down' && blockIndex < blocks.length - 1) {
+                let targetBlock = blocks[blockIndex + 1];
+                let openTagMatch = targetBlock.match(/^<[a-zA-Z0-9]+[^>]*>/);
+                if (openTagMatch) {
+                    blocks[blockIndex + 1] = targetBlock.substring(0, openTagMatch[0].length) + "\n" + rawTag + "\n" + targetBlock.substring(openTagMatch[0].length);
+                } else {
+                    blocks[blockIndex + 1] = rawTag + "\n" + targetBlock;
+                }
+                blocks.splice(blockIndex, 1);
+            }
+
+            ta.value = blocks.join('\n\n').replace("___MOVING_BLOCK___", rawTag);
+            renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
+        };
+
+        // Red/Blue Arrows: Pull tag OUT of parent tag
+        window.unnestVisualTag = function(btn, encodedRaw, direction) {
+            event.stopPropagation();
+            const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
+            const ta = document.getElementById('fs-textarea');
+            let content = ta.value;
+
+            // Simplified unnest: Cut the rawTag out, close the parent tag, place rawTag, reopen parent tag.
+            // For now, it extracts the tag completely to the bottom or top of the parent block structure.
+            let idx = content.indexOf(rawTag);
+            if (idx === -1) return;
+            
+            content = content.replace(rawTag, ""); // Remove it
+            
+            if (direction === 'up') {
+                ta.value = rawTag + "\n\n" + content.trim(); // Throw to top
+            } else {
+                ta.value = content.trim() + "\n\n" + rawTag; // Throw to bottom
+            }
+            renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
+        };
+
+        function renderPreviewEngine(rawText, containerEl, injectRemovals = false) {
+            const rawBase = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/main`;
+            const subPath = getMediaSubPath();
+            let text = rawText;
+
+            const wrapRm = (match, innerHtml, noRemove = false, tagName = 'TAG') => {
+                if(!injectRemovals) return innerHtml;
+                const safeRaw = btoa(unescape(encodeURIComponent(match)));
+                const dragAttr = window.isDragModeEnabled !== false ? 'draggable="true"' : 'draggable="false"';
+                const disClass = window.isDragModeEnabled !== false ? '' : ' drag-disabled';
+                
+                // Nested state visual toggles
+                const isNested = text.indexOf(match) > 0 && text.substring(0, text.indexOf(match)).match(/<[a-zA-Z0-9]+[^>]*>$/);
+                const nestedAttr = isNested ? 'data-nested="true"' : '';
+
+                const removeBtn = noRemove ? '' : `<div class="action-btn remove" onclick="removeVisualTag(this, '${safeRaw}')"><i class="fas fa-times"></i></div>`;
+                
+                // Add the Nesting Action Arrows (Green, Red, Blue)
+                const nestBtns = `
+                    <div class="nest-actions">
+                        <div class="action-btn nest-btn" onclick="nestVisualTag(this, '${safeRaw}', 'up')" title="Push inside above tag"><i class="fas fa-level-up-alt"></i></div>
+                        <div class="action-btn nest-btn" onclick="nestVisualTag(this, '${safeRaw}', 'down')" title="Push inside below tag"><i class="fas fa-level-down-alt"></i></div>
+                        <div class="action-btn unnest-btn" onclick="unnestVisualTag(this, '${safeRaw}', 'up')" title="Pull out of parent"><i class="fas fa-sign-out-alt"></i></div>
+                    </div>
+                `;
+
+                return `<div class="preview-removable${disClass}" ${dragAttr} ${nestedAttr} ondragstart="window.isDragModeEnabled !== false && vDragStart(event, '${safeRaw}')" ondragover="window.isDragModeEnabled !== false && vDragOver(event)" ondrop="window.isDragModeEnabled !== false && vDrop(event, '${safeRaw}')" ondragend="this.style.opacity='1'" data-raw="${safeRaw}"><div class="block-actions"><div class="text-[9px] font-black uppercase text-slate-500 bg-white dark:bg-[#2A1610] dark:text-slate-300 px-2 py-1 rounded shadow-sm border dark:border-white/10 flex items-center mr-1" style="border-color: var(--border); letter-spacing: 0.05em;">${tagName}</div><div class="action-btn move-up" onclick="moveVisualTag(this, '${safeRaw}', 'up')"><i class="fas fa-arrow-up"></i></div><div class="action-btn move-down" onclick="moveVisualTag(this, '${safeRaw}', 'down')"><i class="fas fa-arrow-down"></i></div>${removeBtn}</div>${nestBtns}${innerHtml}</div>`;
+            };
+
+            text = text.replace(/<sym>([\s\S]*?)<\/sym>/g, (m, symCode) => wrapRm(m, `<span class="html-sym">${symCode.trim()}</span>`, false, 'SYM'));
+            text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, (m,a,c) => wrapRm(m, `<div style="text-align:${a}">${c}</div>`, false, 'ALIGN'));
+            text = text.replace(/<hr>/g, m => wrapRm(m, `<hr>`, false, 'HR'));
+            
+            text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m,s,a,c) => { 
+                const sz={1:'2.8rem',2:'2.4rem',3:'2.0rem',4:'1.8rem',5:'1.6rem',6:'1.4rem',7:'1.2rem',8:'1.1rem',9:'1.05rem',10:'1rem'}; 
+                return wrapRm(m, `<div style="font-size:${sz[s]||'1.2rem'};text-align:${a};font-weight:${s<=3?'800':'600'};margin:1.5rem 0 0.8rem;line-height:1.2;color:var(--text-main);">${c}</div>`, false, 'HEADING'); 
+            });
+            
+            text = text.replace(/<collapse heading="(.*?)"([^>]*)>([\s\S]*?)<\/collapse>/g,(m,h,attrs,con)=>{ 
+                const ga = (n) => { const match=attrs.match(new RegExp(`${n}="([^"]*)"`)); return match?match[1]:null; }; 
+                const color = ga('color') || 'accent'; const bgColor = ga('bg-color') || 'accent'; 
+                const cc = resolveColor(color); const bgc = resolveColorBg(bgColor, 0.07); 
+                return wrapRm(m, `<details class="custom-collapse" style="border:2px solid ${cc};background:${bgc}"><summary style="color:${cc};font-weight:700">${h}</summary><div class="collapse-anim-wrap"><div class="collapse-anim-inner"><div class="collapse-body">${con}</div></div></div></details>`, false, 'COLLAPSE'); 
+            });
+            
+            text = text.replace(/<collapse2 heading="(.*?)" unextendedhr="(.*?)" extendedhr="(.*?)">([\s\S]*?)<\/collapse2>/g,(m,h,uhr,exhr,con)=>{ 
+                return wrapRm(m, `<div class="collapse2-container"><details class="clean-collapse"><summary><span>${h}</span><i class="fas fa-chevron-down" style="font-size:12px;opacity:0.5"></i></summary><div class="clean-anim-wrap"><div class="clean-anim-inner"><div class="clean-body">${con}${exhr==='true'?'<hr class="collapse-hr">':''}</div></div></div></details>${uhr==='true'?'<hr class="collapse-hr">':''}</div>`, false, 'COLLAPSE 2'); 
+            });
+            
+            text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g,(m,st,col,ty,con)=>{ 
+                const resolvedCol = resolveColor(col) || 'inherit'; 
+                return wrapRm(m, `<span class="tw-text tw-cursor" data-state="${st||'continuous'}" data-fulltext="${con.replace(/"/g,'&quot;')}" style="color:${resolvedCol};font-weight:${ty.includes('bold')?'bold':'normal'};font-style:${ty.includes('italic')?'italic':'normal'}"></span>`, false, 'TYPEWRITER'); 
+            });
+            
+            text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g,(m,h,l)=>wrapRm(m, `<a href="${l.trim()}" class="custom-href" target="_blank">${h||l.trim()}</a>`, false, 'LINK'));
+            
+            text = text.replace(/<text ([\s\S]*?)>([\s\S]*?)<\/text>/g,(m,attrs,content)=>{ 
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`${n}="([^"]*)"`)); return match?match[1]:null; }; 
+                const color = ga('color'), cLight = ga('color-light'), cDark = ga('color-dark'); 
+                const bgColor = ga('bg-color'), bgL = ga('bg-color-light'), bgD = ga('bg-color-dark'); 
+                const type = ga('type')||''; let st='', cls=''; 
+                if(cLight||cDark) { st+=`--light-c:${resolveColor(cLight||color)||'inherit'};--dark-c:${resolveColor(cDark||color)||'inherit'};color:var(--light-c);`; cls='adaptive-text'; } 
+                else if(color) { st+=`color:${resolveColor(color)};`; } 
+                if(bgL||bgD) { st+=`--light-bg:${resolveColorBg(bgL||bgColor)||'transparent'};--dark-bg:${resolveColorBg(bgD||bgColor)||'transparent'};background:var(--light-bg);padding:1px 6px;border-radius:4px;`; cls='adaptive-text'; } 
+                else if(bgColor) { st+=`background:${resolveColorBg(bgColor)};padding:1px 6px;border-radius:4px;`; } 
+                if(type.includes('bold')) st+='font-weight:bold;'; if(type.includes('italic')) st+='font-style:italic;'; if(type.includes('underline')) st+='text-decoration:underline;'; 
+                return wrapRm(m, `<span${cls?' class="'+cls+'"':''} style="${st.trim()}">${content}</span>`, false, 'TEXT'); 
+            });
+            
+            text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g,(m,type,content)=>{ 
+                const tag=type==='number'?'ol':'ul'; 
+                return wrapRm(m, `<${tag} style="margin:15px 0 15px 40px">${content.trim().split('\n').map(i=>`<li>${i.trim()}</li>`).join('')}</${tag}>`, false, 'LIST'); 
+            });
+            
+            text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g,(m,c,t,con)=>{ 
+                const cc = resolveColor(c); const bgc = resolveColorBg(c, 0.1); 
+                return wrapRm(m, `<div class="logic-box" style="border-color:${cc};background:${bgc};border-style:${t==='dotted'?'dotted':'solid'}">${con}</div>`, false, 'BOX'); 
+            });
+            
+            text = text.replace(/<code>([\s\S]*?)<\/code>/g,(m,code)=>{ 
+                const escaped = code.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
+                return wrapRm(m, `<div class="code-container"><button class="copy-btn" onclick="copyCodePreview(this)">Copy</button><pre><code>${escaped}</code></pre></div>`, false, 'CODE'); 
+            });
+            
+            // Injected TRIPLE TAP onto media tags directly here:
+            text = text.replace(/<image>(.*?)<\/image>/g,(m,n)=>wrapRm(m, `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'" onclick="if(event.detail===3) emSelectMedia('${btoa(unescape(encodeURIComponent(m)))}')"/>`, false, 'IMAGE'));
+            text = text.replace(/<video>(.*?)<\/video>/g,(m,n)=>wrapRm(m, `<video muted playsinline loop controls onclick="if(event.detail===3) emSelectMedia('${btoa(unescape(encodeURIComponent(m)))}')"><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`, false, 'VIDEO'));
+            text = text.replace(/<audio>(.*?)<\/audio>/g,(m,n)=>wrapRm(m, `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'" onclick="if(event.detail===3) emSelectMedia('${btoa(unescape(encodeURIComponent(m)))}')"></audio>`, false, 'AUDIO'));
+
+            if (window.isRawMoveModeEnabled && injectRemovals) {
+                let blocks = text.split(/\n{2,}/);
+                blocks = blocks.map(b => {
+                    if (b.trim().length > 0 && !b.trim().startsWith('<')) {
+                        let parsedHtml = marked.parse(b.trim());
+                        return wrapRm(b.trim(), parsedHtml, true, 'RAW TEXT');
+                    }
+                    return b;
+                });
+                text = blocks.join('\n\n');
+            }
+
+            containerEl.innerHTML = marked.parse(text);
+            setTimeout(initTypewriters, 50); 
+        }
 
         function setMode(mode) {
             const editor = document.getElementById('editor');
             const preview = document.getElementById('preview-box');
-            editor.classList.toggle('hidden', mode === 'preview');
+            
+            if (window.cm && typeof window.cm.getWrapperElement === 'function') {
+                window.cm.getWrapperElement().classList.toggle('hidden', mode === 'preview');
+                editor.classList.add('hidden');
+            } else { editor.classList.toggle('hidden', mode === 'preview'); }
             preview.classList.toggle('hidden', mode === 'write');
-            document.getElementById('btn-write').className = mode === 'write' ? 'px-4 py-2 rounded-lg text-[10px] font-black uppercase bg-white shadow-sm' : 'px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400';
-            document.getElementById('btn-preview').className = mode === 'preview' ? 'px-4 py-2 rounded-lg text-[10px] font-black uppercase bg-white shadow-sm' : 'px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400';
+            
+            document.getElementById('btn-write').className = mode === 'write' ? 'px-4 py-2 rounded-lg text-[10px] font-black uppercase shadow-sm transition-all bg-white dark:bg-white/10' : 'px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all';
+            if (mode === 'write') document.getElementById('btn-write').style.color = 'var(--text-main)'; else document.getElementById('btn-write').style.color = '';
+            
+            document.getElementById('btn-preview').className = mode === 'preview' ? 'px-4 py-2 rounded-lg text-[10px] font-black uppercase shadow-sm transition-all bg-white dark:bg-white/10' : 'px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all';
+            if (mode === 'preview') document.getElementById('btn-preview').style.color = 'var(--text-main)'; else document.getElementById('btn-preview').style.color = '';
 
-            if(mode === 'preview') {
-                let text = editor.value;
-                const rawBase = `https://raw.githubusercontent.com/${CONFIG.owner}/${CONFIG.repo}/main`;
-                
-                // Determine subpath for images/videos based on current file location
-                const pathParts = activeFilePath.split('/');
-                pathParts.shift(); // remove root folder (e.g., Get-Started)
-                pathParts.pop();   // remove filename
-                const subPath = pathParts.join('/');
+            if(mode === 'preview') renderPreviewEngine(getEditorValue(), preview, false);
+        }
+        
+    </script>
 
-                text = text.replace(/<br>/g, '<br>');
-                text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, '<div style="text-align:$1">$2</div>');
-                
-                // MATCH VIEWING SITE HEADING SIZES
-                text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m, s, a, c) => {
-                    const sizeMap = {
-                        1: '2.8rem', 2: '2.4rem', 3: '2.0rem', 
-                        4: '1.8rem', 5: '1.6rem', 6: '1.4rem', 
-                        7: '1.2rem', 8: '1.1rem', 9: '1.05rem', 10: '1rem'
-                    };
-                    const fontSize = sizeMap[s] || "1.2rem";
-                    const weight = s <= 3 ? '800' : '600';
-                    return `<div style="font-size:${fontSize}; text-align:${a}; font-weight:${weight}; margin:1.5rem 0 0.8rem 0; line-height:1.2;">${c}</div>`;
-                });
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closetag.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
 
-                text = text.replace(/<collapse heading="(.*?)" color="(.*?)" bg-color="(.*?)">([\s\S]*?)<\/collapse>/g, (m, h, c, bg, con) => {
-                    return `<details class="custom-collapse" style="border: 2px solid ${c}; background: ${bg}15;">
-                                <summary style="color: ${c}; font-weight: 700;">${h}</summary>
-                                <div class="collapse-body">${con}</div>
-                            </details>`;
-                });
+    <script>
+        (function initWriter() {
+            const tagNames = ["heading","text","align","list","href","tw","code","box","collapse","image","video","audio","br","hr","collapse2", "sym"];
+            const attrs = ["color","type","heading","bg-color","size","align","state","color-light","color-dark","unextendedhr","extendedhr"];
 
+            const textarea = document.getElementById("editor");
+            if (!textarea || !window.CodeMirror) return;
 
-
-                // NEW COLLAPSE2 PREVIEW RENDER
-                text = text.replace(/<collapse2 heading="(.*?)" unextendedhr="(.*?)" extendedhr="(.*?)">([\s\S]*?)<\/collapse2>/g, (m, h, uhr, exhr, con) => {
-                    const uHr = uhr === 'true' ? '<hr class="collapse-hr">' : '';
-                    const eHr = exhr === 'true' ? '<hr class="collapse-hr">' : '';
-                    return `<div class="collapse2-container"><details class="clean-collapse"><summary><span>${h}</span><i class="fas fa-chevron-down" style="font-size:12px; opacity:0.5"></i></summary><div class="clean-body">${con}${eHr}</div></details>${uHr}</div>`;
-                });
-
-
-                text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g, (m, state, color, type, content) => {
-                    const b = type.includes('bold') ? 'bold' : 'normal', i = type.includes('italic') ? 'italic' : 'normal';
-                    return `<span class="tw-text tw-cursor" data-state="${state || 'continuous'}" data-fulltext="${content.replace(/"/g, '&quot;')}" style="color:${color || 'inherit'}; font-weight:${b}; font-style:${i};"></span>`;
-                });
-
-                // ADDED MISSING HREF TAG LOGIC
-                text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g, (m, h, l) => {
-                    const linkText = h || l.trim();
-                    return `<a href="${l.trim()}" class="custom-href" target="_blank" style="color:var(--accent); text-decoration:none; font-weight:700;">${linkText}</a>`;
-                });
-
-                // REPLACE THE OLD <text> REGEX WITH THIS:
-                text = text.replace(/<text ([\s\S]*?)>([\s\S]*?)<\/text>/g, (m, attrs, content) => {
-                    const getAttr = (name) => {
-                        const match = attrs.match(new RegExp(`${name}="([^"]*)"`));
-                        return match ? match[1] : null;
-                    };
-
-                    const color = getAttr('color');
-                    const cLight = getAttr('color-light');
-                    const cDark = getAttr('color-dark');
-                    const type = getAttr('type') || '';
-
-                    let styles = "";
-                    let classAttr = "";
-                    
-                    // Logic: if color-light or color-dark exists, use CSS variables
-                    if (cLight || cDark) {
-                        styles += `--light-c: ${cLight || color || 'inherit'}; `;
-                        styles += `--dark-c: ${cDark || color || 'inherit'}; `;
-                        styles += `color: var(--light-c); `;
-                        classAttr = 'class="adaptive-text"'; 
-                    } else if (color) {
-                        styles += `color: ${color}; `;
+            const cm = window.CodeMirror.fromTextArea(textarea, {
+                mode: "xml", lineNumbers: true, lineWrapping: true, inputStyle: "contenteditable", 
+                spellcheck: true, autoCloseBrackets: true, matchBrackets: true,
+                autoCloseTags: { dontCloseTags: "br hr img input meta link source", whenOpening: true, whenClosing: true },
+                extraKeys: {
+                    "Ctrl-Space": "autocomplete",
+                    "Tab": function(cm) { if (cm.state.completionActive) return window.CodeMirror.commands.pickSelectedHint(cm); cm.execCommand("insertSoftTab"); },
+                    "Enter": function(cm) { if (window.autoBrEnabled) { cm.replaceSelection("<br>\n", "end"); return; } return window.CodeMirror.commands.newlineAndIndent(cm); },
+                    "Backspace": function(cm) {
+                        const cur = cm.getCursor(); const line = cm.getLine(cur.line); const ch = cur.ch;
+                        if (ch > 0 && ch < line.length) {
+                            const left = line[ch - 1]; const right = line[ch];
+                            const pairs = { "(": ")", "[": "]", "{": "}", "\"": "\"", "'": "'" };
+                            if (pairs[left] && pairs[left] === right) { cm.replaceRange("", { line: cur.line, ch: ch - 1 }, { line: cur.line, ch: ch + 1 }); return; }
+                        }
+                        return window.CodeMirror.commands.delCharBefore(cm);
                     }
+                },
+                hintOptions: { completeSingle: false, closeOnUnfocus: true }
+            });
 
-                    if(type.includes('bold')) styles += 'font-weight:bold; ';
-                    if(type.includes('italic')) styles += 'font-style:italic; ';
-                    if(type.includes('underline')) styles += 'text-decoration:underline; ';
+            const overlay = {
+                token: function(stream) {
+                    if (stream.match(/<\/?(heading|text|align|list|href|tw|code|box|collapse|image|video|audio|br|hr|collapse2|sym)\b/)) return "tag-" + RegExp.$1;
+                    while (stream.next() != null && !stream.match(/<\/?(heading|text|align|list|href|tw|code|box|collapse|image|video|audio|br|hr|collapse2|sym)\b/, false)) {}
+                    return null;
+                }
+            };
+            cm.addOverlay(overlay);
 
-                    return `<span ${classAttr} style="${styles.trim()}">${content}</span>`;
-                });
+            window.CodeMirror.registerHelper("hint", "xml", function(cm) {
+                const cur = cm.getCursor(); const token = cm.getTokenAt(cur);
+                const start = token.start, end = cur.ch; const line = cm.getLine(cur.line); const before = line.slice(0, cur.ch);
+                const inTag = /<[^>]*$/.test(before);
+                let list = [];
+                if (inTag) {
+                    if (/^<\/?\w*$/.test(token.string) || token.type === "tag") {
+                        const prefix = token.string.replace(/[<\/]/g, "");
+                        list = tagNames.filter(t => t.startsWith(prefix)).map(t => ({ text: t, displayText: `<${t}>` }));
+                    } else {
+                        const prefix = token.string.replace(/["'=]/g, "");
+                        list = attrs.filter(a => a.startsWith(prefix)).map(a => ({ text: a + '=""', displayText: a }));
+                    }
+                } else { if (token.string === "<") list = tagNames.map(t => ({ text: t, displayText: `<${t}>` })); }
+                return { list, from: window.CodeMirror.Pos(cur.line, start), to: window.CodeMirror.Pos(cur.line, end) };
+            });
 
-                text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g, (m, type, content) => {
-                    const tag = type === 'number' ? 'ol' : 'ul';
-                    return `<${tag} style="margin:15px 0 15px 40px;">${content.trim().split('\n').map(i => `<li>${i.trim()}</li>`).join('')}</${tag}>`;
-                });
+            cm.on("inputRead", function(cm, change) {
+                const c = change.text && change.text[0];
+                if (c && (c === "<" || c === " " || c === "\"" || c === ":" || c === "-" )) cm.showHint({ hint: window.CodeMirror.hint.xml });
+            });
 
-                text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g, (m, c, t, con) => `<div class="logic-box" style="border-color:${c}; background:${c}15; border-style:${t === 'dotted' ? 'dotted' : 'solid'}">${con}</div>`);
-                
-                text = text.replace(/<code>([\s\S]*?)<\/code>/g, (m, code) => {
-                    const clean = code.trim();
-                    return `<div class="code-container"><button class="copy-btn">Copy</button><pre><code>${clean}</code></pre></div>`;
-                });
+            const chipWrap = document.getElementById("color-chip-wrap");
+            const chip = document.getElementById("color-chip");
+            const chipLabel = document.getElementById("color-chip-label");
+            const inlinePicker = document.getElementById("inlineColorPicker");
 
-                // FIXED MEDIA PATHS TO MATCH VIEW SITE LOGIC
-                text = text.replace(/<image>(.*?)<\/image>/g, (m, n) => `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'">`);
-                text = text.replace(/<video>(.*?)<\/video>/g, (m, n) => `<video controls><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4" onerror="this.src='${rawBase}/videos/${n.trim()}'"></video>`);
-                text = text.replace(/<audio>(.*?)<\/audio>/g, (m, n) => `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'"></audio>`);
+            function isHexColor(s) { return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test((s || "").trim()); }
+            function isValidCssColor(s) { const v = (s || "").trim(); if (!v) return false; return isHexColor(v) || (window.CSS && CSS.supports && CSS.supports("color", v)); }
 
-                preview.innerHTML = marked.parse(text);
-                
-                // Initialize typewriter effects in preview
-                if (typeof initTypewriters === "function") initTypewriters();
-
-                document.querySelectorAll('.copy-btn').forEach(btn => btn.onclick = () => { 
-                    navigator.clipboard.writeText(btn.nextElementSibling.innerText); 
-                    btn.innerText = "COPIED"; 
-                    setTimeout(() => btn.innerText = "COPY", 2000); 
-                });
+            function getColorContext() {
+                const cur = cm.getCursor(); const line = cm.getLine(cur.line); const before = line.slice(0, cur.ch);
+                const m = before.match(/(?:\b(color|bg-color|color-light|color-dark))="([^"]*)$/);
+                if (!m) return null;
+                const attr = m[1]; const valueSoFar = m[2]; const valueStartCh = before.lastIndexOf('"') + 1;
+                const after = line.slice(cur.ch); const nextQuote = after.indexOf('"'); const valueEndCh = nextQuote === -1 ? cur.ch : (cur.ch + nextQuote);
+                return { attr, value: valueSoFar, from: { line: cur.line, ch: valueStartCh }, to: { line: cur.line, ch: valueEndCh } };
             }
+
+            function refreshColorChip() {
+                if (!chipWrap || !chip || !inlinePicker) return;
+                const ctx = getColorContext();
+                if (!ctx) { chipWrap.style.display = "none"; return; }
+                chipWrap.style.display = "flex"; chipLabel.textContent = ctx.attr.toUpperCase().replace("-", " ");
+                const current = ctx.value.trim();
+                chip.style.background = isValidCssColor(current) ? current : "linear-gradient(135deg, rgba(148,163,184,0.7), rgba(148,163,184,0.15))";
+                inlinePicker.value = (isHexColor(current) ? current : "#000000");
+                chip.title = isValidCssColor(current) ? current : `Pick ${ctx.attr}`;
+            }
+
+            function applyInlineColor(hex) { const ctx = getColorContext(); if (!ctx) return; cm.replaceRange(hex, ctx.from, ctx.to); }
+
+            if (chip && inlinePicker) { chip.addEventListener("click", () => inlinePicker.click()); inlinePicker.addEventListener("input", (e) => applyInlineColor(e.target.value)); }
+            cm.on("cursorActivity", refreshColorChip); cm.on("change", refreshColorChip); refreshColorChip();
+
+            let colorMarks = [];
+            function clearColorMarks() { for (const m of colorMarks) m.clear(); colorMarks = []; }
+            function paintColorsInView() {
+                if (!cm.getViewport) return;
+                clearColorMarks();
+                const vp = cm.getViewport();
+                for (let lineNo = vp.from; lineNo <= vp.to; lineNo++) {
+                    const line = cm.getLine(lineNo);
+                    if (!line) continue;
+                    const re = /\b(color|bg-color|color-light|color-dark)="([^"]*)"/g;
+                    let m;
+                    while ((m = re.exec(line)) !== null) {
+                        const value = (m[2] || "").trim();
+                        if (!isValidCssColor(value)) continue;
+                        const valueStart = m.index + m[0].indexOf('"') + 1;
+                        const valueEnd = valueStart + m[2].length;
+                        try {
+                            const mark = cm.markText(
+                                { line: lineNo, ch: valueStart }, { line: lineNo, ch: valueEnd },
+                                { className: "cm-color-literal", css: `color: ${value};` }
+                            );
+                            colorMarks.push(mark);
+                        } catch (_) {}
+                    }
+                }
+            }
+            cm.on("viewportChange", paintColorsInView); cm.on("change", paintColorsInView); paintColorsInView();
+
+            window.cm = cm;
+            window.getEditorValue = () => cm.getValue(); window.setEditorValue = (v) => cm.setValue(v || "");
+            window.getEditorSelectionText = () => cm.getSelection(); window.replaceEditorSelection = (insert) => cm.replaceSelection(insert || "", "around");
+        })();
+
+        // Auto Br toggle
+        window.autoBrEnabled = (localStorage.getItem("admin_auto_br") || "off") === "on";
+        function updateAutoBrButton() {
+            const btn = document.getElementById("btn-autobr"); if (!btn) return;
+            btn.className = window.autoBrEnabled ? "px-4 py-2 rounded-lg text-[10px] font-black uppercase shadow-sm transition-all bg-white dark:bg-white/10" : "px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all";
+            if (window.autoBrEnabled) btn.style.color = 'var(--text-main)'; else btn.style.color = '';
+        }
+        function toggleAutoBr() {
+            window.autoBrEnabled = !window.autoBrEnabled; localStorage.setItem("admin_auto_br", window.autoBrEnabled ? "on" : "off");
+            updateAutoBrButton(); if (window.cm) window.cm.focus();
+        }
+        updateAutoBrButton();
+
+        // ---------------------------------------------------------
+        // 5. ORGANISE WIZARD LOGIC
+        // ---------------------------------------------------------
+        let wizardState = {};
+        
+        function openWizardModal() { document.getElementById('wizard-modal').classList.remove('hidden'); document.getElementById('wizard-modal').classList.add('flex'); wizardStep1(); }
+        function closeWizardModal() { document.getElementById('wizard-modal').classList.add('hidden'); document.getElementById('wizard-modal').classList.remove('flex'); }
+
+        function wizardStep1() {
+            document.getElementById('wizard-title').innerText = "What to organise?";
+            const c = document.getElementById('wizard-content');
+            c.innerHTML = `
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="wizardStepGuide('dropdowns')" class="p-6 rounded-2xl border text-center hover:border-purple-500 hover:text-purple-500 transition-colors dark:border-white/10" style="background: var(--surface-2);">
+                        <i class="fas fa-folder text-3xl mb-3 text-purple-400"></i><br><span class="font-extrabold text-sm">Dropdowns</span>
+                    </button>
+                    <button onclick="wizardStepGuide('files')" class="p-6 rounded-2xl border text-center hover:border-blue-500 hover:text-blue-500 transition-colors dark:border-white/10" style="background: var(--surface-2);">
+                        <i class="fas fa-file-alt text-3xl mb-3 text-blue-400"></i><br><span class="font-extrabold text-sm">Files</span>
+                    </button>
+                </div>
+            `;
+        }
+
+        async function wizardStepGuide(type) {
+            wizardState.type = type; document.getElementById('wizard-title').innerText = "Select Guide";
+            const c = document.getElementById('wizard-content');
+            c.innerHTML = `<div class="p-8 text-center"><i class="fas fa-spinner fa-spin text-3xl text-accent mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading Guides...</p></div>`;
+            try {
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/Get-Started`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                const items = await res.json();
+                let html = `<div class="space-y-2 max-h-[300px] overflow-y-auto">`;
+                const dirs = items.filter(i => i.type === 'dir');
+                if(dirs.length === 0) html += `<div class="p-4 text-center text-xs font-bold text-slate-400">No Guides found in Get-Started.</div>`;
+                dirs.forEach(i => { html += `<button onclick="wizardStepNext('${i.path}')" class="w-full p-4 rounded-xl border text-left font-bold transition hover:bg-slate-100 dark:border-white/10 dark:hover:bg-white/5"><i class="fas fa-book text-accent mr-3"></i> ${i.name}</button>`; });
+                html += `</div><button onclick="wizardStep1()" class="mt-4 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600"><i class="fas fa-arrow-left mr-1"></i> Back</button>`;
+                c.innerHTML = html;
+            } catch(e) { c.innerHTML = `<div class="text-red-500 font-bold text-center">Error loading guides from Get-Started folder.</div>`; }
+        }
+
+        async function wizardStepNext(guidePath) {
+            wizardState.guide = guidePath;
+            if(wizardState.type === 'dropdowns') { createAndOpenOrganise(guidePath); } else {
+                document.getElementById('wizard-title').innerText = "Select Dropdown";
+                const c = document.getElementById('wizard-content');
+                c.innerHTML = `<div class="p-8 text-center"><i class="fas fa-spinner fa-spin text-3xl text-accent mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading Folders...</p></div>`;
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${guidePath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                    const items = await res.json();
+                    let html = `<div class="space-y-2 max-h-[300px] overflow-y-auto">`;
+                    const dirs = items.filter(i => i.type === 'dir');
+                    if(dirs.length === 0) html += `<div class="p-4 text-center text-xs font-bold text-slate-400">No dropdown folders found here.</div>`;
+                    dirs.forEach(i => { html += `<button onclick="createAndOpenOrganise('${i.path}')" class="w-full p-4 rounded-xl border text-left font-bold transition hover:bg-slate-100 dark:border-white/10 dark:hover:bg-white/5"><i class="fas fa-folder text-blue-400 mr-3"></i> ${i.name}</button>`; });
+                    html += `</div><button onclick="wizardStepGuide('files')" class="mt-4 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600"><i class="fas fa-arrow-left mr-1"></i> Back</button>`;
+                    c.innerHTML = html;
+                } catch(e) { c.innerHTML = `<div class="text-red-500 font-bold">Error loading folders.</div>`; }
+            }
+        }
+
+        async function createAndOpenOrganise(path) {
+            closeWizardModal();
+            runWithLoader(async () => {
+                const orgPath = `${path}/organise.txt`;
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${orgPath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                    if(res.ok) { const data = await res.json(); openFile(orgPath, data.sha); return; }
+                } catch(e) {}
+                await saveToGithub(orgPath, btoa(""), `Create organise.txt in ${path}`);
+                const res2 = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${orgPath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                const data2 = await res2.json(); openFile(orgPath, data2.sha); loadRootTree();
+            }, "Creating Structure File...");
+        }
+
+        // =========================================================
+        // 5.5 CREATE WIZARD LOGIC
+        // =========================================================
+        let createState = {};
+
+        function openCreateModal() { document.getElementById('create-modal').classList.remove('hidden'); document.getElementById('create-modal').classList.add('flex'); createStep1(); }
+        function closeCreateModal() { document.getElementById('create-modal').classList.add('hidden'); document.getElementById('create-modal').classList.remove('flex'); }
+
+        function createStep1() {
+            document.getElementById('create-title').innerText = "What to Create?";
+            const c = document.getElementById('create-content');
+            c.innerHTML = `
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="createMainGuidePrompt()" class="p-4 rounded-xl border text-left font-bold transition hover:bg-slate-100 dark:border-white/10 dark:hover:bg-white/5" style="background: var(--surface-2);"><i class="fas fa-book text-blue-400 mr-3"></i> Main Guide</button>
+                    <button onclick="createDropdownStepGuide()" class="p-4 rounded-xl border text-left font-bold transition hover:bg-slate-100 dark:border-white/10 dark:hover:bg-white/5" style="background: var(--surface-2);"><i class="fas fa-folder-open text-purple-400 mr-3"></i> Dropdown</button>
+                    <button onclick="createFileStepGuide()" class="p-4 rounded-xl border text-left font-bold transition hover:bg-slate-100 dark:border-white/10 dark:hover:bg-white/5" style="background: var(--surface-2);"><i class="fas fa-file-alt text-green-400 mr-3"></i> File</button>
+                </div>
+            `;
+        }
+
+        function createMainGuidePrompt() {
+            const name = prompt("Enter Main Guide Name:");
+            if (!name) return; closeCreateModal();
+            runWithLoader(async () => {
+                for(let root of CONFIG.roots) {
+                    if (root === 'Descriptions') { await saveToGithub(`Descriptions/${name}.md`, btoa(`# ${name}\n\nMain guide description...`), `Create Guide: ${name}`); } 
+                    else { await saveToGithub(`${root}/${name}/.keep`, btoa("init"), `Create Guide: ${name}`); }
+                }
+                loadRootTree();
+            }, "Creating Main Guide...");
+        }
+
+        async function createDropdownStepGuide() { createState.flow = 'dropdown'; document.getElementById('create-title').innerText = "Select Guide for Dropdown"; await renderGuidesListForCreate(); }
+        async function createFileStepGuide() { createState.flow = 'file'; document.getElementById('create-title').innerText = "Select Guide for File"; await renderGuidesListForCreate(); }
+
+        async function renderGuidesListForCreate() {
+            const c = document.getElementById('create-content');
+            c.innerHTML = `<div class="p-8 text-center"><i class="fas fa-spinner fa-spin text-3xl text-accent mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading Guides...</p></div>`;
+            try {
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/Get-Started`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                const items = await res.json();
+                let html = `<div class="space-y-2 max-h-[300px] overflow-y-auto">`;
+                const dirs = items.filter(i => i.type === 'dir');
+                if(dirs.length === 0) html += `<div class="p-4 text-center text-xs font-bold text-slate-400">No Guides found.</div>`;
+                dirs.forEach(i => { html += `<button onclick="handleGuideSelect('${i.name}')" class="w-full p-4 rounded-xl border text-left font-bold transition hover:bg-slate-100 dark:border-white/10 dark:hover:bg-white/5"><i class="fas fa-book text-accent mr-3"></i> ${i.name}</button>`; });
+                html += `</div><button onclick="createStep1()" class="mt-4 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600"><i class="fas fa-arrow-left mr-1"></i> Back</button>`;
+                c.innerHTML = html;
+            } catch(e) { c.innerHTML = `<div class="text-red-500 font-bold text-center">Error loading guides.</div>`; }
+        }
+
+        async function handleGuideSelect(guideName) {
+            createState.guide = guideName;
+            if (createState.flow === 'dropdown') {
+                const dpName = prompt(`Enter Dropdown Name in "${guideName}":`);
+                if (!dpName) return; closeCreateModal();
+                runWithLoader(async () => {
+                    for (let root of CONFIG.roots) { if (root === 'Descriptions') continue; await saveToGithub(`${root}/${guideName}/${dpName}/.keep`, btoa("init"), `Create Dropdown: ${dpName}`); }
+                    loadRootTree();
+                }, "Creating Dropdown...");
+            } else if (createState.flow === 'file') {
+                document.getElementById('create-title').innerText = "Select Dropdown for File";
+                const c = document.getElementById('create-content');
+                c.innerHTML = `<div class="p-8 text-center"><i class="fas fa-spinner fa-spin text-3xl text-accent mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading Dropdowns...</p></div>`;
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/Get-Started/${guideName}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                    const items = await res.json();
+                    let html = `<div class="space-y-2 max-h-[300px] overflow-y-auto">`;
+                    const dirs = items.filter(i => i.type === 'dir');
+                    html += `<button onclick="handleDropdownSelect('')" class="w-full p-4 rounded-xl border text-left font-bold transition hover:bg-slate-100 dark:border-white/10 dark:hover:bg-white/5 italic"><i class="fas fa-folder text-slate-400 mr-3"></i> (Root of ${guideName})</button>`;
+                    dirs.forEach(i => { html += `<button onclick="handleDropdownSelect('${i.name}')" class="w-full p-4 rounded-xl border text-left font-bold transition hover:bg-slate-100 dark:border-white/10 dark:hover:bg-white/5"><i class="fas fa-folder-open text-purple-400 mr-3"></i> ${i.name}</button>`; });
+                    html += `</div><button onclick="createFileStepGuide()" class="mt-4 text-[10px] font-black uppercase text-slate-400 hover:text-slate-600"><i class="fas fa-arrow-left mr-1"></i> Back</button>`;
+                    c.innerHTML = html;
+                } catch(e) { c.innerHTML = `<div class="text-red-500 font-bold text-center">Error loading dropdowns.</div>`; }
+            }
+        }
+
+        function handleDropdownSelect(dropdownName) {
+            let fName = prompt("Enter File Name (without .md):");
+            if (!fName) return; if(!fName.endsWith('.md')) fName += '.md';
+            closeCreateModal();
+            const basePath = dropdownName ? `Get-Started/${createState.guide}/${dropdownName}` : `Get-Started/${createState.guide}`;
+            const fullPath = `${basePath}/${fName}`;
+            runWithLoader(async () => {
+                await saveToGithub(fullPath, btoa("# " + fName.replace('.md', '') + "\n\nStart typing here..."), `Create File: ${fName}`);
+                loadRootTree();
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${fullPath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                    if(res.ok) { const data = await res.json(); openFile(fullPath, data.sha); }
+                } catch(e) {}
+            }, "Creating File...");
+        }
+
+        // =========================================================
+        // 5.6 DELETE WIZARD LOGIC
+        // =========================================================
+        let deleteState = {};
+        
+        function openDeleteModal() { document.getElementById('delete-modal').classList.remove('hidden'); document.getElementById('delete-modal').classList.add('flex'); deleteStep1(); }
+        function closeDeleteModal() { document.getElementById('delete-modal').classList.add('hidden'); document.getElementById('delete-modal').classList.remove('flex'); }
+        
+        function deleteStep1() {
+            document.getElementById('delete-title').innerText = "What to Delete?";
+            document.getElementById('delete-content').innerHTML = `
+                <div class="grid grid-cols-1 gap-3">
+                    <button onclick="deleteStepGuide('main')" class="p-4 rounded-xl border text-left font-bold transition hover:bg-red-50 dark:border-white/10 dark:hover:bg-red-900/20 text-red-500" style="background: var(--surface-2);"><i class="fas fa-book mr-3"></i> Main Guide (Deep Delete)</button>
+                    <button onclick="deleteStepGuide('dropdown')" class="p-4 rounded-xl border text-left font-bold transition hover:bg-red-50 dark:border-white/10 dark:hover:bg-red-900/20 text-red-500" style="background: var(--surface-2);"><i class="fas fa-folder-open mr-3"></i> Dropdown (Deep Delete)</button>
+                    <button onclick="deleteStepGuide('file')" class="p-4 rounded-xl border text-left font-bold transition hover:bg-red-50 dark:border-white/10 dark:hover:bg-red-900/20 text-red-500" style="background: var(--surface-2);"><i class="fas fa-file-alt mr-3"></i> File</button>
+                </div>`;
+        }
+
+        async function deleteStepGuide(flow) {
+            deleteState.flow = flow; document.getElementById('delete-title').innerText = `Select Guide (${flow})`;
+            const c = document.getElementById('delete-content');
+            c.innerHTML = `<div class="p-8 text-center"><i class="fas fa-spinner fa-spin text-3xl text-red-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading...</p></div>`;
+            try {
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/Get-Started`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                const dirs = (await res.json()).filter(i => i.type === 'dir');
+                let html = `<div class="space-y-2 max-h-[300px] overflow-y-auto">`;
+                dirs.forEach(i => html += `<button onclick="handleDeleteGuideSelect('${i.name}')" class="w-full p-4 rounded-xl border text-left font-bold transition hover:bg-slate-100 dark:border-white/10"><i class="fas fa-book text-red-400 mr-3"></i> ${i.name}</button>`);
+                html += `</div><button onclick="deleteStep1()" class="mt-4 text-[10px] font-black uppercase text-slate-400"><i class="fas fa-arrow-left mr-1"></i> Back</button>`;
+                c.innerHTML = html;
+            } catch(e) { c.innerHTML = `<div class="text-red-500 font-bold text-center">Error loading guides.</div>`; }
+        }
+
+        async function handleDeleteGuideSelect(guideName) {
+            deleteState.guide = guideName;
+            if (deleteState.flow === 'main') { executeDeepDelete(guideName, true); } else {
+                document.getElementById('delete-title').innerText = `Select Dropdown in ${guideName}`;
+                const c = document.getElementById('delete-content');
+                c.innerHTML = `<div class="p-8 text-center"><i class="fas fa-spinner fa-spin text-3xl text-red-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading...</p></div>`;
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/Get-Started/${guideName}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                    const dirs = (await res.json()).filter(i => i.type === 'dir');
+                    let html = `<div class="space-y-2 max-h-[300px] overflow-y-auto">`;
+                    if (deleteState.flow === 'file') html += `<button onclick="handleDeleteDropdownSelect('')" class="w-full p-4 rounded-xl border text-left font-bold italic"><i class="fas fa-folder text-slate-400 mr-3"></i> (Root of ${guideName})</button>`;
+                    dirs.forEach(i => html += `<button onclick="handleDeleteDropdownSelect('${i.name}')" class="w-full p-4 rounded-xl border text-left font-bold"><i class="fas fa-folder-open text-red-400 mr-3"></i> ${i.name}</button>`);
+                    html += `</div><button onclick="deleteStepGuide(deleteState.flow)" class="mt-4 text-[10px] font-black uppercase text-slate-400"><i class="fas fa-arrow-left mr-1"></i> Back</button>`;
+                    c.innerHTML = html;
+                } catch(e) { c.innerHTML = `<div class="text-red-500 font-bold text-center">Error loading dropdowns.</div>`; }
+            }
+        }
+
+        async function handleDeleteDropdownSelect(dropdownName) {
+            deleteState.dropdown = dropdownName;
+            if (deleteState.flow === 'dropdown') { executeDeepDelete(`${deleteState.guide}/${dropdownName}`, false); } else if (deleteState.flow === 'file') {
+                const basePath = dropdownName ? `Get-Started/${deleteState.guide}/${dropdownName}` : `Get-Started/${deleteState.guide}`;
+                document.getElementById('delete-title').innerText = `Select File to Delete`;
+                const c = document.getElementById('delete-content');
+                c.innerHTML = `<div class="p-8 text-center"><i class="fas fa-spinner fa-spin text-3xl text-red-500 mb-4"></i><p class="text-xs font-bold uppercase tracking-widest text-slate-400">Loading...</p></div>`;
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${basePath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                    const files = (await res.json()).filter(i => i.type === 'file' && i.name.endsWith('.md'));
+                    let html = `<div class="space-y-2 max-h-[300px] overflow-y-auto">`;
+                    if(files.length === 0) html += `<div class="p-4 text-center text-xs font-bold text-slate-400">No Files found.</div>`;
+                    files.forEach(i => html += `<button onclick="handleDeleteFileFinal('${basePath}/${i.name}', '${i.sha}')" class="w-full p-4 rounded-xl border text-left font-bold"><i class="fas fa-file-alt text-red-400 mr-3"></i> ${i.name}</button>`);
+                    html += `</div><button onclick="handleDeleteGuideSelect('${deleteState.guide}')" class="mt-4 text-[10px] font-black uppercase text-slate-400"><i class="fas fa-arrow-left mr-1"></i> Back</button>`;
+                    c.innerHTML = html;
+                } catch(e) { c.innerHTML = `<div class="text-red-500 font-bold text-center">Error loading files.</div>`; }
+            }
+        }
+
+        async function handleDeleteFileFinal(path, sha) {
+            if(!confirm(`Delete File: Are you sure you want to delete ${path}?`)) return; closeDeleteModal();
+            runWithLoader(async () => { await deleteItem(path, sha, false, true); loadRootTree(); }, "Deleting File...");
+        }
+
+        let currentOrganiseItems = [];
+        
+        async function openEasyMode() {
+            if(!activeFilePath) return;
+            const pathParts = activeFilePath.split('/'); pathParts.pop(); 
+            const folderPath = pathParts.join('/');
+            document.getElementById('em-folder-path').innerText = folderPath;
+            
+            const loaderData = startSlider('Loading structure...');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${folderPath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                const items = await res.json();
+                const currentText = getEditorValue();
+                const existingMap = {};
+                currentText.split('\n').forEach(l => {
+                    const m = l.match(/(?:dropdown|dropdowns|place)="([^"]+)"=(\d+)(?:=(open|closed))?/);
+                    if(m) existingMap[m[1]] = { pos: parseInt(m[2]), state: m[3] || 'closed' };
+                });
+                currentOrganiseItems = [];
+                items.forEach(item => {
+                    if (item.name === 'organise.txt' || item.name === '.keep') return;
+                    const isDir = item.type === 'dir';
+                    const cleanName = isDir ? item.name : item.name.replace('.md', '');
+                    const existing = existingMap[cleanName] || { pos: 999, state: 'closed' };
+                    currentOrganiseItems.push({ name: cleanName, isDir: isDir, pos: existing.pos !== 999 ? existing.pos : '', state: existing.state, sortKey: existing.pos !== 999 ? existing.pos : 999 });
+                });
+                currentOrganiseItems.sort((a,b) => a.sortKey - b.sortKey || a.name.localeCompare(b.name));
+                const listEl = document.getElementById('easy-mode-list');
+                listEl.innerHTML = '';
+                currentOrganiseItems.forEach((item, index) => {
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center gap-2 p-3 rounded-2xl border'; row.style.borderColor = 'var(--border)'; row.style.background = 'var(--surface-2)';
+                    let iconHtml = item.isDir ? `<i class="fas fa-folder text-blue-400"></i>` : `<i class="far fa-file-alt text-slate-400"></i>`;
+                    let stateHtml = item.isDir ? `<select id="em-state-${index}" class="w-24 p-2 rounded-xl text-xs font-bold border outline-none" style="background: var(--surface-1); border-color: var(--border);"><option value="closed" ${item.state === 'closed' ? 'selected' : ''}>Closed</option><option value="open" ${item.state === 'open' ? 'selected' : ''}>Open</option></select>` : `<div class="w-24 text-center text-[10px] uppercase font-bold text-slate-400">N/A</div>`;
+                    let posHtml = `<div class="w-24 flex items-center justify-center gap-1"><button onclick="emPosAdjust(${index}, -1)" class="w-6 h-6 flex items-center justify-center bg-slate-200 dark:bg-white/10 rounded hover:bg-slate-300 dark:hover:bg-white/20 transition text-[10px]"><i class="fas fa-chevron-left"></i></button><input type="number" id="em-pos-${index}" value="${item.pos}" placeholder="0" class="w-10 p-1 text-center rounded text-xs font-black border outline-none appearance-none" style="background: var(--surface-1); border-color: var(--border);"><button onclick="emPosAdjust(${index}, 1)" class="w-6 h-6 flex items-center justify-center bg-slate-200 dark:bg-white/10 rounded hover:bg-slate-300 dark:hover:bg-white/20 transition text-[10px]"><i class="fas fa-chevron-right"></i></button></div>`;
+                    row.innerHTML = `<div class="w-8 text-center text-lg opacity-80">${iconHtml}</div><div class="flex-1 font-bold text-sm truncate" title="${item.name}">${item.name}</div>${posHtml}${stateHtml}`;
+                    listEl.appendChild(row);
+                });
+                document.getElementById('easy-mode-modal').classList.remove('hidden'); document.getElementById('easy-mode-modal').classList.add('flex');
+            } catch(e) { alert('Failed to load folder structure.'); } finally {
+                clearInterval(loaderData.interval); loaderData.bar.style.width = '100%';
+                setTimeout(() => { loaderData.loader.style.opacity = '0'; setTimeout(() => { loaderData.loader.style.display = 'none'; }, 400); }, 500);
+            }
+        }
+
+        function emPosAdjust(index, delta) { const input = document.getElementById(`em-pos-${index}`); let val = parseInt(input.value) || 0; val += delta; if(val < 1) val = 1; input.value = val; }
+
+        function autoSortEasyMode() {
+            let items = [];
+            currentOrganiseItems.forEach((item, index) => { const posInput = parseInt(document.getElementById(`em-pos-${index}`).value) || 999; items.push({ index: index, pos: posInput }); });
+            items.sort((a,b) => a.pos - b.pos);
+            items.forEach((it, seqIndex) => { document.getElementById(`em-pos-${it.index}`).value = seqIndex + 1; });
+        }
+
+        function closeEasyMode() { document.getElementById('easy-mode-modal').classList.add('hidden'); document.getElementById('easy-mode-modal').classList.remove('flex'); }
+
+        function applyEasyMode() {
+            let outLines = []; const toProcess = []; const positions = {}; let hasError = false;
+            currentOrganiseItems.forEach((item, index) => {
+                const posInput = document.getElementById(`em-pos-${index}`).value; const stateSelect = document.getElementById(`em-state-${index}`);
+                if (posInput.trim() !== '') {
+                    const posNum = parseInt(posInput);
+                    if (positions[posNum]) { alert(`❌ SAVE FAILED!\n\nBoth "${item.name}" and "${positions[posNum]}" have position ${posNum}.\n\nPlease give them different numbers or click AUTO SORT before saving.`); hasError = true; }
+                    positions[posNum] = item.name; toProcess.push({ item: item, pos: posNum, state: stateSelect ? stateSelect.value : 'closed' });
+                }
+            });
+            if(hasError) return; 
+            toProcess.sort((a,b) => a.pos - b.pos);
+            toProcess.forEach(p => { if (p.item.isDir) outLines.push(`dropdown="${p.item.name}"=${p.pos}=${p.state}`); else outLines.push(`place="${p.item.name}"=${p.pos}`); });
+            setEditorValue(outLines.join('\n')); closeEasyMode();
+            const applyBtn = document.querySelector('#easy-mode-modal .btn-primary');
+            const originalText = applyBtn.innerText; applyBtn.innerText = "GENERATED!"; applyBtn.style.background = "#22c55e"; 
+            setTimeout(() => { applyBtn.innerText = originalText; applyBtn.style.background = "var(--accent)"; }, 1500);
+        }
+
+        // ---------------------------------------------------------
+        // 6. SEARCH ENGINE
+        // ---------------------------------------------------------
+        let currentSearchIndex = -1;
+
+        function openSearchModal(isEasyModeContext = false) {
+            const m = document.getElementById("search-modal"); if (!m) return;
+            m.classList.remove("hidden"); m.classList.add("flex");
+            const q = document.getElementById("search-query");
+            if (q) { q.value = q.value || ""; setTimeout(() => q.focus(), 0); }
+            updateSearchStatus(""); window.isSearchingEasyMode = isEasyModeContext;
+        }
+
+        function closeSearchModal() {
+            const m = document.getElementById("search-modal"); if (!m) return;
+            m.classList.add("hidden"); m.classList.remove("flex");
+            if (window.isSearchingEasyMode) document.getElementById('fs-textarea').focus(); else if (window.cm) window.cm.focus();
+        }
+
+        function updateSearchStatus(msg) { const s = document.getElementById("search-status"); if (s) s.textContent = msg || ""; }
+        
+        function runSearch(direction) {
+            const query = document.getElementById("search-query").value.trim().toLowerCase();
+            const statusEl = document.getElementById("search-status");
+            if (!query) { statusEl.innerText = "Type something to search."; return; }
+        
+            const isEasy = window.isSearchingEasyMode;
+            const doc = isEasy ? document.getElementById('fs-textarea').value.toLowerCase() : (window.cm ? window.cm.getValue().toLowerCase() : "");
+            if(!doc) return;
+
+            const scope = document.querySelector('input[name="search-scope"]:checked').value;
+            let matches = []; let pos = doc.indexOf(query);
+            
+            while (pos !== -1) {
+                let isValid = true;
+                if (scope !== "combined") {
+                    const before = doc.substring(0, pos);
+                    const lastTagOpen = before.lastIndexOf("<" + scope); const lastTagClose = before.lastIndexOf("</" + scope + ">");
+                    if (lastTagOpen === -1 || lastTagClose > lastTagOpen) isValid = false;
+                }
+                if (isValid) matches.push({ from: pos, to: pos + query.length });
+                pos = doc.indexOf(query, pos + 1);
+            }
+            if (matches.length === 0) { statusEl.innerText = "No matches found."; return; }
+        
+            if (direction === 'next') currentSearchIndex = (currentSearchIndex + 1) % matches.length;
+            else if (direction === 'prev') currentSearchIndex = (currentSearchIndex - 1 + matches.length) % matches.length;
+            else currentSearchIndex = 0; 
+        
+            const match = matches[currentSearchIndex];
+            
+            if (isEasy) {
+                const ta = document.getElementById('fs-textarea');
+                ta.focus(); ta.setSelectionRange(match.from, match.to);
+            } else {
+                const fromPos = window.cm.posFromIndex(match.from); const toPos = window.cm.posFromIndex(match.to);
+                window.cm.setSelection(fromPos, toPos); window.cm.scrollIntoView({ from: fromPos, to: toPos }, 150); window.cm.focus();
+            }
+            statusEl.innerText = `Result ${currentSearchIndex + 1} of ${matches.length}`;
+        }
+        document.getElementById("search-query").addEventListener("input", () => currentSearchIndex = -1);
+
+        // ---------------------------------------------------------
+        // 7. FULLSCREEN EASY MODE VISUAL WRITER
+        // ---------------------------------------------------------
+        let fsPhase = 1;
+        let easyWriterInitialValue = "";
+        
+        function enterEasyWriter() {
+            const fw = document.getElementById('fs-easy-writer'); const ta = document.getElementById('fs-textarea');
+            ta.value = getEditorValue(); easyWriterInitialValue = ta.value; 
+            fw.classList.remove('hidden'); fw.classList.add('flex'); setFsPhase(1);
+        }
+
+        function exitEasyWriter() {
+            const fw = document.getElementById('fs-easy-writer'); const ta = document.getElementById('fs-textarea');
+            if (ta.value !== easyWriterInitialValue) { if (!confirm("You have unsaved changes. Click OK to DISCARD them, or Cancel to stay.")) return; ta.value = easyWriterInitialValue; }
+            setEditorValue(ta.value); fw.classList.add('hidden'); fw.classList.remove('flex');
+            if (window.cm) window.cm.focus();
+        }
+
+        function saveFromEasyMode() {
+            const ta = document.getElementById('fs-textarea'); setEditorValue(ta.value); easyWriterInitialValue = ta.value; 
+            const btn = document.getElementById('btn-em-save');
+            if(btn) {
+                const originalText = btn.innerHTML; btn.innerHTML = `<i class="fas fa-check mr-1"></i> Saved!`; btn.style.background = "#22c55e"; btn.style.color = "white";
+                setTimeout(() => { btn.innerHTML = originalText; btn.style.background = "var(--surface-2)"; btn.style.color = "var(--text-main)"; }, 2000);
+            }
+        }
+
+        function saveAndCommitEasyMode() { saveFromEasyMode(); runWithLoader(async () => { await saveFile(); }, "Committing to Github..."); }
+
+        function setFsPhase(phase) {
+            fsPhase = phase;
+            const ta = document.getElementById('fs-textarea'); const preview = document.getElementById('fs-preview-box');
+            const p1 = document.getElementById('fs-phase1-tools'); const ptags = document.getElementById('fs-phase2-tools');
+            const p2act = document.getElementById('fs-phase2-actions'); const sb = document.getElementById('fs-sidebar');
+            const st = document.getElementById('fs-mode-status');
+            
+            if(phase === 1) {
+                ta.classList.remove('hidden'); preview.classList.add('hidden');
+                p1.classList.remove('hidden'); p1.classList.add('flex');
+                ptags.classList.add('hidden'); ptags.classList.remove('flex');
+                p2act.classList.add('hidden'); p2act.classList.remove('flex');
+                sb.classList.add('hidden'); sb.classList.remove('flex');
+                st.innerText = "Drafting Structure..."; ta.focus();
+            } else {
+                ta.classList.add('hidden'); preview.classList.remove('hidden');
+                p1.classList.add('hidden'); p1.classList.remove('flex');
+                ptags.classList.remove('hidden'); ptags.classList.add('flex');
+                p2act.classList.remove('hidden'); p2act.classList.add('flex');
+                st.innerText = "Formatting Select & Apply";
+                document.getElementById('fs-sidebar-content').innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Select text in the preview and click a tag above to format.</div>`;
+                renderPreviewEngine(ta.value, preview, true);
+            }
+        }
+
+        let emAutoBrEnabled = false;
+        function toggleEmAutoBr() {
+            emAutoBrEnabled = !emAutoBrEnabled; const btn = document.getElementById('btn-em-autobr');
+            if (emAutoBrEnabled) { btn.style.background = 'var(--surface-2)'; btn.style.color = 'var(--text-main)'; } else { btn.style.background = 'transparent'; btn.style.color = 'var(--text-dim)'; }
+            document.getElementById('fs-textarea').focus();
+        }
+        document.getElementById('fs-textarea').addEventListener('keydown', function(e) {
+            if(e.key === 'Enter' && fsPhase === 1 && emAutoBrEnabled) {
+                e.preventDefault(); const start = this.selectionStart; const end = this.selectionEnd;
+                this.value = this.value.substring(0, start) + "<br>\n" + this.value.substring(end);
+                this.selectionStart = this.selectionEnd = start + 5;
+            }
+        });
+
+        let currentVisualSelection = "";
+        document.addEventListener('selectionchange', () => {
+            if (fsPhase === 2) { const sel = window.getSelection().toString().trim(); if(sel.length > 0) currentVisualSelection = sel; }
+        });
+
+        async function fetchMediaFiles(type) {
+            const subPath = getMediaSubPath(); const basePath = type + 's' + (subPath ? `/${subPath}` : '');
+            try {
+                const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${basePath}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
+                if(!res.ok) return []; const items = await res.json(); return items.filter(i => i.type === 'file').map(i => i.name);
+            } catch(e) { return []; }
+        }
+
+        function styleToggles(id, label, options) {
+            let html = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">${label}</label><div class="flex flex-wrap gap-2 mb-4" id="${id}">`;
+            options.forEach(opt => { html += `<button type="button" onclick="this.classList.toggle('active-style')" class="style-toggle-btn px-4 py-2 rounded-xl border text-xs font-bold shadow-sm transition-colors" data-val="${opt}" style="background: var(--surface-2); border-color: var(--border); color: var(--text-main);">${opt.charAt(0).toUpperCase() + opt.slice(1)}</button>`; });
+            html += `</div>`; return html;
+        }
+
+        window.cancelEmInsert = function() {
+            const sb = document.getElementById('fs-sidebar'); const sbc = document.getElementById('fs-sidebar-content');
+            sb.classList.add('hidden'); sb.classList.remove('flex');
+            sbc.innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Select text in the preview and click a tag above to format.</div>`;
+        };
+
+        async function emInsertTag(tag) {
+            if (fsPhase !== 2) return;
+            if (window.isDraggingTags) { window.isDraggingTags = false; return; }
+
+            const sel = currentVisualSelection || "Content";
+            const sb = document.getElementById('fs-sidebar'); const sbc = document.getElementById('fs-sidebar-content');
+            sb.classList.remove('hidden'); sb.classList.add('flex');
+            
+            let fields = "";
+            const cp = (id, label, def) => `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">${label}</label><div class="flex items-center gap-2 mb-4"><input type="text" id="${id}" value="${def}" class="flex-1 p-3 rounded-xl border text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><input type="color" id="${id}-picker" class="hidden" onchange="document.getElementById('${id}').value = this.value; this.nextElementSibling.style.backgroundColor = this.value;"><button onclick="document.getElementById('${id}-picker').click()" class="p-3 rounded-xl border shadow-sm w-12 h-12 flex items-center justify-center transition hover:scale-105" style="background: var(--accent); color: white; border-color: rgba(0,0,0,0.1);"><i class="fas fa-palette"></i></button></div>`;
+            const ti = (id, label, def, ph="") => `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">${label}</label><input type="text" id="${id}" value="${def}" placeholder="${ph}" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);">`;
+
+            if (tag === 'box') { fields = cp('fs-prop-color', 'Color Picker', 'accent') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Border Type</label><select id="fs-prop-type" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="solid">Solid</option><option value="dotted">Dotted</option></select>`; } 
+            else if (tag === 'text') { fields = cp('fs-prop-color', 'Color Picker', 'accent') + styleToggles('fs-prop-type', 'Style Type', ['bold', 'italic', 'underline']); } 
+            else if (tag === 'heading') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Size (1-10)</label><input type="number" id="fs-prop-size" value="1" min="1" max="10" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Align</label><select id="fs-prop-align" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>`; } 
+            else if (tag === 'collapse') { fields = ti('fs-prop-title', 'Heading Title', 'Click to expand') + cp('fs-prop-color', 'Border Color', 'accent'); } 
+            else if (tag === 'collapse2') { fields = ti('fs-prop-title', 'Heading Title', 'Clean Collapse') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Top HR</label><select id="fs-prop-uhr" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="true">True</option><option value="false">False</option></select><label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Bottom HR</label><select id="fs-prop-ehr" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="false">False</option><option value="true">True</option></select>`; } 
+            else if (tag === 'align') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Alignment</label><select id="fs-prop-align" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="center">Center</option><option value="right">Right</option></select>`; } 
+            else if (tag === 'tw') { fields = cp('fs-prop-color', 'Color Picker', 'accent') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">State</label><select id="fs-prop-state" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="active">Active</option><option value="continuous">Continuous</option></select>` + styleToggles('fs-prop-type', 'Style Type', ['bold', 'italic']); } 
+            else if (tag === 'href') { fields = ti('fs-prop-url', 'Link URL', 'https://') + ti('fs-prop-title', 'Link Title', 'Click Here'); } 
+            else if (tag === 'image' || tag === 'video' || tag === 'audio') { 
+                sbc.innerHTML = `<div class="p-4 text-center"><i class="fas fa-spinner fa-spin text-2xl mb-2 text-blue-500"></i><p class="text-[10px] font-bold text-slate-400 uppercase">Fetching Media...</p></div>`;
+                const files = await fetchMediaFiles(tag);
+                let optionsHtml = files.length > 0 ? files.map(f => `<option value="${f}">${f}</option>`).join('') : `<option value="">No ${tag}s found in directory</option>`;
+                
+                const sub = getMediaSubPath(); 
+                fields = `<div class="p-3 mb-4 rounded-xl border border-blue-500/30 bg-blue-500/10 text-[10px] font-bold text-blue-500 dark:text-blue-400 leading-relaxed"><i class="fas fa-info-circle mr-1"></i> Path: <br> <span class="font-mono text-[9px] opacity-80">${tag}s/${sub}/</span></div>
+                <label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Select File</label>
+                <select id="fs-prop-filename" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);">
+                    ${optionsHtml}
+                </select>`; 
+            } 
+            else if (tag === 'br' || tag === 'hr' || tag === 'symEmpty') { emApplyVisualTag(tag); return; } 
+            else { fields = `<div class="text-xs font-bold text-slate-400 mb-4 text-center">No extra attributes needed.</div>`; }
+            
+            sbc.innerHTML = `
+                <div class="p-4 rounded-xl mb-6 shadow-inner" style="background: var(--surface-2); border: 1px solid var(--border);">
+                    <div class="text-[9px] font-black uppercase tracking-[0.2em] mb-2" style="color: var(--accent);">Target Text</div>
+                    <div class="text-sm italic truncate font-medium">${sel}</div>
+                </div>
+                ${fields}
+                <div class="flex gap-2 mt-2">
+                    <button onclick="emApplyVisualTag('${tag}')" class="flex-1 py-4 rounded-2xl btn-primary shadow-lg tracking-widest text-xs transition hover:scale-[1.02]">APPLY <i class="fas fa-bolt ml-1"></i></button>
+                    <button onclick="cancelEmInsert()" class="px-4 py-4 rounded-2xl shadow-lg tracking-widest text-xs font-bold transition hover:scale-[1.02] border" style="background: var(--surface-2); color: var(--text-dim); border-color: var(--border);">CANCEL</button>
+                </div>
+            `;
+        }
+
+        function emApplyVisualTag(tag) {
+            const ta = document.getElementById('fs-textarea');
+            const sel = currentVisualSelection || "Content";
+            let res = "";
+
+            const getVal = (id) => { 
+                const el = document.getElementById(id); if(!el) return ''; 
+                if(el.tagName === 'DIV') return Array.from(el.querySelectorAll('.active-style')).map(b => b.getAttribute('data-val')).join(' ');
+                return el.value; 
+            };
+
+            if(tag === 'box') res = `<box color="${getVal('fs-prop-color')}" type="${getVal('fs-prop-type')}">\n${sel}\n</box>`;
+            else if(tag === 'text') res = `<text color="${getVal('fs-prop-color')}" type="${getVal('fs-prop-type')}">${sel}</text>`;
+            else if(tag === 'heading') res = `<heading size="${getVal('fs-prop-size')}" align="${getVal('fs-prop-align')}">${sel}</heading>`;
+            else if(tag === 'collapse') res = `<collapse heading="${getVal('fs-prop-title')}" color="${getVal('fs-prop-color')}">\n${sel}\n</collapse>`;
+            else if(tag === 'collapse2') res = `<collapse2 heading="${getVal('fs-prop-title')}" unextendedhr="${getVal('fs-prop-uhr')}" extendedhr="${getVal('fs-prop-ehr')}">\n${sel}\n</collapse2>`;
+            else if(tag === 'align') res = `<align type="${getVal('fs-prop-align')}">\n${sel}\n</align>`;
+            else if(tag === 'tw') res = `<tw state="${getVal('fs-prop-state')}" color="${getVal('fs-prop-color')}" type="${getVal('fs-prop-type')}">${sel}</tw>`;
+            else if(tag === 'href') res = `<href heading="${getVal('fs-prop-title')}">${getVal('fs-prop-url')}</href>`;
+            else if(tag === 'list') res = `<list type="bullet">\n${sel}\n</list>`;
+            else if(tag === 'code') res = `<code>\n${sel}\n</code>`;
+            else if(tag === 'image') res = `<image>${getVal('fs-prop-filename')}</image>`;
+            else if(tag === 'video') res = `<video>${getVal('fs-prop-filename')}</video>`;
+            else if(tag === 'audio') res = `<audio>${getVal('fs-prop-filename')}</audio>`;
+            else if(tag === 'br') res = `<br>`;
+            else if(tag === 'hr') res = `<hr>`;
+            else if(tag === 'symEmpty') res = `<sym>\n${sel === 'Content' ? '' : sel}\n</sym>`;
+            else res = `<${tag}>${sel}</${tag}>`;
+
+            if (sel !== "Content" && ta.value.includes(sel)) { ta.value = ta.value.replace(sel, res); } 
+            else { ta.value += `\n${res}`; }
+            
+            document.getElementById('fs-sidebar').classList.add('hidden'); document.getElementById('fs-sidebar').classList.remove('flex');
+            document.getElementById('fs-sidebar-content').innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Select text in the preview and click a tag above to format.</div>`;
+            renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
+        }
+
+        function removeVisualTag(btn, encodedRaw) {
+            event.stopPropagation();
+            const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
+            const ta = document.getElementById('fs-textarea');
+            let inner = rawTag.replace(/^<[a-zA-Z0-9]+[^>]*>([\s\S]*?)<\/[a-zA-Z0-9]+>$/, '$1');
+            if (inner === rawTag) { inner = ""; }
+            ta.value = ta.value.replace(rawTag, inner.trim());
+            renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
         }
 
     </script>
