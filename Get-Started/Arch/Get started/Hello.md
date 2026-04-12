@@ -1,3 +1,0 @@
-# Hello
-
-Start typing here...
