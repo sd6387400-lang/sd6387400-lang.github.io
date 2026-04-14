@@ -161,6 +161,6 @@ Arch Linux sticks closely to traditional Linux filesystem hierarchies. Because y
 
 <br>
 <align type="center">
-  <btn href="https://archlinux.org/download/" icon="download" type="glowing">Download Arch Linux</btn>
+  <btn href="https://archlinux.org/download/" icon="download" type="dotted">Download Arch Linux</btn>
   <btn href="https://wiki.archlinux.org/" icon="book-open" type="floating">Read the Wiki</btn>
 </align>
