@@ -28,6 +28,8 @@
             --blob-2: #60C8D8;
             --surface-1: rgba(255, 248, 242, 0.98);
             --surface-2: rgba(255, 238, 224, 0.6);
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
         
         /* SUNSET PALETTE DEFAULT (DARK) */
@@ -45,8 +47,7 @@
             --surface-2: rgba(32, 14, 8, 0.5);
         }
 
-        /* TRUE DARK MODE FIX ON BODY */
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-base); color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
+        body { font-family: var(--font-main); background-color: var(--bg-base); color: var(--text-main); transition: background-color 0.3s, color 0.3s; }
         html.dark body { background-color: #18080A; color: #FFE0CC; }
 
         .bg-wrapper { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
@@ -55,7 +56,6 @@
         .blob-2 { background: var(--blob-2); bottom: -170px; right: -170px; animation-delay: -7s; }
         @keyframes float { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(60px, 80px) scale(1.08); } }
 
-        /* GLASSMORPHISM TOGGLE CLASSES */
         html.no-glass .glass-card, html.no-glass #auth-layer > div { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: var(--surface-1) !important; border: 1px solid var(--border) !important; }
         html.no-glass #auth-layer { backdrop-filter: none !important; background: var(--bg-base) !important; }
         html.no-glass .bg-wrapper { display: none !important; } 
@@ -63,13 +63,8 @@
         .glass-card { backdrop-filter: blur(20px); border-radius: 24px; background: var(--card-bg); border: 1px solid var(--border); transition: background 0.3s, border-color 0.3s; }
         .btn-primary { background: var(--accent); color: #fff; font-weight: 900; transition: 0.3s; cursor: pointer; border:none; }
 
-        input, textarea, select {
-            background: var(--surface-2) !important;
-            color: var(--text-main) !important;
-            border: 1px solid var(--border) !important;
-        }
+        input, textarea, select { background: var(--surface-2) !important; color: var(--text-main) !important; border: 1px solid var(--border) !important; }
         input::placeholder, textarea::placeholder { color: color-mix(in srgb, var(--text-dim) 78%, transparent); }
-
         input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         
@@ -79,11 +74,13 @@
         .tree-btn { opacity: 0; transition: 0.2s; padding: 4px; border-radius: 4px; font-size: 10px; }
         .group:hover .tree-btn { opacity: 1; }
         
-        .tag-ref { font-size: 10px; font-weight: 900; padding: 6px 10px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(0,0,0,0.06); }
+        .tag-ref { font-size: 10px; font-weight: 900; padding: 6px 10px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(0,0,0,0.06); white-space: nowrap; }
         html.dark .tag-ref { border-color: rgba(255,255,255,0.1); }
         .tag-ref:hover { filter: brightness(0.98); transform: translateY(-0.5px); transition: 0.15s; }
         .tag-ref[data-tag] { background: color-mix(in srgb, var(--tag-color) 14%, transparent); color: var(--tag-color); }
         html.dark .tag-ref[data-tag] { background: color-mix(in srgb, var(--tag-color) 22%, transparent); }
+        
+        /* EXHAUSTIVE TAG COLOR LIST */
         .tag-ref[data-tag="heading"] { --tag-color: #7c3aed; }
         .tag-ref[data-tag="text"] { --tag-color: #06b6d4; }
         .tag-ref[data-tag="align"] { --tag-color: #f97316; }
@@ -97,20 +94,48 @@
         .tag-ref[data-tag="video"] { --tag-color: #f43f5e; }
         .tag-ref[data-tag="audio"] { --tag-color: #10b981; }
         .tag-ref[data-tag="br"] { --tag-color: #64748b; }
-        .tag-ref[data-tag="collapse2"] { --tag-color: #8b5cf6; }
         .tag-ref[data-tag="hr"] { --tag-color: #9ca3af; }
+        .tag-ref[data-tag="collapse2"] { --tag-color: #8b5cf6; }
         .tag-ref[data-tag="sym"] { --tag-color: #f59e0b; }
         .tag-ref[data-tag="sym-empty"] { --tag-color: #f43f5e; }
 
-        .style-toggle-btn.active-style {
-            background: var(--accent) !important;
-            color: #fff !important;
-            border-color: var(--accent) !important;
-        }
+        /* NEW TAG COLORS */
+        .tag-ref[data-tag="card"] { --tag-color: #3b82f6; }
+        .tag-ref[data-tag="grid"] { --tag-color: #8b5cf6; }
+        .tag-ref[data-tag="col"] { --tag-color: #a855f7; }
+        .tag-ref[data-tag="hero"] { --tag-color: #f59e0b; }
+        .tag-ref[data-tag="api"] { --tag-color: #10b981; }
+        .tag-ref[data-tag="editor"] { --tag-color: #64748b; }
+        .tag-ref[data-tag="progress"] { --tag-color: #06b6d4; }
+        .tag-ref[data-tag="carousel"] { --tag-color: #ec4899; }
+        .tag-ref[data-tag="slide"] { --tag-color: #f43f5e; }
+        .tag-ref[data-tag="btn"] { --tag-color: #3b82f6; }
+        .tag-ref[data-tag="author"] { --tag-color: #8b5cf6; }
+        .tag-ref[data-tag="feedback"] { --tag-color: #14b8a6; }
+        .tag-ref[data-tag="stat"] { --tag-color: #eab308; }
+        .tag-ref[data-tag="pricing"] { --tag-color: #22c55e; }
+        .tag-ref[data-tag="terminal"] { --tag-color: #334155; }
+        .tag-ref[data-tag="props"] { --tag-color: #f97316; }
+        .tag-ref[data-tag="diff"] { --tag-color: #ef4444; }
+        .tag-ref[data-tag="compare"] { --tag-color: #06b6d4; }
+        .tag-ref[data-tag="checklist"] { --tag-color: #10b981; }
+        .tag-ref[data-tag="quote"] { --tag-color: #8b5cf6; }
+        .tag-ref[data-tag="gallery"] { --tag-color: #ec4899; }
+        .tag-ref[data-tag="search"] { --tag-color: #f59e0b; }
+        .tag-ref[data-tag="tabs"] { --tag-color: #3b82f6; }
+        .tag-ref[data-tag="steps"] { --tag-color: #14b8a6; }
+        .tag-ref[data-tag="tooltip"] { --tag-color: #a855f7; }
+        .tag-ref[data-tag="key"] { --tag-color: #64748b; }
+        .tag-ref[data-tag="badge"] { --tag-color: #ef4444; }
+        .tag-ref[data-tag="alert"] { --tag-color: #eab308; }
+        .tag-ref[data-tag="embed"] { --tag-color: #f43f5e; }
+        .tag-ref[data-tag="filetree"] { --tag-color: #22c55e; }
+        .tag-ref[data-tag="page"] { --tag-color: #3b82f6; }
+        .tag-ref[data-tag="last"] { --tag-color: #9ca3af; }
 
+        .style-toggle-btn.active-style { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
         #editor-shell { display: flex; flex-direction: column; gap: 1.5rem; }
         #tag-toolbar { position: sticky; top: 12px; z-index: 50; }
-
         #color-chip-wrap { display: none; align-items: center; gap: 8px; margin-left: 6px; }
         #color-chip { width: 22px; height: 22px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.12); box-shadow: inset 0 0 0 2px rgba(255,255,255,0.55); cursor: pointer; }
         html.dark #color-chip { border-color: rgba(255,255,255,0.15); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.35); }
@@ -139,9 +164,6 @@
         .loader-m3-bar { width: 280px; height: 4px; background: rgba(var(--accent-rgb), 0.15); border-radius: 2px; overflow: hidden; margin-top: 5px; }
         .loader-m3-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5); }
 
-        @media (prefers-color-scheme: dark) { .adaptive-text { color: var(--dark-c) !important; background: var(--dark-bg, transparent) !important; } }
-        html.dark .adaptive-text { color: var(--dark-c) !important; background: var(--dark-bg, transparent) !important; }
-
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;500;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
         #preview-box, #fs-preview-box { 
@@ -155,80 +177,193 @@
             box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04), 0 24px 64px rgba(0,0,0,0.5);
         }
 
+        /* FIXED: BORDERS PERMANENTLY OFF, ONLY ORIGINAL BLUE ON HOVER */
         .preview-removable { 
-            position: relative; border: 2px solid transparent; transition: border-color 0.2s, opacity 0.2s; border-radius: inherit; 
+            position: relative; border: 2px solid transparent; transition: border-color 0.2s, opacity 0.2s, background 0.2s; border-radius: 6px; 
             cursor: grab; 
         }
+        
+        .preview-removable.is-selected { 
+            outline: 3px solid var(--accent) !important; 
+            background: rgba(var(--accent-rgb), 0.1) !important; 
+            border-color: transparent !important;
+            border-radius: 8px !important;
+        }
+
+        span.preview-removable.preview-inline { display: inline-block; vertical-align: middle; margin: 0 2px; padding: 0 2px; }
+        span.preview-removable.preview-inline > .block-actions { top: -22px; right: -10px; transform: scale(0.65); transform-origin: bottom right; }
+
         .preview-removable:active { cursor: grabbing; }
         .preview-removable.drag-disabled { cursor: auto !important; }
         .preview-removable.drag-disabled:active { cursor: auto !important; }
-        .preview-removable:hover { border-color: rgba(59, 130, 246, 0.4); }
+        
+        .preview-removable:hover { border-color: rgba(59, 130, 246, 0.4); } 
         .preview-removable:hover > .block-actions, .preview-removable:hover > .nest-actions { opacity: 1; pointer-events: auto; transform: scale(1); }
         
+        .selection-mode-active .preview-removable * { pointer-events: none !important; }
+        .selection-mode-active .preview-removable { cursor: crosshair !important; }
+        .selection-mode-active .preview-removable:hover { border-color: rgba(59, 130, 246, 0.4) !important; background: rgba(59, 130, 246, 0.05) !important; }
+
+        .selection-mode-active .preview-removable.no-select { cursor: not-allowed !important; opacity: 0.6; }
+        .selection-mode-active .preview-removable.no-select:hover { border-color: transparent !important; background: transparent !important; }
+
         .block-actions { position: absolute; top: -14px; right: -14px; display: flex; gap: 4px; opacity: 0; pointer-events: none; transition: 0.2s; z-index: 50; transform: scale(0.8); }
-        
         .nest-actions { position: absolute; bottom: -14px; left: 10px; display: flex; gap: 4px; opacity: 0; pointer-events: none; transition: 0.2s; z-index: 50; transform: scale(0.8); }
         
         .action-btn { background: #ef4444; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: 0.2s; }
         .action-btn.remove { background: #ef4444; } .action-btn.remove:hover { background: #dc2626; transform: scale(1.1); }
         .action-btn.move-up, .action-btn.move-down { background: #3b82f6; } .action-btn.move-up:hover, .action-btn.move-down:hover { background: #2563eb; transform: scale(1.1); }
         
-        /* Nesting Arrow Colors - Dynamic red when nested */
         .preview-removable[data-nested="true"] > .nest-actions .action-btn.nest-btn { background: #ef4444 !important; }
         .preview-removable[data-nested="true"] > .nest-actions .action-btn.nest-btn:hover { background: #dc2626 !important; transform: scale(1.1); }
         
         .action-btn.nest-btn { background: #22c55e; } .action-btn.nest-btn:hover { background: #16a34a; transform: scale(1.1); }
         .action-btn.unnest-btn { background: #3b82f6; } .action-btn.unnest-btn:hover { background: #2563eb; transform: scale(1.1); }
 
-        #preview-box h1, #fs-preview-box h1 { font-size:clamp(1.9rem,4vw,2.5rem); font-weight:800; letter-spacing:-0.04em; line-height:1.15; margin:2.5rem 0 1rem; color:var(--text-main); border-bottom:2px solid rgba(var(--accent-rgb),0.15); padding-bottom:0.5rem; }
-        #preview-box h2, #fs-preview-box h2 { font-size:1.65rem; font-weight:700; letter-spacing:-0.03em; line-height:1.25; margin:2.2rem 0 0.8rem; color:var(--text-main); }
-        #preview-box h3, #fs-preview-box h3 { font-size:1.28rem; font-weight:700; letter-spacing:-0.02em; line-height:1.3; margin:1.8rem 0 0.6rem; color:var(--text-main); }
-        #preview-box h4, #fs-preview-box h4 { font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.5rem; color:var(--text-main); }
-        #preview-box p, #fs-preview-box p { margin-bottom:1.25em; }
-        #preview-box strong, #fs-preview-box strong { font-weight:800; color:var(--accent); }
-        #preview-box em, #fs-preview-box em { font-style:italic; opacity:0.85; }
-        #preview-box ul, #preview-box ol, #fs-preview-box ul, #fs-preview-box ol { margin:0.9em 0 0.9em 2em; line-height:1.9; }
-        #preview-box li, #fs-preview-box li { margin-bottom:0.25em; }
-        #preview-box li::marker, #fs-preview-box li::marker { color:var(--accent); }
-        #preview-box blockquote, #fs-preview-box blockquote { border-left:3px solid var(--accent); padding:0.9em 1.3em; margin:1.5em 0; background:rgba(var(--accent-rgb),0.06); border-radius:0 14px 14px 0; color:var(--text-dim); }
-        html.dark #preview-box blockquote, html.dark #fs-preview-box blockquote { background:rgba(var(--accent-rgb),0.1); }
-        #preview-box hr, #fs-preview-box hr { border:none; height:1px; background:var(--border); margin:2em 0; }
-        #preview-box a, #fs-preview-box a { color:var(--accent); text-decoration:none; font-weight:600; border-bottom:1.5px solid rgba(var(--accent-rgb),0.3); transition:border-color 0.2s, opacity 0.2s; }
-        #preview-box a:hover, #fs-preview-box a:hover { border-bottom-color:var(--accent); opacity:0.8; }
-        #preview-box table, #fs-preview-box table { width:100%; border-collapse:collapse; margin:1.5em 0; border-radius:12px; overflow:hidden; }
-        #preview-box th, #fs-preview-box th { background:rgba(var(--accent-rgb),0.1); padding:11px 15px; font-weight:700; text-align:left; border-bottom:2px solid rgba(var(--accent-rgb),0.2); font-size:0.88rem; }
-        #preview-box td, #fs-preview-box td { padding:9px 15px; border-bottom:1px solid var(--border); font-size:0.9rem; }
-        #preview-box tr:nth-child(even) td, #fs-preview-box tr:nth-child(even) td { background:rgba(var(--accent-rgb),0.03); }
-        #preview-box :not(pre) > code, #fs-preview-box :not(pre) > code { background:rgba(var(--accent-rgb),0.1); color:var(--accent); padding:2px 7px; border-radius:5px; font-size:0.84em; font-family:'JetBrains Mono', monospace; font-weight:500; border:1px solid rgba(var(--accent-rgb),0.15); }
-        html.dark #preview-box :not(pre) > code, html.dark #fs-preview-box :not(pre) > code { background:rgba(var(--accent-rgb),0.15); border-color:rgba(var(--accent-rgb),0.25); }
+        /* ========================================================
+           NEW TAGS GLOBAL ENGINE CSS (IMPORTED FROM GET STARTED)
+           ======================================================== */
+        .adaptive-color { color: var(--light-c); }
+        html.dark .adaptive-color { color: var(--dark-c); }
+        .adaptive-bg { background-color: var(--light-bg); padding:2px 6px; border-radius:6px; box-sizing: border-box; display: inline-block; word-break: break-word; }
+        html.dark .adaptive-bg { background-color: var(--dark-bg); }
 
-        #preview-box .logic-box, #fs-preview-box .logic-box { padding:22px 25px; margin:28px 0; border-radius:18px; border:2px solid; transition:border-color 0.3s, background 0.3s; }
-        #preview-box .custom-collapse, #fs-preview-box .custom-collapse { border-radius:18px; overflow:hidden; margin:20px 0; border:2px solid; transition:box-shadow 0.3s; }
-        #preview-box .custom-collapse summary, #fs-preview-box .custom-collapse summary { padding:16px 20px; cursor:pointer; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; user-select:none; }
-        #preview-box .custom-collapse summary::-webkit-details-marker, #fs-preview-box .custom-collapse summary::-webkit-details-marker { display:none; }
-        #preview-box .custom-collapse summary::after, #fs-preview-box .custom-collapse summary::after { content:'▼'; font-size: 0.8em; transition: transform 0.3s ease; }
-        #preview-box .custom-collapse[open] summary::after, #fs-preview-box .custom-collapse[open] summary::after { transform: rotate(180deg); }
-        #preview-box .collapse-body, #fs-preview-box .collapse-body { padding:0 20px 18px; padding-top:10px; }
+        .custom-card, .custom-action-btn, .custom-alert, .stat-block, .author-pill { max-width: 100%; box-sizing: border-box; }
+        .custom-card { margin: 24px 0; background: var(--bg-base); padding: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow-x: auto; border-radius: 20px; }
+        .custom-grid { display: grid; grid-template-columns: repeat(var(--cols, 1), 1fr); gap: 20px; margin: 24px 0; width: 100%; box-sizing: border-box; align-items: start; }
+        @media(max-width: 768px) { .custom-grid { grid-template-columns: 1fr !important; } }
+        .custom-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; overflow-x: auto; }
+        .custom-hero { position: relative; padding: clamp(40px, 8vw, 80px) 20px; border-radius: 24px; overflow: hidden; display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; margin: 24px 0; background-size: cover; background-position: center; min-height: 250px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .hero-overlay { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+        .hero-overlay[data-type="dark"] { background: rgba(0,0,0,1); } .hero-overlay[data-type="light"] { background: rgba(255,255,255,1); } .hero-overlay[data-type="gradient"] { background: linear-gradient(to right, rgba(0,0,0,1), transparent); }
+        .custom-hero > div:not(.hero-overlay) { position: relative; z-index: 2; width: 100%; max-width: 800px; }
+        
+        .api-endpoint { display: inline-flex; align-items: center; gap: 12px; padding: 8px 16px; border-radius: 12px; font-family: var(--font-mono); background: var(--card-bg); border: 1.5px solid var(--border); margin: 12px 0; max-width: 100%; overflow-x: auto; box-sizing: border-box; white-space: nowrap; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .api-method { font-weight: 800; font-size: 0.8rem; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .method-GET { color: #10b981; background: rgba(16,185,129,0.15); } .method-POST { color: #3b82f6; background: rgba(59,130,246,0.15); } .method-PUT { color: #f59e0b; background: rgba(245,158,11,0.15); } .method-DELETE { color: #ef4444; background: rgba(239,68,68,0.15); } .method-PATCH { color: #8b5cf6; background: rgba(139,92,246,0.15); }
+        .api-path { font-weight: 600; color: var(--text-main); font-size: 0.95rem; } .api-desc { color: var(--text-dim); font-family: 'Nunito', sans-serif; font-size: 0.9rem; margin-left: auto; padding-left: 12px; border-left: 1px solid var(--border); }
+        
+        .editor-window { border-radius: 16px; background: #0d1117; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; margin: 24px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-width: 100%; box-sizing: border-box; }
+        .editor-header { padding: 12px 16px; background: #161b22; display: flex; gap: 8px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .editor-dots { display: flex; gap: 6px; } .editor-dot { width: 12px; height: 12px; border-radius: 50%; } .editor-dot:nth-child(1) { background: #ff5f56; } .editor-dot:nth-child(2) { background: #ffbd2e; } .editor-dot:nth-child(3) { background: #27c93f; }
+        .editor-title { color: #8b949e; font-size: 0.8rem; font-family: var(--font-mono); margin-left: auto; margin-right: auto; padding-right: 40px; font-weight: 500; }
+        .editor-window .code-container { margin: 0; box-shadow: none; border: none; border-radius: 0; background: transparent; } .editor-window .code-container pre { padding-top: 20px; }
+        
+        .custom-progress { margin: 24px 0; max-width: 100%; box-sizing: border-box; }
+        .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
+        .progress-track { width: 100%; height: 12px; background: rgba(var(--accent-rgb), 0.1); border-radius: 99px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 1s ease; }
+        
+        .custom-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; padding-bottom: 16px; margin: 24px 0; scrollbar-width: thin; }
+        .custom-slide { scroll-snap-align: start; flex: 0 0 85%; max-width: 600px; border-radius: 20px; overflow: hidden; } .custom-slide img { margin: 0 !important; width: 100%; height: auto; display: block; border-radius: 20px; }
+        
+        .custom-action-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 24px; border-radius: 14px; font-weight: 800; cursor: pointer; text-decoration: none; transition: all 0.3s ease; margin: 8px; font-size: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 2px solid transparent; }
+        .author-pill { display: inline-flex; align-items: center; gap: 12px; padding: 6px 16px 6px 6px; border-radius: 99px; background: var(--card-bg); border: 1.5px solid var(--border); margin: 16px 0; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .author-pill img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; margin: 0 !important; } .author-pill span { font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
+        
+        .feedback-widget { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; background: rgba(var(--accent-rgb), 0.05); border: 1.5px solid var(--border); border-radius: 16px; margin: 32px 0; flex-wrap: wrap; gap: 16px; }
+        .feedback-title { font-weight: 800; font-size: 1.05rem; color: var(--text-main); }
+        .feedback-actions { display: flex; gap: 12px; } .feedback-btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: var(--card-bg); border: 1.5px solid var(--border); color: var(--text-dim); cursor: pointer; transition: all 0.3s ease; } .feedback-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        
+        .stat-block { display: inline-flex; flex-direction: column; padding: 24px; background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 20px; min-width: 200px; margin: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+        .stat-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; } .stat-value { font-size: 2.8rem; font-weight: 900; line-height: 1; letter-spacing: -0.03em; color: var(--text-main); } .stat-trend { font-size: 0.9rem; font-weight: 800; padding: 4px 8px; border-radius: 8px; } .stat-trend.positive { color: #10b981; background: rgba(16,185,129,0.15); } .stat-trend.negative { color: #ef4444; background: rgba(239,68,68,0.15); } .stat-label { font-size: 0.95rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        .pricing-card { display: flex; flex-direction: column; padding: 32px; background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 24px; margin: 16px 0; width: 100%; max-width: 340px; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
+        .pricing-card.recommended { border-color: var(--accent); box-shadow: 0 15px 40px rgba(var(--accent-rgb), 0.15); transform: translateY(-8px); }
+        .pricing-rec-badge { position: absolute; top: 0; left: 0; right: 0; background: var(--accent); color: #fff; text-align: center; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; padding: 6px; }
+        .pricing-name { font-size: 1.4rem; font-weight: 800; color: var(--text-main); margin-top: 10px; } .pricing-price { font-size: 3rem; font-weight: 900; color: var(--accent); margin: 16px 0; line-height: 1; }
+        .pricing-features { list-style: none; padding: 0; margin: 20px 0; border-top: 1px solid var(--border); padding-top: 20px; } .pricing-features li { padding: 8px 0; font-weight: 600; color: var(--text-dim); display: flex; align-items: center; gap: 10px; }
+        
+        .custom-terminal { border-radius: 12px; background: #1a1b26; border: 1px solid #30363d; overflow: hidden; margin: 24px 0; font-family: var(--font-mono); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .term-header { background: #21262d; padding: 8px 16px; color: #8b949e; font-size: 0.8rem; border-bottom: 1px solid #30363d; }
+        .term-body { padding: 20px; color: #c9d1d9; font-size: 0.9rem; line-height: 1.6; overflow-x: auto; } .term-prompt { color: #7ee787; margin-right: 8px; font-weight: bold; } .term-cursor { display: inline-block; width: 8px; height: 16px; background: #c9d1d9; vertical-align: middle; animation: blink 1s step-end infinite; }
+        
+        .props-container { display: flex; flex-direction: column; gap: 12px; margin: 24px 0; max-width: 100%; box-sizing: border-box; }
+        .prop-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; padding: 16px; background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .prop-name { font-family: var(--font-mono); font-weight: 800; font-size: 1rem; color: var(--text-main); } .prop-type { font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); background: rgba(var(--accent-rgb), 0.1); padding: 4px 8px; border-radius: 6px; } .prop-req { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: #ef4444; background: rgba(239,68,68,0.1); padding: 4px 8px; border-radius: 6px; } .prop-opt { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-dim); background: rgba(0,0,0,0.05); padding: 4px 8px; border-radius: 6px; } html.dark .prop-opt { background: rgba(255,255,255,0.05); } .prop-desc { flex-basis: 100%; font-size: 0.95rem; color: var(--text-dim); margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--border); }
+        
+        .diff-viewer { background: #0d1117; border-radius: 12px; margin: 24px 0; overflow: hidden; font-family: var(--font-mono); font-size: 0.85rem; border: 1px solid #30363d; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .diff-line { display: flex; padding: 2px 0; } .diff-num { width: 40px; min-width: 40px; text-align: right; padding-right: 12px; color: #484f58; user-select: none; border-right: 1px solid #30363d; margin-right: 16px; } .diff-content { color: #c9d1d9; white-space: pre-wrap; word-break: break-all; flex-grow: 1; } .diff-add { background: rgba(46,160,67,0.15); } .diff-add .diff-num { color: #7ee787; } .diff-add .diff-content { color: #e6ffec; } .diff-sub { background: rgba(248,81,73,0.15); } .diff-sub .diff-num { color: #ff7b72; } .diff-sub .diff-content { color: #ffdcd7; }
+        
+        .compare-slider { position: relative; width: 100%; max-width: 800px; margin: 24px 0; border-radius: 20px; overflow: hidden; border: 2px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); line-height: 0; }
+        .compare-after { width: 100%; display: block; } .compare-before { position: absolute; top: 0; left: 0; height: 100%; width: 50%; overflow: hidden; z-index: 1; border-right: 3px solid #fff; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } .compare-before img { height: 100%; width: auto; max-width: none !important; display: block; } .compare-range { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; z-index: 2; cursor: ew-resize; margin: 0; }
+        
+        .interactive-checklist { margin: 24px 0; display: flex; flex-direction: column; gap: 12px; background: var(--card-bg); padding: 24px; border-radius: 16px; border: 1.5px solid var(--border); }
+        .check-item { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; } .check-item input { appearance: none; width: 22px; height: 22px; border: 2px solid var(--accent); border-radius: 6px; background: transparent; cursor: pointer; position: relative; flex-shrink: 0; transition: all 0.2s ease; margin-top: 2px; } .check-item input:checked { background: var(--accent); } .check-item input:checked::after { content: ''; position: absolute; left: 6px; top: 2px; width: 5px; height: 10px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); } .check-item span { font-size: 1rem; font-weight: 600; color: var(--text-main); transition: opacity 0.2s; } .check-item input:checked + span { opacity: 0.5; text-decoration: line-through; }
+        
+        .pull-quote { position: relative; margin: 40px 0; padding: 40px; background: linear-gradient(135deg, rgba(var(--accent-rgb),0.1), transparent); border-radius: 24px; border-left: 8px solid var(--accent); }
+        .pull-quote::before { content: '"'; position: absolute; top: -10px; left: 20px; font-size: 8rem; color: var(--accent); opacity: 0.1; font-family: serif; line-height: 1; pointer-events: none; } .quote-text { font-size: 1.4rem; font-style: italic; font-weight: 700; color: var(--text-main); line-height: 1.6; position: relative; z-index: 2; } .quote-author { display: flex; align-items: center; gap: 16px; margin-top: 24px; } .quote-author img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin: 0 !important; border: 2px solid var(--accent); } .qa-info strong { display: block; font-size: 1.1rem; color: var(--text-main); } .qa-info span { font-size: 0.9rem; color: var(--text-dim); }
+        
+        .masonry-gallery { columns: 2; column-gap: 20px; margin: 24px 0; } @media(max-width: 600px) { .masonry-gallery { columns: 1; } }
+        .masonry-item { break-inside: avoid; margin-bottom: 20px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.1); } .masonry-item img { width: 100%; display: block; margin: 0 !important; }
+        
+        .custom-tabs { margin: 24px 0; border-radius: 16px; overflow: hidden; border: 1.5px solid var(--border); background: var(--card-bg); max-width: 100%; box-sizing: border-box; }
+        .tab-header { display: flex; overflow-x: auto; background: rgba(var(--accent-rgb), 0.05); padding: 8px; gap: 8px; scrollbar-width: none; } .tab-header::-webkit-scrollbar { display: none; }
+        .tab-btn { flex: 1; min-width: max-content; padding: 10px 18px; background: transparent; border: none; font-weight: 700; color: var(--text-dim); cursor: pointer; transition: all 0.3s ease; border-radius: 10px; font-size: 0.9rem; } .tab-btn:hover { color: var(--accent); background: rgba(var(--accent-rgb), 0.08); } .tab-btn.active { color: var(--accent); background: var(--card-bg); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .tab-body { padding: 24px; max-width: 100%; overflow-x: auto; box-sizing: border-box; } .tab-panel { display: none; animation: lagFreeFade 0.3s ease; max-width: 100%; box-sizing: border-box; } .tab-panel.active { display: block; }
+        
+        .custom-steps { margin: 24px 0; padding-left: 10px; max-width: 100%; box-sizing: border-box; }
+        .custom-step { position: relative; padding: 0 0 24px 30px; border-left: 2px dashed var(--border); max-width: 100%; box-sizing: border-box; } .custom-step:last-child { border-left-color: transparent; padding-bottom: 0; }
+        .custom-step .step-dot { position: absolute; left: -11px; top: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 4px solid var(--card-bg); box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.2); } .custom-step .step-content { transform: translateY(-4px); overflow-wrap: break-word; word-wrap: break-word; max-width: 100%; box-sizing: border-box; }
+        
+        .custom-tooltip { position: relative; display: inline-block; border-bottom: 2px dotted var(--accent); cursor: help; color: var(--accent); font-weight: 600; }
+        .custom-tooltip .tooltip-text { visibility: hidden; opacity: 0; width: max-content; max-width: 85vw; background: rgba(20, 20, 20, 0.95); color: #fff; text-align: center; border-radius: 10px; padding: 8px 12px; position: absolute; z-index: 100; bottom: 125%; left: 50%; transform: translateX(-50%) translateY(10px); font-size: 0.8rem; font-weight: 500; line-height: 1.4; transition: opacity 0.3s, transform 0.3s ease; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); pointer-events: none; word-break: break-word; white-space: normal; }
+        .custom-tooltip .tooltip-text::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -6px; border-width: 6px; border-style: solid; border-color: rgba(20, 20, 20, 0.95) transparent transparent transparent; }
+        .custom-tooltip:hover .tooltip-text { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+        
+        .custom-key { display: inline-block; padding: 4px 10px; font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--text-main); background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 8px; box-shadow: 0 4px 0 rgba(var(--accent-rgb), 0.2); transform: translateY(-2px); transition: all 0.1s; cursor: pointer; user-select: none; margin: 0 2px; }
+        .custom-key:hover { border-color: var(--accent); } .custom-key.pressed, .custom-key:active { box-shadow: 0 0 0 rgba(var(--accent-rgb), 0.2); transform: translateY(2px); background: rgba(var(--accent-rgb), 0.1); color: var(--accent); }
+        
+        .custom-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; vertical-align: middle; margin: 0 6px; background: var(--bdg-bg, rgba(var(--accent-rgb),0.1)); color: var(--tag-color, var(--bdg-c, var(--accent))); border: 1.5px solid var(--tag-color, var(--bdg-b, var(--border))); white-space: nowrap; }
+        
+        .custom-alert { display:flex; gap:16px; padding:18px 24px; border-radius:20px; margin:24px 0; border-left: 8px solid var(--tag-color, var(--al-color)); background: var(--al-bg); color: var(--text-main); font-weight:500; font-size:0.95rem; line-height:1.6; max-width: 100%; box-sizing: border-box; overflow-wrap: break-word; word-wrap: break-word; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .custom-alert i { color: var(--tag-color, var(--al-color)); flex-shrink:0; margin-top:2px; } .custom-alert div { flex-grow: 1; max-width: 100%; }
+        .custom-alert[data-type="info"] { --al-color: #3b82f6; --al-bg: rgba(59, 130, 246, 0.1); } .custom-alert[data-type="success"] { --al-color: #10b981; --al-bg: rgba(16, 185, 129, 0.1); } .custom-alert[data-type="warning"] { --al-color: #f59e0b; --al-bg: rgba(245, 158, 11, 0.1); } .custom-alert[data-type="danger"] { --al-color: #ef4444; --al-bg: rgba(239, 68, 68, 0.1); }
+        
+        .custom-embed { width: 100%; border-radius: 16px; overflow: hidden; margin: 24px 0; border: 1.5px solid var(--border); background: var(--card-bg); max-width: 100%; box-sizing: border-box; }
+        .custom-embed iframe { width: 100%; border: none; display: block; max-width: 100%; } .embed-youtube { aspect-ratio: 16/9; } .embed-spotify { height: 152px; } .embed-codepen { height: 400px; }
+        
+        .custom-filetree { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 24px; margin: 24px 0; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 100%; box-sizing: border-box; }
+        .custom-filetree ul { list-style: none; padding-left: 28px; margin: 0; position: relative; } .custom-filetree > ul { padding-left: 0; } .custom-filetree li { position: relative; margin: 8px 0; display: flex; flex-direction: column; }
+        .ft-item { display: flex; align-items: center; gap: 10px; color: var(--text-dim); transition: opacity 0.2s; } .ft-item.folder { font-weight: 700; color: var(--text-main); margin-bottom: 4px; } .ft-item i { color: var(--accent); flex-shrink: 0; opacity: 0.85; }
+        .custom-filetree[data-type="line"] ul ul::before { content: ''; position: absolute; top: 0; bottom: 12px; left: 14px; width: 1.5px; background: rgba(var(--accent-rgb), 0.25); border-radius: 2px; } .custom-filetree[data-type="line"] ul ul > li::before { content: ''; position: absolute; left: -14px; top: 12px; width: 12px; height: 1.5px; background: rgba(var(--accent-rgb), 0.25); border-radius: 2px; }
+        .custom-filetree[data-type="dot"] .ft-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: 0.5; margin-right: 2px; flex-shrink: 0; } .custom-filetree[data-type="dot"] .ft-item.folder::before { opacity: 1; transform: scale(1.3); }
+        .custom-filetree[data-type="only-dot"] i { display: none !important; } .custom-filetree[data-type="only-dot"] .ft-item::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--border); margin-right: 6px; transition: background 0.2s; flex-shrink: 0; } .custom-filetree[data-type="only-dot"] .ft-item.folder::before { background: var(--accent); }
+        
+        .custom-page { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; text-decoration: none; transition: all 0.3s ease; margin: 8px; font-size: 0.95rem; user-select: none; max-width: 100%; box-sizing: border-box; white-space: normal; text-align: left; -webkit-tap-highlight-color: transparent; }
+        .custom-page i { transition: transform 0.3s ease; flex-shrink: 0; } .pg-default { background: rgba(var(--accent-rgb), 0.1); color: var(--accent); border: 1.5px solid transparent; } .pg-box { background: var(--card-bg); border: 2px solid var(--accent); color: var(--accent); } .pg-dotted { background: transparent; border: 2px dotted var(--accent); color: var(--accent); } .pg-glowing { background: var(--accent); color: #fff; box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.5); border: none; } .pg-floating { box-shadow: 0 10px 25px rgba(0,0,0,0.15); border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); } html.dark .pg-floating { box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        .pagination-wrapper { display: flex; gap: 16px; margin-top: 50px; padding-top: 30px; border-top: 2px solid rgba(var(--accent-rgb), 0.15); flex-wrap: wrap; max-width: 100%; box-sizing: border-box; }
+        .pag-btn { flex: 1; min-width: 200px; display: flex; flex-direction: column; padding: 20px 24px; border-radius: 20px; border: 1.5px solid var(--border); background: var(--card-bg); cursor: pointer; transition: all 0.3s ease; text-decoration: none; max-width: 100%; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        .pag-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); font-weight: 800; margin-bottom: 6px; opacity: 0.7; } .pag-title { font-size: 1.15rem; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 10px; word-break: break-word; }
+        .pag-btn.prev { align-items: flex-start; text-align: left; } .pag-btn.next { align-items: flex-end; text-align: right; } .pag-btn.full { flex-basis: 100%; }
+        
+        .in-page-search-wrap { position: relative; margin: 20px 0; width: 100%; max-width: 500px; box-sizing: border-box; }
+        .in-page-search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--accent); opacity: 0.7; pointer-events: none; }
+        .in-page-search { width: 100%; padding: 14px 20px 14px 44px; border-radius: 16px; border: 2px solid var(--border); background: var(--card-bg); color: var(--text-main); font-size: 0.95rem; font-weight: 600; font-family: var(--font-main); transition: all 0.3s ease; box-sizing: border-box; }
+        .in-page-search:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.15); outline: none; }
+        
+        .custom-collapse { border-radius:18px; overflow:hidden; margin:20px 0; border:2px solid var(--tag-color, transparent); transition:box-shadow 0.3s; max-width: 100%; box-sizing: border-box; }
+        .custom-collapse summary { padding:16px 20px; cursor:pointer; font-weight:700; list-style:none; display:flex; justify-content:space-between; align-items:center; user-select:none; transition:opacity 0.2s; color: var(--tag-color, inherit); }
+        .custom-collapse summary:hover { opacity:0.85; }
+        .custom-collapse summary::-webkit-details-marker { display:none; }
+        .custom-collapse summary::after { content:'▼'; font-size: 0.8em; transition: transform 0.3s ease; }
+        .custom-collapse[open] summary::after { transform: rotate(180deg); }
+        
+        .collapse2-container { width:100%; max-width: 100%; box-sizing: border-box; }
+        .clean-collapse { margin:10px 0; border:none; background:transparent; max-width: 100%; box-sizing: border-box; }
+        .clean-collapse summary { padding:10px 0; list-style:none; cursor:pointer; font-weight:700; display:flex; justify-content:space-between; align-items:center; transition:opacity 0.2s; font-size:1.05rem; color:var(--text-main); user-select:none; }
+        .clean-collapse summary i, .clean-collapse summary svg { transition:transform 0.35s ease!important; display:inline-block; opacity:0.5; }
+        .clean-collapse[open] summary i, .clean-collapse[open] summary svg { transform:rotate(180deg)!important; }
+        .clean-collapse summary:hover { opacity:0.7; }
+        .clean-collapse summary::-webkit-details-marker { display:none; }
+        .collapse-body { padding:0 20px 18px; overflow-x: auto; box-sizing: border-box; }
+        .clean-body { padding:6px 0 10px; color:var(--text-dim); line-height:1.7; overflow-x: auto; box-sizing: border-box; }
+        .collapse-hr { border:0; height:1px; background:var(--border); margin:10px 0; opacity:0.5; }
 
-        #preview-box .clean-collapse, #fs-preview-box .clean-collapse { margin:10px 0; border:none; background:transparent; }
-        #preview-box .clean-collapse summary, #fs-preview-box .clean-collapse summary { padding:10px 0; list-style:none; cursor:pointer; font-weight:700; display:flex; justify-content:space-between; align-items:center; transition:opacity 0.2s; font-size:1.05rem; color:var(--text-main); }
-        #preview-box .clean-collapse summary::-webkit-details-marker, #fs-preview-box .clean-collapse summary::-webkit-details-marker { display:none; }
-        #preview-box .clean-body, #fs-preview-box .clean-body { padding:6px 0 10px; padding-top:10px; color:var(--text-dim); line-height:1.7; }
-        #preview-box .collapse-hr, #fs-preview-box .collapse-hr { border:0; height:1px; background:var(--border); margin:10px 0; opacity:0.5; }
+        .logic-box { padding:22px 25px; margin:28px 0; border-radius:18px; border:2px solid var(--tag-color, var(--border)); transition:border-color 0.3s, background 0.3s; max-width: 100%; box-sizing: border-box; overflow-x: auto; }
 
-        #preview-box .code-container, #fs-preview-box .code-container { position:relative; background:#181410; color:#e8e4dc; border-radius:16px; margin:22px 0; border:1px solid rgba(255,255,255,0.08); overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.2); }
-        html.dark #preview-box .code-container, html.dark #fs-preview-box .code-container { background:#0E0C0A; border-color:rgba(255,255,255,0.06); }
-        #preview-box .code-container pre, #fs-preview-box .code-container pre { margin:0; padding:20px; padding-top:46px; overflow-x:auto; display:block; width:100%; font-family:'JetBrains Mono', monospace; font-size:0.88rem; line-height:1.7; }
-        #preview-box .copy-btn, #fs-preview-box .copy-btn { position:absolute; top:10px; right:10px; background:rgba(var(--accent-rgb),0.85); color:white; border:none; padding:6px 14px; border-radius:8px; font-size:0.68rem; cursor:pointer; font-weight:700; z-index:10; transition: transform 0.2s, background 0.2s; }
-        #preview-box .copy-btn:hover, #fs-preview-box .copy-btn:hover { background:var(--accent); transform:scale(1.05); }
-
-        #preview-box img, #fs-preview-box img { width:100%; border-radius:20px; margin:20px 0; display:block; cursor: pointer; transition: outline 0.1s; }
-        #preview-box video, #fs-preview-box video { width:100%; border-radius:20px; margin:20px 0; border:1px solid var(--border); cursor: pointer; transition: outline 0.1s; }
-        #preview-box audio, #fs-preview-box audio { width:100%; border-radius:12px; margin:20px 0; border:1px solid var(--border); cursor: pointer; transition: outline 0.1s; }
-        .tw-cursor::after { content:'|'; animation:blink 1s infinite; margin-left:2px; color:var(--accent); }
-        .custom-href { color:var(--accent); text-decoration:none; font-weight:700; border-bottom:1.5px solid rgba(var(--accent-rgb),0.35); }
-        .html-sym { display:inline-block; font-family: sans-serif; font-style: normal; font-weight: normal; font-variant: normal; text-transform: none; text-rendering: auto; line-height: 1; -webkit-font-smoothing: antialiased; }
-
+        /* Media Queries for responsiveness */
         @media (max-width: 768px) {
             .max-w-7xl { padding: 10px !important; }
             .glass-card { padding: 16px !important; border-radius: 18px !important; }
@@ -242,20 +377,84 @@
             #tag-toolbar .flex.bg-slate-100 { width: 100%; justify-content: space-between; }
             #fs-sidebar { width: 100% !important; border-left: none; border-top: 1px solid var(--border); height: 40vh; }
             #fs-preview-box { height: 60vh; }
-            /* PADDING FIX FOR MOBILE SIDEBAR */
             #fs-sidebar-content { padding-bottom: 120px !important; overflow-y: auto; }
+            
+            /* Responsive fixes for new tags in admin */
+            #standard-tools, #fs-phase2-tools { max-height: 120px; overflow-y: auto; }
         }
 
         @media (orientation: landscape) and (max-height: 600px) {
             #fs-easy-writer > .flex-1 { flex-direction: row !important; }
             #fs-sidebar { display: flex !important; width: 40% !important; max-width: 350px; height: 100vh !important; border-top: none !important; border-left: 1px solid var(--border) !important; overflow-y: auto; }
             #fs-textarea, #fs-preview-box { height: 100vh !important; flex: 1; }
-            /* PADDING FIX FOR LANDSCAPE SIDEBAR */
             #fs-sidebar-content { padding-bottom: 120px !important; }
         }
         
-        /* PADDING FIX FOR DESKTOP SIDEBAR */
         #fs-sidebar-content { padding-bottom: 80px; }
+        
+        /* Toolbar Scroll helpers for massive amount of tags */
+        #standard-tools { max-height: 100px; overflow-y: auto; overflow-x: hidden; padding-right: 5px; }
+        #standard-tools::-webkit-scrollbar { width: 4px; }
+        #standard-tools::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+        
+                /* ── MD Render Typography & Global Wraps (Imported from 7.html) ── */
+        #preview-box *, #fs-preview-box * { box-sizing: border-box; max-width: 100%; }
+
+        #preview-box h1, #fs-preview-box h1 { font-size:clamp(1.9rem,4vw,2.5rem); font-weight:800; letter-spacing:-0.04em; line-height:1.15; margin:2.5rem 0 1rem; color:var(--text-main); border-bottom:2px solid rgba(var(--accent-rgb),0.15); padding-bottom:0.5rem; }
+        #preview-box h2, #fs-preview-box h2 { font-size:1.65rem; font-weight:700; letter-spacing:-0.03em; line-height:1.25; margin:2.2rem 0 0.8rem; color:var(--text-main); }
+        #preview-box h3, #fs-preview-box h3 { font-size:1.28rem; font-weight:700; letter-spacing:-0.02em; line-height:1.3; margin:1.8rem 0 0.6rem; color:var(--text-main); }
+        #preview-box h4, #fs-preview-box h4 { font-size:1.1rem; font-weight:700; margin:1.5rem 0 0.5rem; color:var(--text-main); }
+        #preview-box h5, #fs-preview-box h5 { font-size:0.95rem; font-weight:700; margin:1.2rem 0 0.4rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em; }
+        #preview-box h6, #fs-preview-box h6 { font-size:0.85rem; font-weight:700; margin:1rem 0 0.3rem; color:var(--text-dim); }
+        #preview-box p, #fs-preview-box p { margin-bottom:1.25em; }
+        #preview-box strong, #fs-preview-box strong { font-weight:800; color:var(--accent); }
+        #preview-box em, #fs-preview-box em { font-style:italic; opacity:0.85; }
+        #preview-box ul, #fs-preview-box ul { margin:0.9em 0 0.9em 2em; line-height:1.9; list-style-type: disc; }
+        #preview-box ol, #fs-preview-box ol { margin:0.9em 0 0.9em 2em; line-height:1.9; list-style-type: decimal; }
+
+        #preview-box li, #fs-preview-box li { margin-bottom:0.25em; }
+        #preview-box li::marker, #fs-preview-box li::marker { color:var(--accent); }
+        #preview-box blockquote, #fs-preview-box blockquote { border-left:3px solid var(--accent); padding:0.9em 1.3em; margin:1.5em 0; background:rgba(var(--accent-rgb),0.06); border-radius:0 14px 14px 0; color:var(--text-dim); }
+        #preview-box hr, #fs-preview-box hr { border:none; height:1px; background:var(--border); margin:2em 0; }
+        #preview-box a, #fs-preview-box a { color:var(--accent); text-decoration:none; font-weight:600; border-bottom:1.5px solid rgba(var(--accent-rgb),0.3); transition:border-color 0.2s, opacity 0.2s; }
+        #preview-box a:hover, #fs-preview-box a:hover { border-bottom-color:var(--accent); opacity:0.8; }
+        #preview-box table, #fs-preview-box table { width:100%; border-collapse:collapse; margin:1.5em 0; border-radius:12px; overflow-x:auto; display:block; white-space:nowrap; }
+        #preview-box th, #fs-preview-box th { background:rgba(var(--accent-rgb),0.1); padding:11px 15px; font-weight:700; text-align:left; border-bottom:2px solid rgba(var(--accent-rgb),0.2); font-size:0.88rem; }
+        #preview-box td, #fs-preview-box td { padding:9px 15px; border-bottom:1px solid var(--border); font-size:0.9rem; }
+        #preview-box tr:last-child td, #fs-preview-box tr:last-child td { border-bottom:none; }
+        #preview-box tr:nth-child(even) td, #fs-preview-box tr:nth-child(even) td { background:rgba(var(--accent-rgb),0.03); }
+        #preview-box :not(pre) > code, #fs-preview-box :not(pre) > code { background:rgba(var(--accent-rgb),0.1); color:var(--accent); padding:2px 7px; border-radius:5px; font-size:0.84em; font-family:var(--font-mono); font-weight:500; border:1px solid rgba(var(--accent-rgb),0.15); word-break: break-all; }
+
+        html.dark #preview-box p, html.dark #fs-preview-box p { opacity:0.92; }
+        html.dark #preview-box h1, html.dark #preview-box h2, html.dark #preview-box h3, html.dark #preview-box h4,
+        html.dark #fs-preview-box h1, html.dark #fs-preview-box h2, html.dark #fs-preview-box h3, html.dark #fs-preview-box h4 { color:var(--text-main); }
+        html.dark #preview-box blockquote, html.dark #fs-preview-box blockquote { background:rgba(var(--accent-rgb),0.1); }
+        html.dark #preview-box :not(pre) > code, html.dark #fs-preview-box :not(pre) > code { background:rgba(var(--accent-rgb),0.15); border-color:rgba(var(--accent-rgb),0.25); }
+
+        /* ── Code Containers & Terminal UI ── */
+        .code-container { position:relative; background:#181410; color:#e8e4dc; border-radius:16px; margin:22px 0; border:1px solid rgba(255,255,255,0.08); overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.2); max-width: 100%; box-sizing: border-box; }
+        html.dark .code-container { background:#0E0C0A; border-color:rgba(255,255,255,0.06); }
+        .code-container pre { margin:0; padding:20px; padding-top:46px; overflow-x:auto; display:block; width:100%; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.15) transparent; font-family:var(--font-mono); font-size:0.88rem; line-height:1.7; box-sizing: border-box; }
+        .code-container code { font-family:var(--font-mono); white-space: pre; }
+        
+        .copy-btn { position:absolute; top:10px; right:10px; background:rgba(var(--accent-rgb),0.85); color:white; border:none; padding:6px 14px; border-radius:8px; font-size:0.68rem; cursor:pointer; font-weight:700; z-index:10; box-shadow:0 3px 10px rgba(0,0,0,0.3); transition:transform 0.2s ease, background 0.2s, opacity 0.2s; }
+        .copy-btn:hover { transform:scale(1.06); opacity:1; background:var(--accent); }
+        .copy-btn:active { transform:scale(0.94); }
+
+        /* ── Typwriter & Symbol fixes ── */
+        .html-sym { display:inline-block; font-family:var(--font-main); font-weight:inherit; }
+        .tw-text { white-space: pre-wrap; word-break: break-word; }
+
+        /* ── Text color lock for structural elements ── */
+        .logic-box, .collapse-body, .clean-body, .custom-alert, .custom-card, 
+        .custom-grid, .custom-col, .tab-body, .step-content, .interactive-checklist {
+            color: var(--text-main) !important;
+        }
+        
+        .action-btn.edit-opts { background: #8b5cf6; } 
+        .action-btn.edit-opts:hover { background: #7c3aed; transform: scale(1.1); }
+
+
     </style>
 </head>
 <body class="min-h-screen pb-20">
@@ -361,6 +560,38 @@
                         <span class="tag-ref" data-tag="collapse2" onclick="insertTag('collapse2')">Collapse 2</span>
                         <span class="tag-ref" data-tag="sym" onclick="openSymbolModal('normal')">Symbol</span>
                         <span class="tag-ref" data-tag="sym-empty" onclick="insertTag('symEmpty')">Empty Sym</span>
+                        <span class="tag-ref" data-tag="card" onclick="insertTag('card')">Card</span>
+                        <span class="tag-ref" data-tag="grid" onclick="insertTag('grid')">Grid</span>
+                        <span class="tag-ref" data-tag="col" onclick="insertTag('col')">Col</span>
+                        <span class="tag-ref" data-tag="hero" onclick="insertTag('hero')">Hero</span>
+                        <span class="tag-ref" data-tag="api" onclick="insertTag('api')">API</span>
+                        <span class="tag-ref" data-tag="editor" onclick="insertTag('editor')">Editor Win</span>
+                        <span class="tag-ref" data-tag="progress" onclick="insertTag('progress')">Progress</span>
+                        <span class="tag-ref" data-tag="carousel" onclick="insertTag('carousel')">Carousel</span>
+                        <span class="tag-ref" data-tag="slide" onclick="insertTag('slide')">Slide</span>
+                        <span class="tag-ref" data-tag="btn" onclick="insertTag('btn')">Button</span>
+                        <span class="tag-ref" data-tag="author" onclick="insertTag('author')">Author</span>
+                        <span class="tag-ref" data-tag="feedback" onclick="insertTag('feedback')">Feedback</span>
+                        <span class="tag-ref" data-tag="stat" onclick="insertTag('stat')">Stat</span>
+                        <span class="tag-ref" data-tag="pricing" onclick="insertTag('pricing')">Pricing</span>
+                        <span class="tag-ref" data-tag="terminal" onclick="insertTag('terminal')">Terminal</span>
+                        <span class="tag-ref" data-tag="props" onclick="insertTag('props')">Props</span>
+                        <span class="tag-ref" data-tag="diff" onclick="insertTag('diff')">Diff</span>
+                        <span class="tag-ref" data-tag="compare" onclick="insertTag('compare')">Compare</span>
+                        <span class="tag-ref" data-tag="checklist" onclick="insertTag('checklist')">Checklist</span>
+                        <span class="tag-ref" data-tag="quote" onclick="insertTag('quote')">Quote</span>
+                        <span class="tag-ref" data-tag="gallery" onclick="insertTag('gallery')">Gallery</span>
+                        <span class="tag-ref" data-tag="search" onclick="insertTag('search')">Search</span>
+                        <span class="tag-ref" data-tag="tabs" onclick="insertTag('tabs')">Tabs</span>
+                        <span class="tag-ref" data-tag="steps" onclick="insertTag('steps')">Steps</span>
+                        <span class="tag-ref" data-tag="tooltip" onclick="insertTag('tooltip')">Tooltip</span>
+                        <span class="tag-ref" data-tag="key" onclick="insertTag('key')">Key/Kbd</span>
+                        <span class="tag-ref" data-tag="badge" onclick="insertTag('badge')">Badge</span>
+                        <span class="tag-ref" data-tag="alert" onclick="insertTag('alert')">Alert</span>
+                        <span class="tag-ref" data-tag="embed" onclick="insertTag('embed')">Embed</span>
+                        <span class="tag-ref" data-tag="filetree" onclick="insertTag('filetree')">Filetree</span>
+                        <span class="tag-ref" data-tag="page" onclick="insertTag('page')">Page Link</span>
+                        <span class="tag-ref" data-tag="last" onclick="insertTag('last')">Pagination</span>
 
                         <div id="color-chip-wrap" class="ml-1">
                             <span id="color-chip-label">Color</span>
@@ -383,7 +614,7 @@
                     <div class="flex p-1 rounded-xl w-full sm:w-auto" style="background: var(--surface-2);">
                         <button onclick="setMode('write')" id="btn-write" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase shadow-sm transition-all bg-white dark:bg-white/10" style="color: var(--text-main);">Write</button>
                         <button onclick="setMode('preview')" id="btn-preview" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all">Preview</button>
-                        <button onclick="toggleAutoBr()" id="btn-autobr" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all" title="When ON: Enter inserts &lt;br&gt;">Auto &lt;br&gt;</button>
+                        <button onclick="toggleAutoBr()" id="btn-autobr" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all" title="When ON: Enter inserts <br>">Auto <br></button>
                         <button onclick="openSearchModal(false)" id="btn-search" class="px-4 py-2 rounded-lg text-[10px] font-black uppercase text-slate-400 transition-all" title="Search in editor"><i class="fa-solid fa-magnifying-glass mr-1"></i>Search</button>
                     </div>
                 </div>
@@ -422,9 +653,7 @@
                 </div>
                 <button class="text-slate-400 hover:text-red-500 transition-colors" onclick="closeWizardModal()"><i class="fas fa-times text-xl"></i></button>
             </div>
-            
-            <div id="wizard-content" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
-            </div>
+            <div id="wizard-content" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2"></div>
         </div>
     </div>
 
@@ -438,9 +667,7 @@
                 </div>
                 <button class="text-slate-400 hover:text-red-500 transition-colors" onclick="closeCreateModal()"><i class="fas fa-times text-xl"></i></button>
             </div>
-            
-            <div id="create-content" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
-            </div>
+            <div id="create-content" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2"></div>
         </div>
     </div>
     
@@ -454,9 +681,7 @@
                 </div>
                 <button class="text-slate-400 hover:text-red-500 transition-colors" onclick="closeDeleteModal()"><i class="fas fa-times text-xl"></i></button>
             </div>
-            
-            <div id="delete-content" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
-            </div>
+            <div id="delete-content" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2"></div>
         </div>
     </div>
 
@@ -473,14 +698,12 @@
                     <button class="px-3 py-2 rounded-xl font-black text-[10px] uppercase border" style="border-color: var(--border); color: var(--text-main);" onclick="closeEasyMode()">Close</button>
                 </div>
             </div>
-            
             <div class="flex text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 px-2">
                 <div class="w-8"></div>
                 <div class="flex-1">Item Name</div>
                 <div class="w-24 text-center">Pos</div>
                 <div class="w-24 text-center">State</div>
             </div>
-
             <div id="easy-mode-list" class="overflow-y-auto flex-1 space-y-2 mb-6 pr-2"></div>
             <button onclick="applyEasyMode()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest text-sm shadow-lg hover:scale-[1.02]">Apply & Generate Code</button>
         </div>
@@ -527,8 +750,7 @@
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 <input type="text" id="symbol-search" placeholder="Search symbols (e.g. check, star, arrow)..." class="w-full p-4 pl-10 rounded-xl border text-sm font-bold outline-none" style="background: var(--surface-2); border-color: var(--border);" onkeyup="filterSymbols()">
             </div>
-            <div id="symbol-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 overflow-y-auto flex-1 pr-2 pb-4">
-                </div>
+            <div id="symbol-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3 overflow-y-auto flex-1 pr-2 pb-4"></div>
         </div>
     </div>
 
@@ -544,23 +766,41 @@
                     <span id="fs-mode-status" class="text-[10px] font-black uppercase tracking-widest hidden sm:block transition-colors duration-300" style="color: var(--accent);">Drafting Structure...</span>
                 </div>
                 
-                <div id="fs-phase1-tools" class="flex items-center gap-3">
-                    <button onclick="openSearchModal(true)" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors hidden sm:block" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-search"></i> Search</button>
-                    <button onclick="saveFromEasyMode()" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors hidden sm:block" style="border-color: var(--border); color: var(--accent);"><i class="fas fa-save"></i> Save</button>
-                    <button onclick="toggleEmAutoBr()" id="btn-em-autobr" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors" style="border-color: var(--border); color: var(--text-dim);">Auto &lt;br&gt;</button>
+                <div id="fs-phase1-tools" class="flex flex-wrap items-center gap-3 justify-end">
+                    <button onclick="openSearchModal(true)" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-search"></i> Search</button>
+                    <button onclick="saveFromEasyMode()" class="px-3 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors" style="border-color: var(--border); color: var(--accent);"><i class="fas fa-save"></i> Save</button>
+                    <button onclick="toggleEmAutoBr()" id="btn-em-autobr" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors" style="border-color: var(--border); color: var(--text-dim);">Auto <br></button>
+                    <button onclick="setFsPhase(3)" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase shadow-md transition-transform hover:scale-105" style="background: #f59e0b; color: white;">
+                        <i class="fas fa-pencil-alt mr-1"></i> Text Edit Mode
+                    </button>
                     <button onclick="setFsPhase(2)" class="px-6 py-2 rounded-xl text-[10px] font-black uppercase shadow-lg transition-transform hover:scale-105" style="background: var(--accent); color: white;">
-                        <i class="fas fa-check mr-1"></i> Completed Structure
+                        <i class="fas fa-layer-group mr-1"></i> Structure Edit
                     </button>
                 </div>
 
                 <div id="fs-phase2-actions" class="hidden items-center gap-2 flex-wrap justify-end ml-auto">
                     <button onclick="openSearchModal(true)" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase border transition-colors flex-shrink-0" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-search mr-1"></i> Search</button>
-                    <button onclick="setFsPhase(1)" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors mr-2 flex-shrink-0" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-edit mr-1"></i> Back to Editing</button>
+                    <button onclick="setFsPhase(1)" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors mr-2 flex-shrink-0" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-code mr-1"></i> Code Editor</button>
+                    <button onclick="setFsPhase(3)" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors mr-2 flex-shrink-0" style="background: #f59e0b; color: white; border-color: #f59e0b;"><i class="fas fa-pencil-alt mr-1"></i> Text Edit Mode</button>
+                    
                     <button onclick="toggleRawMode()" id="btn-raw-toggle" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase border transition-colors flex-shrink-0" style="background: transparent; color: var(--text-dim); border-color: var(--border);"><i class="fas fa-layer-group mr-1"></i> Raw Move: OFF</button>
                     <button onclick="toggleDragMode()" id="btn-drag-toggle" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase border transition-colors flex-shrink-0" style="background: var(--accent); color: white; border-color: var(--border);"><i class="fas fa-hand-paper mr-1"></i> Drag: ON</button>
+                    <button onclick="toggleSelectMode()" id="btn-swipe-toggle" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase border transition-colors flex-shrink-0" style="background: transparent; color: var(--text-dim); border-color: var(--border);"><i class="fas fa-mouse-pointer mr-1"></i> Select Mode: OFF</button>
+                    
                     <button onclick="saveFromEasyMode()" id="btn-em-save" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase shadow-sm transition-transform hover:scale-105 flex-shrink-0" style="background: var(--surface-2); color: var(--text-main); border: 1px solid var(--border);"><i class="fas fa-save mr-1"></i> Save</button>
                     <button onclick="saveAndCommitEasyMode()" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase shadow-sm transition-transform hover:scale-105 flex-shrink-0" style="background: var(--accent); color: white;"><i class="fas fa-cloud-arrow-up mr-1"></i> Save & Commit</button>
                 </div>
+
+                <div id="fs-phase3-actions" class="hidden items-center gap-2 flex-wrap justify-end ml-auto">
+                    <button onclick="openSearchModal(true)" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase border transition-colors flex-shrink-0" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-search mr-1"></i> Search</button>
+                    <button onclick="setFsPhase(1)" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors mr-2 flex-shrink-0" style="border-color: var(--border); color: var(--text-dim);"><i class="fas fa-code mr-1"></i> Code Editor</button>
+                    <button onclick="setFsPhase(2)" class="px-4 py-2 rounded-xl text-[10px] font-black uppercase border transition-colors mr-2 flex-shrink-0" style="background: var(--accent); color: white; border-color: var(--accent);"><i class="fas fa-layer-group mr-1"></i> Structure Edit</button>
+                    
+                    <button onclick="toggleSelectMode()" id="btn-swipe-toggle-p3" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase border transition-colors flex-shrink-0" style="background: transparent; color: var(--text-dim); border-color: var(--border);"><i class="fas fa-mouse-pointer mr-1"></i> Select Mode: OFF</button>
+                    <button onclick="saveFromEasyMode()" id="btn-em-save-p3" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase shadow-sm transition-transform hover:scale-105 flex-shrink-0" style="background: var(--surface-2); color: var(--text-main); border: 1px solid var(--border);"><i class="fas fa-save mr-1"></i> Save</button>
+                    <button onclick="saveAndCommitEasyMode()" class="px-3 py-1.5 rounded-xl text-[9px] font-black uppercase shadow-sm transition-transform hover:scale-105 flex-shrink-0" style="background: var(--accent); color: white;"><i class="fas fa-cloud-arrow-up mr-1"></i> Save & Commit</button>
+                </div>
+
             </div>
 
             <div id="fs-phase2-tools" class="hidden items-center gap-2 overflow-x-auto no-scrollbar px-4 lg:px-8 py-3 border-t cursor-grab w-full select-none" style="border-color: var(--border); background: var(--surface-2);">
@@ -581,6 +821,39 @@
                 <span class="tag-ref flex-shrink-0" data-tag="hr" onclick="emInsertTag('hr')">Divider</span>
                 <span class="tag-ref flex-shrink-0" data-tag="sym" onclick="openSymbolModal('easy')">Symbol</span>
                 <span class="tag-ref flex-shrink-0" data-tag="sym-empty" onclick="emInsertTag('symEmpty')">Empty Sym</span>
+                
+                <span class="tag-ref flex-shrink-0" data-tag="card" onclick="emInsertTag('card')">Card</span>
+                <span class="tag-ref flex-shrink-0" data-tag="grid" onclick="emInsertTag('grid')">Grid</span>
+                <span class="tag-ref flex-shrink-0" data-tag="col" onclick="emInsertTag('col')">Col</span>
+                <span class="tag-ref flex-shrink-0" data-tag="hero" onclick="emInsertTag('hero')">Hero</span>
+                <span class="tag-ref flex-shrink-0" data-tag="api" onclick="emInsertTag('api')">API</span>
+                <span class="tag-ref flex-shrink-0" data-tag="editor" onclick="emInsertTag('editor')">Editor Win</span>
+                <span class="tag-ref flex-shrink-0" data-tag="progress" onclick="emInsertTag('progress')">Progress</span>
+                <span class="tag-ref flex-shrink-0" data-tag="carousel" onclick="emInsertTag('carousel')">Carousel</span>
+                <span class="tag-ref flex-shrink-0" data-tag="slide" onclick="emInsertTag('slide')">Slide</span>
+                <span class="tag-ref flex-shrink-0" data-tag="btn" onclick="emInsertTag('btn')">Button</span>
+                <span class="tag-ref flex-shrink-0" data-tag="author" onclick="emInsertTag('author')">Author</span>
+                <span class="tag-ref flex-shrink-0" data-tag="feedback" onclick="emInsertTag('feedback')">Feedback</span>
+                <span class="tag-ref flex-shrink-0" data-tag="stat" onclick="emInsertTag('stat')">Stat</span>
+                <span class="tag-ref flex-shrink-0" data-tag="pricing" onclick="emInsertTag('pricing')">Pricing</span>
+                <span class="tag-ref flex-shrink-0" data-tag="terminal" onclick="emInsertTag('terminal')">Terminal</span>
+                <span class="tag-ref flex-shrink-0" data-tag="props" onclick="emInsertTag('props')">Props</span>
+                <span class="tag-ref flex-shrink-0" data-tag="diff" onclick="emInsertTag('diff')">Diff</span>
+                <span class="tag-ref flex-shrink-0" data-tag="compare" onclick="emInsertTag('compare')">Compare</span>
+                <span class="tag-ref flex-shrink-0" data-tag="checklist" onclick="emInsertTag('checklist')">Checklist</span>
+                <span class="tag-ref flex-shrink-0" data-tag="quote" onclick="emInsertTag('quote')">Quote</span>
+                <span class="tag-ref flex-shrink-0" data-tag="gallery" onclick="emInsertTag('gallery')">Gallery</span>
+                <span class="tag-ref flex-shrink-0" data-tag="search" onclick="emInsertTag('search')">Search</span>
+                <span class="tag-ref flex-shrink-0" data-tag="tabs" onclick="emInsertTag('tabs')">Tabs</span>
+                <span class="tag-ref flex-shrink-0" data-tag="steps" onclick="emInsertTag('steps')">Steps</span>
+                <span class="tag-ref flex-shrink-0" data-tag="tooltip" onclick="emInsertTag('tooltip')">Tooltip</span>
+                <span class="tag-ref flex-shrink-0" data-tag="key" onclick="emInsertTag('key')">Key/Kbd</span>
+                <span class="tag-ref flex-shrink-0" data-tag="badge" onclick="emInsertTag('badge')">Badge</span>
+                <span class="tag-ref flex-shrink-0" data-tag="alert" onclick="emInsertTag('alert')">Alert</span>
+                <span class="tag-ref flex-shrink-0" data-tag="embed" onclick="emInsertTag('embed')">Embed</span>
+                <span class="tag-ref flex-shrink-0" data-tag="filetree" onclick="emInsertTag('filetree')">Filetree</span>
+                <span class="tag-ref flex-shrink-0" data-tag="page" onclick="emInsertTag('page')">Page Link</span>
+                <span class="tag-ref flex-shrink-0" data-tag="last" onclick="emInsertTag('last')">Pagination</span>
             </div>
         </div>
 
@@ -728,10 +1001,59 @@
             return val;
         }
 
+        // --- NEW: THE GLOBAL ATTRS ENGINE IMPORTED FROM GET STARTED ---
+        function applyGlobalAttrs(attrs, baseClass='', extraStyle='') {
+            let cls = baseClass; let st = extraStyle ? extraStyle + (extraStyle.endsWith(';')?'':';') : ''; let idStr = '';
+            if(!attrs) return `class="${cls.trim()}" style="${st}"`;
+            
+            const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+            
+            const color = ga('color'); const cLight = ga('color-light'); const cDark = ga('color-dark');
+            const bgColor = ga('bg-color'); const bgL = ga('bg-color-light'); const bgD = ga('bg-color-dark');
+            const format = ga('format')||''; const id = ga('id'); const align = ga('align');
+            const cOp = ga('color-opacity'); const bgOp = ga('bg-opacity');
+            const bgOpL = ga('bg-opacity-light'); const bgOpD = ga('bg-opacity-dark');
+            
+            if(id) idStr = `id="${id}"`;
+            
+            if(cLight || cDark) { 
+                st += `--light-c:${resolveColor(cLight||color)||'inherit'}; --dark-c:${resolveColor(cDark||color)||'inherit'};`; 
+                cls += ' adaptive-color'; 
+                if(cOp) st += `opacity:${cOp};`;
+            } else if(color) { 
+                st += `color:${resolveColor(color)};`; 
+                if(cOp) st += `opacity:${cOp};`;
+            }
+            
+            if(bgL || bgD) { 
+                let bglVal = bgL === 'transparent' ? 'transparent' : resolveColorBg(bgL||bgColor||color, bgOpL || bgOp || 0.15);
+                let bgdVal = bgD === 'transparent' ? 'transparent' : resolveColorBg(bgD||bgColor||color, bgOpD || bgOp || 0.15);
+                st += `--light-bg:${bglVal}; --dark-bg:${bgdVal};`; 
+                cls += ' adaptive-bg'; 
+            } else if(bgColor) { 
+                if (bgColor.toLowerCase() === 'transparent') {
+                    st += `background-color:transparent;`; 
+                } else {
+                    st += `background-color:${resolveColorBg(bgColor, bgOp || 0.15)};`; 
+                }
+            }
+
+            
+            if(color) st += `--tag-color:${resolveColor(color)};`;
+            
+            if(format.includes('bold')) st+='font-weight:bold;';
+            if(format.includes('italic')) st+='font-style:italic;';
+            if(format.includes('underline')) st+='text-decoration:underline;';
+            if(align) st+=`text-align:${align};`;
+            
+            return `${idStr} class="${cls.trim()}" style="${st}"`;
+        }
+        // --------------------------------------------------------------
+
         const renderer = new marked.Renderer();
         renderer.code = function(code, lang) { 
             let text = typeof code === 'object' ? code.text : code; 
-            const escaped = String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
+            const escaped = String(text).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); 
             return `<div class="code-container"><button class="copy-btn" onclick="copyCodePreview(this)">Copy</button><pre><code>${escaped}</code></pre></div>`; 
         };
         marked.setOptions({ renderer });
@@ -784,7 +1106,6 @@
                 alert("Invalid Token or API Limit Reached.");
             }
         }
-
         function logout() { localStorage.removeItem('logic_engine_token'); location.reload(); }
 
         // =========================================================
@@ -1053,7 +1374,8 @@
             currentFileSha = sha;
             const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`, { headers: { 'Authorization': `token ${GITHUB_TOKEN}` }});
             const data = await res.json();
-            setEditorValue(atob(data.content));
+            setEditorValue(decodeURIComponent(escape(atob(data.content))));
+
             document.getElementById('current-filename').value = data.name;
             document.getElementById('editing-path-display').innerText = path;
             updateToolbarForFile(data.name);
@@ -1070,7 +1392,8 @@
                 const data = await res.json();
                 currentFileSha = data.sha;
             } catch(e) { currentFileSha = null; }
-            await saveToGithub(fullPath, btoa(content), `Update ${filename}`, currentFileSha);
+            await saveToGithub(fullPath, btoa(unescape(encodeURIComponent(content))), `Update ${filename}`, currentFileSha);
+
             loadRootTree();
         }
 
@@ -1083,9 +1406,85 @@
                 body: JSON.stringify(body)
             });
         }
+        
         // =========================================================
-        // 4. PREVIEW & TAG ENGINE (WITH TRIPLE TAP & NESTING LOGIC)
+        // 4. PREVIEW & TAG ENGINE (MULTI-SELECT & SWIPE LOGIC)
         // =========================================================
+        
+        window.emSelectedItems = [];
+        window.isSwipingToSelect = false;
+
+        window.toggleSelectMode = function() {
+            window.isSelectModeEnabled = !window.isSelectModeEnabled;
+            const btn = document.getElementById('btn-swipe-toggle');
+            const previewBox = document.getElementById('fs-preview-box');
+            
+            if(window.isSelectModeEnabled) {
+                if (window.isDragModeEnabled) window.toggleDragMode(); 
+                
+                btn.style.background = 'var(--blob-1)';
+                btn.style.color = '#fff';
+                btn.style.borderColor = 'var(--blob-1)';
+                btn.innerHTML = '<i class="fas fa-mouse-pointer mr-1"></i> Select Mode: ON';
+                previewBox.classList.add('selection-mode-active');
+            } else {
+                btn.style.background = 'transparent';
+                btn.style.color = 'var(--text-dim)';
+                btn.style.borderColor = 'var(--border)';
+                btn.innerHTML = '<i class="fas fa-mouse-pointer mr-1"></i> Select Mode: OFF';
+                previewBox.classList.remove('selection-mode-active');
+                
+                window.emSelectedItems = [];
+                currentVisualSelection = "";
+                document.querySelectorAll('.preview-removable.is-selected').forEach(el => el.classList.remove('is-selected'));
+                document.getElementById('fs-sidebar-content').innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Select text in the preview and click a tag above to format.</div>`;
+            }
+            renderPreviewEngine(document.getElementById('fs-textarea').value, document.getElementById('fs-preview-box'), true);
+        };
+
+        window.toggleSelectItem = function(encodedRaw, el) {
+            if(fsPhase !== 2 && fsPhase !== 3) return;
+            const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
+            
+            const idx = window.emSelectedItems.indexOf(rawTag);
+            if (idx === -1) {
+                window.emSelectedItems.push(rawTag);
+                if(el) el.classList.add('is-selected');
+            } else {
+                window.emSelectedItems.splice(idx, 1);
+                if(el) el.classList.remove('is-selected');
+            }
+
+            const sb = document.getElementById('fs-sidebar-content');
+            if (window.emSelectedItems.length > 0) {
+                sb.innerHTML = `<div class="p-4 rounded-xl border border-blue-500 bg-blue-500/10 text-center text-xs font-bold text-blue-500 transition-all shadow-inner"><i class="fas fa-check-circle text-lg mb-2 block"></i> ${window.emSelectedItems.length} Item(s) Selected!<br>Click a tag above to wrap them.</div>`;
+            } else {
+                sb.innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Select text in the preview and click a tag above to format.</div>`;
+            }
+        };
+
+        document.addEventListener('pointerdown', (e) => {
+            if (!window.isSelectModeEnabled || (fsPhase !== 2 && fsPhase !== 3)) return;
+            const target = e.target.closest('.preview-removable:not(.no-select)');
+            if (target) {
+                window.isSwipingToSelect = true;
+                window.toggleSelectItem(target.dataset.raw, target);
+            }
+        });
+
+        document.addEventListener('pointerover', (e) => {
+            if (!window.isSwipingToSelect || !window.isSelectModeEnabled || fsPhase !== 2) return;
+            const target = e.target.closest('.preview-removable:not(.no-select)');
+            if (target && e.buttons > 0) { 
+                const rawTag = decodeURIComponent(escape(atob(target.dataset.raw)));
+                if (!window.emSelectedItems.includes(rawTag)) {
+                     window.toggleSelectItem(target.dataset.raw, target);
+                }
+            }
+        });
+
+        document.addEventListener('pointerup', () => { window.isSwipingToSelect = false; });
+
         function insertTag(type) {
             const selectedText = getEditorSelectionText() || "Content";
             const tags = {
@@ -1104,8 +1503,41 @@
                 collapse2: `<collapse2 heading="Clean Title" unextendedhr="true" extendedhr="false">\n${selectedText}\n</collapse2>`,
                 br: '<br>',
                 hr: '<hr>',
-                sym: `<sym>&hearts;</sym>`,
-                symEmpty: `<sym>\n${selectedText === 'Content' ? '' : selectedText}\n</sym>`
+                sym: `<sym>♥</sym>`,
+                symEmpty: `<sym>\n${selectedText === 'Content' ? '' : selectedText}\n</sym>`,
+                // NEW TAGS
+                card: `<card>\n${selectedText}\n</card>`,
+                grid: `<grid columns="2">\n${selectedText}\n</grid>`,
+                col: `<col>\n${selectedText}\n</col>`,
+                hero: `<hero bg="https://example.com/bg.jpg" overlay="dark">\n${selectedText}\n</hero>`,
+                api: `<api method="GET" path="/users">\nFetch user list\n</api>`,
+                editor: `<editor file="script.js" lang="javascript">\n${selectedText === 'Content' ? 'const x = 1;' : selectedText}\n</editor>`,
+                progress: `<progress value="75" color="accent">${selectedText}</progress>`,
+                carousel: `<carousel>\n<slide><image>img1.jpg</image></slide>\n<slide><image>img2.jpg</image></slide>\n</carousel>`,
+                slide: `<slide>\n${selectedText}\n</slide>`,
+                btn: `<btn href="https://example.com" icon="arrow-right" type="box">${selectedText}</btn>`,
+                author: `<author avatar="https://github.com/github.png">${selectedText}</author>`,
+                feedback: `<feedback title="Was this helpful?"></feedback>`,
+                stat: `<stat value="10k+" label="Downloads" trend="+15%"></stat>`,
+                pricing: `<pricing name="Pro" price="$19" recommended="true" features="Feature 1, Feature 2"></pricing>`,
+                terminal: `<terminal user="admin@server ~">\n${selectedText === 'Content' ? 'npm install' : selectedText}\n</terminal>`,
+                props: `<props name="id" type="string" required="true">\n${selectedText}\n</props>`,
+                diff: `<diff>\n+ added line\n- removed line\n</diff>`,
+                compare: `<compare before="before.jpg" after="after.jpg"></compare>`,
+                checklist: `<checklist>\n<check>Item 1</check>\n<check>Item 2</check>\n</checklist>`,
+                quote: `<quote author="John Doe" role="CEO">\n${selectedText}\n</quote>`,
+                gallery: `<gallery>\n<image>img1.jpg</image>\n<image>img2.jpg</image>\n</gallery>`,
+                search: `<search></search>`,
+                tabs: `<tabs>\n<tab name="Tab 1">\nContent 1\n</tab>\n<tab name="Tab 2">\nContent 2\n</tab>\n</tabs>`,
+                steps: `<steps>\n<step>Step 1</step>\n<step>Step 2</step>\n</steps>`,
+                tooltip: `<tooltip text="This is a tooltip">\n${selectedText}\n</tooltip>`,
+                key: `<key>Ctrl</key>`,
+                badge: `<badge color="accent">${selectedText}</badge>`,
+                alert: `<alert type="info">\n${selectedText}\n</alert>`,
+                embed: `<embed type="youtube" id="dQw4w9WgXcQ"></embed>`,
+                filetree: `<filetree type="line">\n<li>index.html</li>\n<li>style.css</li>\n</filetree>`,
+                page: `<page to="filename">Next Page</page>`,
+                last: `<last></last>`
             };
             replaceEditorSelection(tags[type] || '');
         }
@@ -1143,7 +1575,6 @@
             return parts.join('/');
         }
 
-        // --- Symbols Library Logic ---
         let SYMBOLS_DB = [];
         let symbolTargetMode = 'normal';
 
@@ -1206,30 +1637,12 @@
             closeSymbolModal();
         }
 
-        // --- Triple Tap Media Selector ---
-        window.emSelectMedia = function(encodedRaw) {
-            if(fsPhase !== 2) return;
-            const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
-            currentVisualSelection = rawTag;
-            
-            // Highlight the sidebar so the user knows they selected it
-            const sb = document.getElementById('fs-sidebar-content');
-            sb.innerHTML = `<div class="p-4 rounded-xl border border-blue-500 bg-blue-500/10 text-center text-xs font-bold text-blue-500 transition-all"><i class="fas fa-check-circle text-lg mb-2 block"></i> Media Selected!<br>Click a tag above to wrap it.</div>`;
-            setTimeout(() => {
-                sb.innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Media loaded in memory. Select a tag to apply.</div>`;
-            }, 2500);
-        };
-
-        // --- Drag, Move, and NESTING State ---
-        let draggedRawData = null;
-        window.isDragModeEnabled = true;
-        window.isRawMoveModeEnabled = false;
-        window.isDraggingTags = false; 
-
         window.toggleDragMode = function() {
             window.isDragModeEnabled = !window.isDragModeEnabled;
             const btn = document.getElementById('btn-drag-toggle');
             if(window.isDragModeEnabled) {
+                if (window.isSelectModeEnabled) window.toggleSelectMode(); 
+                
                 btn.style.background = 'var(--accent)';
                 btn.style.color = 'white';
                 btn.innerHTML = '<i class="fas fa-hand-paper mr-1"></i> Drag: ON';
@@ -1318,7 +1731,6 @@
             renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
         }
 
-        // Green Arrows: Push tag INSIDE the adjacent tag
         window.nestVisualTag = function(btn, encodedRaw, direction) {
             event.stopPropagation();
             const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
@@ -1357,24 +1769,21 @@
             renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
         };
 
-        // Red/Blue Arrows: Pull tag OUT of parent tag
         window.unnestVisualTag = function(btn, encodedRaw, direction) {
             event.stopPropagation();
             const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
             const ta = document.getElementById('fs-textarea');
             let content = ta.value;
 
-            // Simplified unnest: Cut the rawTag out, close the parent tag, place rawTag, reopen parent tag.
-            // For now, it extracts the tag completely to the bottom or top of the parent block structure.
             let idx = content.indexOf(rawTag);
             if (idx === -1) return;
             
-            content = content.replace(rawTag, ""); // Remove it
+            content = content.replace(rawTag, ""); 
             
             if (direction === 'up') {
-                ta.value = rawTag + "\n\n" + content.trim(); // Throw to top
+                ta.value = rawTag + "\n\n" + content.trim(); 
             } else {
-                ta.value = content.trim() + "\n\n" + rawTag; // Throw to bottom
+                ta.value = content.trim() + "\n\n" + rawTag; 
             }
             renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
         };
@@ -1384,68 +1793,305 @@
             const subPath = getMediaSubPath();
             let text = rawText;
 
-            const wrapRm = (match, innerHtml, noRemove = false, tagName = 'TAG') => {
+            const wrapRm = (match, innerHtml, noRemove = false, tagName = 'TAG', isInline = false) => {
                 if(!injectRemovals) return innerHtml;
                 const safeRaw = btoa(unescape(encodeURIComponent(match)));
-                const dragAttr = window.isDragModeEnabled !== false ? 'draggable="true"' : 'draggable="false"';
+                const isSelectMode = window.isSelectModeEnabled;
+                const E = isInline ? 'span' : 'div';
+                const inlineClass = isInline ? ' preview-inline' : '';
+                const selectedClass = (window.emSelectedItems && window.emSelectedItems.includes(match)) ? ' is-selected' : '';
+                const isRawText = tagName === 'RAW TEXT';
+                const noSelectClass = isRawText ? ' no-select' : '';
+
+                if (fsPhase === 3) {
+                    // Protected Phase 3 Wrapper: Only Edit button
+                    const editBtn = `<${E} class="action-btn" style="background:#f59e0b;" onclick="startInlineEdit(this, '${safeRaw}')" title="Edit Content"><i class="fas fa-pencil-alt"></i></${E}>`;
+                    return `<${E} class="preview-removable drag-disabled${inlineClass}${selectedClass}${noSelectClass}" data-raw="${safeRaw}">
+                        <${E} class="block-actions">${editBtn}</${E}>
+                        <${E} class="p3-content-wrap" style="display:block; width:100%;">${innerHtml}</${E}>
+                    </${E}>`;
+                }
+
+                // Standard Phase 2 Wrapper (Drag, Nest, Move, Remove)
+                const dragAttr = (window.isDragModeEnabled !== false && !isSelectMode) ? 'draggable="true"' : 'draggable="false"';
                 const disClass = window.isDragModeEnabled !== false ? '' : ' drag-disabled';
-                
-                // Nested state visual toggles
                 const isNested = text.indexOf(match) > 0 && text.substring(0, text.indexOf(match)).match(/<[a-zA-Z0-9]+[^>]*>$/);
                 const nestedAttr = isNested ? 'data-nested="true"' : '';
-
-                const removeBtn = noRemove ? '' : `<div class="action-btn remove" onclick="removeVisualTag(this, '${safeRaw}')"><i class="fas fa-times"></i></div>`;
+                const removeBtn = noRemove ? '' : `<${E} class="action-btn remove" onclick="removeVisualTag(this, '${safeRaw}')"><i class="fas fa-times"></i></${E}>`;
                 
-                // Add the Nesting Action Arrows (Green, Red, Blue)
+                // NEW: Phase 2 Sidebar Edit Button
+                const editBtnPhase2 = noRemove ? '' : `<${E} class="action-btn edit-opts" onclick="emEditVisualTag(this, '${safeRaw}')" title="Edit Tag Properties"><i class="fas fa-sliders-h"></i></${E}>`;
+
                 const nestBtns = `
-                    <div class="nest-actions">
-                        <div class="action-btn nest-btn" onclick="nestVisualTag(this, '${safeRaw}', 'up')" title="Push inside above tag"><i class="fas fa-level-up-alt"></i></div>
-                        <div class="action-btn nest-btn" onclick="nestVisualTag(this, '${safeRaw}', 'down')" title="Push inside below tag"><i class="fas fa-level-down-alt"></i></div>
-                        <div class="action-btn unnest-btn" onclick="unnestVisualTag(this, '${safeRaw}', 'up')" title="Pull out of parent"><i class="fas fa-sign-out-alt"></i></div>
-                    </div>
+                    <${E} class="nest-actions">
+                        <${E} class="action-btn nest-btn" onclick="nestVisualTag(this, '${safeRaw}', 'up')" title="Push inside above tag"><i class="fas fa-level-up-alt"></i></${E}>
+                        <${E} class="action-btn nest-btn" onclick="nestVisualTag(this, '${safeRaw}', 'down')" title="Push inside below tag"><i class="fas fa-level-down-alt"></i></${E}>
+                        <${E} class="action-btn unnest-btn" onclick="unnestVisualTag(this, '${safeRaw}', 'up')" title="Pull out of parent"><i class="fas fa-sign-out-alt"></i></${E}>
+                    </${E}>
                 `;
 
-                return `<div class="preview-removable${disClass}" ${dragAttr} ${nestedAttr} ondragstart="window.isDragModeEnabled !== false && vDragStart(event, '${safeRaw}')" ondragover="window.isDragModeEnabled !== false && vDragOver(event)" ondrop="window.isDragModeEnabled !== false && vDrop(event, '${safeRaw}')" ondragend="this.style.opacity='1'" data-raw="${safeRaw}"><div class="block-actions"><div class="text-[9px] font-black uppercase text-slate-500 bg-white dark:bg-[#2A1610] dark:text-slate-300 px-2 py-1 rounded shadow-sm border dark:border-white/10 flex items-center mr-1" style="border-color: var(--border); letter-spacing: 0.05em;">${tagName}</div><div class="action-btn move-up" onclick="moveVisualTag(this, '${safeRaw}', 'up')"><i class="fas fa-arrow-up"></i></div><div class="action-btn move-down" onclick="moveVisualTag(this, '${safeRaw}', 'down')"><i class="fas fa-arrow-down"></i></div>${removeBtn}</div>${nestBtns}${innerHtml}</div>`;
+            return `<${E} class="preview-removable${disClass}${inlineClass}${selectedClass}${noSelectClass}" ${dragAttr} ${nestedAttr} ondragstart="window.isDragModeEnabled !== false && !window.isSelectModeEnabled && vDragStart(event, '${safeRaw}')" ondragover="window.isDragModeEnabled !== false && !window.isSelectModeEnabled && vDragOver(event)" ondrop="window.isDragModeEnabled !== false && !window.isSelectModeEnabled && vDrop(event, '${safeRaw}')" ondragend="this.style.opacity='1'" data-raw="${safeRaw}"><${E} class="block-actions"><${E} class="text-[9px] font-black uppercase text-slate-500 bg-white dark:bg-[#2A1610] dark:text-slate-300 px-2 py-1 rounded shadow-sm border dark:border-white/10 flex items-center mr-1" style="border-color: var(--border); letter-spacing: 0.05em;">${tagName}</${E}><${E} class="action-btn move-up" onclick="moveVisualTag(this, '${safeRaw}', 'up')"><i class="fas fa-arrow-up"></i></${E}><${E} class="action-btn move-down" onclick="moveVisualTag(this, '${safeRaw}', 'down')"><i class="fas fa-arrow-down"></i></${E}>${editBtnPhase2}${removeBtn}</${E}>${nestBtns}${innerHtml}</${E}>`;
+
             };
 
-            text = text.replace(/<sym>([\s\S]*?)<\/sym>/g, (m, symCode) => wrapRm(m, `<span class="html-sym">${symCode.trim()}</span>`, false, 'SYM'));
-            text = text.replace(/<align type="(.*?)">([\s\S]*?)<\/align>/g, (m,a,c) => wrapRm(m, `<div style="text-align:${a}">${c}</div>`, false, 'ALIGN'));
-            text = text.replace(/<hr>/g, m => wrapRm(m, `<hr>`, false, 'HR'));
+
+            // ── NEW MASSIVE ENGINE REPLACEMENTS WRAPPED IN WRAPRM ──
             
-            text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m,s,a,c) => { 
-                const sz={1:'2.8rem',2:'2.4rem',3:'2.0rem',4:'1.8rem',5:'1.6rem',6:'1.4rem',7:'1.2rem',8:'1.1rem',9:'1.05rem',10:'1rem'}; 
-                return wrapRm(m, `<div style="font-size:${sz[s]||'1.2rem'};text-align:${a};font-weight:${s<=3?'800':'600'};margin:1.5rem 0 0.8rem;line-height:1.2;color:var(--text-main);">${c}</div>`, false, 'HEADING'); 
+            text = text.replace(/<card([^>]*)>([\s\S]*?)<\/card>/g, (m, attrs, content) => wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-card')}>${content}</div>`, false, 'CARD'));
+            
+            text = text.replace(/<grid([^>]*)>([\s\S]*?)<\/grid>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const cols = ga('columns') || '2';
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-grid', `--cols:${cols}`)}>${content}</div>`, false, 'GRID');
             });
             
-            text = text.replace(/<collapse heading="(.*?)"([^>]*)>([\s\S]*?)<\/collapse>/g,(m,h,attrs,con)=>{ 
-                const ga = (n) => { const match=attrs.match(new RegExp(`${n}="([^"]*)"`)); return match?match[1]:null; }; 
-                const color = ga('color') || 'accent'; const bgColor = ga('bg-color') || 'accent'; 
-                const cc = resolveColor(color); const bgc = resolveColorBg(bgColor, 0.07); 
-                return wrapRm(m, `<details class="custom-collapse" style="border:2px solid ${cc};background:${bgc}"><summary style="color:${cc};font-weight:700">${h}</summary><div class="collapse-anim-wrap"><div class="collapse-anim-inner"><div class="collapse-body">${con}</div></div></div></details>`, false, 'COLLAPSE'); 
+            text = text.replace(/<col([^>]*)>([\s\S]*?)<\/col>/g, (m, attrs, content) => wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-col')}>${content}</div>`, false, 'COL'));
+            
+            text = text.replace(/<hero([^>]*)>([\s\S]*?)<\/hero>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const bg = ga('bg') || ''; const overlay = ga('overlay') || 'dark'; const op = ga('opacity') || '0.6';
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-hero', `background-image:url(${bg})`)}><div class="hero-overlay" data-type="${overlay}" style="opacity:${op}"></div><div>${content}</div></div>`, false, 'HERO');
             });
             
-            text = text.replace(/<collapse2 heading="(.*?)" unextendedhr="(.*?)" extendedhr="(.*?)">([\s\S]*?)<\/collapse2>/g,(m,h,uhr,exhr,con)=>{ 
-                return wrapRm(m, `<div class="collapse2-container"><details class="clean-collapse"><summary><span>${h}</span><i class="fas fa-chevron-down" style="font-size:12px;opacity:0.5"></i></summary><div class="clean-anim-wrap"><div class="clean-anim-inner"><div class="clean-body">${con}${exhr==='true'?'<hr class="collapse-hr">':''}</div></div></div></details>${uhr==='true'?'<hr class="collapse-hr">':''}</div>`, false, 'COLLAPSE 2'); 
+            text = text.replace(/<(?:api|endpoint)([^>]*)>([\s\S]*?)<\/(?:api|endpoint)>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const method = (ga('method') || 'GET').toUpperCase(); const path = ga('path') || '/';
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'api-endpoint')}><span class="api-method method-${method}">${method}</span><span class="api-path">${path}</span><span class="api-desc">${content}</span></div>`, false, 'API ENDPOINT');
             });
             
+            text = text.replace(/<editor([^>]*)>([\s\S]*?)<\/editor>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const file = ga('file') || 'script.js'; const lang = ga('lang') || 'javascript';
+                const escaped = String(content).trim().replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>');
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'editor-window')}><div class="editor-header"><div class="editor-dots"><div class="editor-dot"></div><div class="editor-dot"></div><div class="editor-dot"></div></div><div class="editor-title">${file}</div></div><div class="code-container" style="margin:0; box-shadow:none; border:none;"><button class="copy-btn" onclick="copyCodePreview(this)">Copy</button><pre><code class="language-${lang}">${escaped}</code></pre></div></div>`, false, 'EDITOR WIN');
+            });
+            
+            text = text.replace(/<progress([^>]*)>([\s\S]*?)<\/progress>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const value = ga('value') || '50'; const color = ga('color') || 'accent';
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-progress')}><div class="progress-info"><span>${content}</span><span>${value}%</span></div><div class="progress-track"><div class="progress-fill" style="width:${value}%; background:${resolveColor(color)}"></div></div></div>`, false, 'PROGRESS');
+            });
+            
+            text = text.replace(/<carousel([^>]*)>([\s\S]*?)<\/carousel>/g, (m, attrs, content) => wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-carousel')}>${content}</div>`, false, 'CAROUSEL'));
+            text = text.replace(/<slide([^>]*)>([\s\S]*?)<\/slide>/g, (m, attrs, content) => wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-slide')}>${content}</div>`, false, 'SLIDE'));
+            
+            text = text.replace(/<btn([^>]*)>([\s\S]*?)<\/btn>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const href = ga('href') || '#'; const icon = ga('icon') || 'arrow-right'; const type = ga('type') || 'default';
+                return wrapRm(m, `<a href="${href}" ${applyGlobalAttrs(attrs, 'custom-action-btn pg-'+type)} target="_blank"><i class="fas fa-${icon}" style="margin-right:4px;"></i> ${content}</a>`, false, 'BUTTON', true);
+            });
+            
+            text = text.replace(/<author([^>]*)>([\s\S]*?)<\/author>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const avatar = ga('avatar') || 'https://github.com/github.png';
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'author-pill')}><img src="${avatar}"><span>${content}</span></div>`, false, 'AUTHOR');
+            });
+            
+            text = text.replace(/<feedback([^>]*)><\/feedback>/g, (m, attrs) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const title = ga('title') || 'Was this page helpful?';
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'feedback-widget')}><div class="feedback-title">${title}</div><div class="feedback-actions"><button class="feedback-btn"><i class="fas fa-thumbs-up"></i></button><button class="feedback-btn"><i class="fas fa-thumbs-down"></i></button></div></div>`, false, 'FEEDBACK');
+            });
+            
+            text = text.replace(/<stat([^>]*)><\/stat>/g, (m, attrs) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const value = ga('value') || '0'; const label = ga('label') || 'Metric'; const trend = ga('trend') || '+0%';
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'stat-block')}><div class="stat-header"><span class="stat-value">${value}</span><span class="stat-trend ${trend.startsWith('-')?'negative':'positive'}">${trend}</span></div><div class="stat-label">${label}</div></div>`, false, 'STAT', true);
+            });
+            
+            text = text.replace(/<pricing([^>]*)><\/pricing>/g, (m, attrs) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const name = ga('name') || 'Plan'; const price = ga('price') || '$0'; const rec = ga('recommended') || 'false'; const feats = ga('features') || '';
+                const list = feats.split(',').map(f => `<li><i class="fas fa-check" style="color:var(--accent);"></i> ${f.trim()}</li>`).join('');
+                let baseCls = 'pricing-card' + (rec==='true'?' recommended':'');
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, baseCls)}>${rec==='true'?'<div class="pricing-rec-badge">Recommended</div>':''}<div class="pricing-name">${name}</div><div class="pricing-price">${price}</div><ul class="pricing-features">${list}</ul><button class="custom-action-btn pg-box" style="width:100%; justify-content:center; margin:0">Get Started</button></div>`, false, 'PRICING');
+            });
+            
+            text = text.replace(/<terminal([^>]*)>([\s\S]*?)<\/terminal>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const user = ga('user') || 'admin@server ~';
+                const lines = content.trim().replace(/\n/g, '<br><span class="term-prompt">$</span> ');
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-terminal')}><div class="term-header">${user}</div><div class="term-body"><span class="term-prompt">$</span> ${lines}<span class="term-cursor"></span></div></div>`, false, 'TERMINAL');
+            });
+            
+            text = text.replace(/<props([^>]*)>([\s\S]*?)<\/props>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const name = ga('name') || 'prop'; const type = ga('type') || 'string'; const req = ga('required') || 'false';
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'prop-row')}><span class="prop-name">${name}</span><span class="prop-type">${type}</span>${req==='true'?'<span class="prop-req">Required</span>':'<span class="prop-opt">Optional</span>'}<div class="prop-desc">${content}</div></div>`, false, 'PROPS');
+            });
+            text = text.replace(/(<div class="prop-row"[\s\S]*?<\/div>\s*)+/g, (match) => `<div class="props-container">${match}</div>`);
+            
+            text = text.replace(/<diff([^>]*)>([\s\S]*?)<\/diff>/g, (m, attrs, content) => {
+                const lines = content.trim().split('\n').map((l, i) => {
+                    let cls = ''; if(l.trim().startsWith('+')) cls = 'diff-add'; else if(l.trim().startsWith('-')) cls = 'diff-sub';
+                    return `<div class="diff-line ${cls}"><div class="diff-num">${i+1}</div><div class="diff-content">${l.replace(/</g,'<').replace(/>/g,'>')}</div></div>`;
+                }).join('');
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'diff-viewer')}>${lines}</div>`, false, 'DIFF');
+            });
+            
+            text = text.replace(/<compare([^>]*)><\/compare>/g, (m, attrs) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const before = ga('before'); const after = ga('after'); const id = Math.random().toString(36).substr(2,9);
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'compare-slider')}><img src="${after}" class="compare-after"><div class="compare-before" id="comp-${id}"><img src="${before}"></div><input type="range" min="0" max="100" value="50" class="compare-range" oninput="document.getElementById('comp-${id}').style.width = this.value + '%'"></div>`, false, 'COMPARE');
+            });
+            
+            text = text.replace(/<checklist([^>]*)>([\s\S]*?)<\/checklist>/g, (m, attrs, content) => {
+                const items = content.replace(/<check>([\s\S]*?)<\/check>/g, (m2, c) => `<label class="check-item"><input type="checkbox"><span>${c}</span></label>`);
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'interactive-checklist')}>${items}</div>`, false, 'CHECKLIST');
+            });
+            
+            text = text.replace(/<quote([^>]*)>([\s\S]*?)<\/quote>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const author = ga('author') || 'Anonymous'; const role = ga('role') || ''; const avatar = ga('avatar') || 'https://github.com/github.png';
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'pull-quote')}><div class="quote-text">${content}</div><div class="quote-author"><img src="${avatar}"><div class="qa-info"><strong>${author}</strong><span>${role}</span></div></div></div>`, false, 'QUOTE');
+            });
+            
+            text = text.replace(/<gallery([^>]*)>([\s\S]*?)<\/gallery>/g, (m, attrs, content) => {
+                let inner = content.replace(/<image([^>]*)>([\s\S]*?)<\/image>/g, (im, imgAttrs, imgContent) => {
+                    const ga=(n)=>{ const match=imgAttrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                    const url = ga('url'); const github = ga('github'); const finalSrc = url || github || `${rawBase}/images/${imgContent.trim()}`;
+                    return `<div class="masonry-item"><img src="${finalSrc}"></div>`;
+                });
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'masonry-gallery')}>${inner}</div>`, false, 'GALLERY');
+            });
+
+            text = text.replace(/<search(?: do="(.*?)")?>/g, (m, id) => {
+                return wrapRm(m, `<div class="in-page-search-wrap"><i class="fas fa-search in-page-search-icon"></i><input type="text" class="in-page-search" placeholder="Search this section..." disabled></div>`, false, 'SEARCH');
+            });
+
+            text = text.replace(/<tabs([^>]*)>([\s\S]*?)<\/tabs>/g, (m, attrs, content) => {
+                let tabHeaders = ''; let tabPanels = ''; let isFirst = true;
+                content.replace(/<tab([^>]*)name="(.*?)"([^>]*)>([\s\S]*?)<\/tab>/g, (m2, a1, name, a2, tabContent) => {
+                    const active = isFirst ? 'active' : ''; const id = 'tab-' + Math.random().toString(36).substr(2, 5);
+                    tabHeaders += `<button class="tab-btn ${active}" onclick="this.parentElement.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active'); this.parentElement.nextElementSibling.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active')); document.getElementById('${id}').classList.add('active');">${name}</button>`;
+                    tabPanels += `<div ${applyGlobalAttrs(a1+a2, 'tab-panel ' + active)} id="${id}">${tabContent}</div>`;
+                    isFirst = false; return '';
+                });
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-tabs')}><div class="tab-header">${tabHeaders}</div><div class="tab-body">${tabPanels}</div></div>`, false, 'TABS');
+            });
+
+            text = text.replace(/<steps([^>]*)>([\s\S]*?)<\/steps>/g, (m, attrs, content) => {
+                let inner = content.replace(/<step([^>]*)>([\s\S]*?)<\/step>/g, (m2, a2, stepContent) => `<div ${applyGlobalAttrs(a2, 'custom-step')}><div class="step-dot"></div><div class="step-content">${stepContent}</div></div>`);
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-steps')}>${inner}</div>`, false, 'STEPS');
+            });
+
+            text = text.replace(/<tooltip([^>]*)text="(.*?)"([^>]*)>([\s\S]*?)<\/tooltip>/g, (m, a1, txt, a2, content) => {
+                return wrapRm(m, `<div ${applyGlobalAttrs(a1+a2, 'custom-tooltip')}>${content}<div class="tooltip-text">${txt}</div></div>`, false, 'TOOLTIP', true);
+            });
+
+            text = text.replace(/<key([^>]*)>(.*?)<\/key>/g, (m, attrs, content) => wrapRm(m, `<span ${applyGlobalAttrs(attrs, 'custom-key')}>${content}</span>`, false, 'KEY', true));
+            text = text.replace(/<kbd([^>]*)>(.*?)<\/kbd>/g, (m, attrs, content) => wrapRm(m, `<span ${applyGlobalAttrs(attrs, 'custom-key')}>${content}</span>`, false, 'KBD', true));
+
+            text = text.replace(/<embed([^>]*)>/g, (m, attrs) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:''; };
+                const type = ga('type'); const id = ga('id'); let url = '';
+                if(type==='youtube') url=`https://www.youtube.com/embed/${id}`;
+                else if(type==='spotify') url=`https://open.spotify.com/embed/${id}`;
+                else if(type==='codepen') url=`https://codepen.io/api/oembed?url=${id}`; 
+                if(!url) return wrapRm(m, `<div class="p-4 border rounded bg-slate-100 text-center text-xs text-slate-500">Invalid Embed</div>`, false, 'EMBED');
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-embed embed-'+type)}><iframe src="${url}" allowfullscreen></iframe></div>`, false, 'EMBED');
+            });
+
+            text = text.replace(/<filetree([^>]*)>([\s\S]*?)<\/filetree>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const type = ga('type') || 'line'; 
+                let tree = content.replace(/<li>(.*?)<\/li>/g, (m2, inner) => {
+                    const isFolder = inner.toLowerCase().includes('.md') || inner.toLowerCase().includes('.html') || inner.toLowerCase().includes('.js') || inner.toLowerCase().includes('.css') ? false : true;
+                    const icon = isFolder ? 'folder' : 'file-alt';
+                    return `<li class="ft-item ${isFolder ? 'folder' : 'file'}"><i class="fas fa-${icon}"></i> ${inner}</li>`;
+                });
+                let cleanAttrs = attrs.replace(/type=".*?"/, '');
+                return wrapRm(m, `<div ${applyGlobalAttrs(cleanAttrs, 'custom-filetree')} data-type="${type}"><ul>${tree}</ul></div>`, false, 'FILETREE');
+            });
+
+            text = text.replace(/<page([^>]*)to="(.*?)"([^>]*)>([\s\S]*?)<\/page>/g, (m, a1, to, a2, content) => {
+                const ga=(n)=>{ const match=(a1+a2).match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:''; };
+                const type = ga('type') || 'default';
+                let classes = ['custom-page'];
+                if(type.includes('box')) classes.push('pg-box'); else if(type.includes('dotted-box')) classes.push('pg-dotted'); else if(type.includes('glowing')) classes.push('pg-glowing'); else if(type.includes('floating')) classes.push('pg-floating'); else classes.push('pg-default');
+                let cleanedAttrs = (a1+a2).replace(/type=".*?"/,'');
+                return wrapRm(m, `<span ${applyGlobalAttrs(cleanedAttrs, classes.join(' '))} title="Link to: ${to}"><span>${content}</span><i class="fas fa-arrow-right"></i></span>`, false, 'PAGE', true);
+            });
+
+            text = text.replace(/<last([^>]*)>/g, (m) => wrapRm(m, `<div class="p-4 border border-dashed rounded text-center text-xs font-bold text-slate-400 my-8">Dynamic Pagination Block Will Render Here</div>`, false, 'LAST'));
+
+            // ── EXISTING INLINE ELEMENTS ──
+            text = text.replace(/<sym>([\s\S]*?)<\/sym>/g, (m, symCode) => wrapRm(m, `<span class="html-sym">${symCode.trim().replace(/\n/g, ' ')}</span>`, false, 'SYM', true));
             text = text.replace(/<tw state="(.*?)" color="(.*?)" type="(.*?)">([\s\S]*?)<\/tw>/g,(m,st,col,ty,con)=>{ 
                 const resolvedCol = resolveColor(col) || 'inherit'; 
-                return wrapRm(m, `<span class="tw-text tw-cursor" data-state="${st||'continuous'}" data-fulltext="${con.replace(/"/g,'&quot;')}" style="color:${resolvedCol};font-weight:${ty.includes('bold')?'bold':'normal'};font-style:${ty.includes('italic')?'italic':'normal'}"></span>`, false, 'TYPEWRITER'); 
+                return wrapRm(m, `<span class="tw-text tw-cursor" data-state="${st||'continuous'}" data-fulltext="${con.trim().replace(/\n/g, ' ').replace(/"/g,'"')}" style="color:${resolvedCol};font-weight:${ty.includes('bold')?'bold':'normal'};font-style:${ty.includes('italic')?'italic':'normal'};text-decoration:${ty.includes('underline')?'underline':'none'}"></span>`, false, 'TYPEWRITER', true); 
             });
-            
-            text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g,(m,h,l)=>wrapRm(m, `<a href="${l.trim()}" class="custom-href" target="_blank">${h||l.trim()}</a>`, false, 'LINK'));
-            
+            text = text.replace(/<href(?: heading="(.*?)")?>([\s\S]*?)<\/href>/g,(m,h,l)=>wrapRm(m, `<a href="${l.trim().replace(/\n/g, '')}" class="custom-href" target="_blank" onclick="event.preventDefault()">${(h||l).trim().replace(/\n/g, ' ')}</a>`, false, 'LINK', true));
+            text = text.replace(/<hr>/g, m => wrapRm(m, `<div style="padding: 1.5rem 0; width: 100%;"><hr style="margin: 0;"></div>`, false, 'HR'));
+
             text = text.replace(/<text ([\s\S]*?)>([\s\S]*?)<\/text>/g,(m,attrs,content)=>{ 
                 const ga=(n)=>{ const match=attrs.match(new RegExp(`${n}="([^"]*)"`)); return match?match[1]:null; }; 
                 const color = ga('color'), cLight = ga('color-light'), cDark = ga('color-dark'); 
                 const bgColor = ga('bg-color'), bgL = ga('bg-color-light'), bgD = ga('bg-color-dark'); 
                 const type = ga('type')||''; let st='', cls=''; 
-                if(cLight||cDark) { st+=`--light-c:${resolveColor(cLight||color)||'inherit'};--dark-c:${resolveColor(cDark||color)||'inherit'};color:var(--light-c);`; cls='adaptive-text'; } 
+                if(cLight||cDark) { st+=`--light-c:${resolveColor(cLight||color)||'inherit'};--dark-c:${resolveColor(cDark||color)||'inherit'};color:var(--light-c);`; cls='adaptive-color'; } 
                 else if(color) { st+=`color:${resolveColor(color)};`; } 
-                if(bgL||bgD) { st+=`--light-bg:${resolveColorBg(bgL||bgColor)||'transparent'};--dark-bg:${resolveColorBg(bgD||bgColor)||'transparent'};background:var(--light-bg);padding:1px 6px;border-radius:4px;`; cls='adaptive-text'; } 
+                if(bgL||bgD) { st+=`--light-bg:${resolveColorBg(bgL||bgColor)||'transparent'};--dark-bg:${resolveColorBg(bgD||bgColor)||'transparent'};background:var(--light-bg);padding:1px 6px;border-radius:4px;`; cls='adaptive-bg'; } 
                 else if(bgColor) { st+=`background:${resolveColorBg(bgColor)};padding:1px 6px;border-radius:4px;`; } 
                 if(type.includes('bold')) st+='font-weight:bold;'; if(type.includes('italic')) st+='font-style:italic;'; if(type.includes('underline')) st+='text-decoration:underline;'; 
-                return wrapRm(m, `<span${cls?' class="'+cls+'"':''} style="${st.trim()}">${content}</span>`, false, 'TEXT'); 
+                return wrapRm(m, `<span${cls?' class="'+cls+'"':''} style="${st.trim()}">${content.trim().replace(/\n/g, ' ')}</span>`, false, 'TEXT', true); 
+            });
+
+            if (injectRemovals) {
+                text = text.replace(/\n{3,}/g, match => {
+                    const extra = match.length - 2; 
+                    const ui = extra === 1 
+                        ? `<div class="flex items-center justify-center py-1 my-1 text-slate-300 dark:text-slate-600"><i class="fas fa-circle" style="font-size: 5px;"></i></div>`
+                        : `<div class="flex items-center justify-center py-1 my-1 gap-1 text-slate-400 dark:text-slate-500"><span class="text-[10px] font-black">${extra}</span><i class="fas fa-circle" style="font-size: 5px;"></i></div>`;
+                    return `\n\n` + wrapRm(match, ui, false, extra === 1 ? 'FREE SPACE' : `SPACE x${extra}`) + `\n\n`;
+                });
+            }
+
+            text = text.replace(/(?:<br>\s*)+/g, match => {
+                const brCount = (match.match(/<br>/g) || []).length;
+                if (brCount === 0) return match;
+                if (!injectRemovals) return match; 
+
+                if (brCount === 1) {
+                    const singleBrUi = `<div class="flex items-center justify-center py-1 my-1 text-slate-300 dark:text-slate-600"><i class="fas fa-circle" style="font-size: 5px;"></i></div>`;
+                    return wrapRm('<br>', singleBrUi, false, 'BR');
+                }
+                
+                const escapedExploded = Array(brCount).fill(wrapRm('<br>', `<div class="flex items-center justify-center py-1 my-1 text-slate-300 dark:text-slate-600"><i class="fas fa-circle" style="font-size: 5px;"></i></div>`, false, 'BR')).join('').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                const groupInner = `<div class="flex items-center justify-center py-1 my-1 gap-1 text-slate-400 dark:text-slate-500 cursor-pointer hover:text-accent transition-colors" onclick="event.stopPropagation(); const p = this.closest('.preview-removable'); if(p) p.outerHTML = '${escapedExploded}';" title="Click to split into single dots">
+                    <span class="text-[10px] font-black">${brCount}</span><i class="fas fa-circle" style="font-size: 5px;"></i>
+                </div>`;
+                return wrapRm(match, groupInner, false, `BR x${brCount}`);
+            });
+
+
+             text = text.replace(/<heading size="(.*?)" align="(.*?)">([\s\S]*?)<\/heading>/g, (m,s,a,c) => { 
+                const sz={1:'2.8rem',2:'2.4rem',3:'2.0rem',4:'1.8rem',5:'1.6rem',6:'1.4rem',7:'1.2rem',8:'1.1rem',9:'1.05rem',10:'1rem'}; 
+                return wrapRm(m, `<div style="font-size:${sz[s]||'1.2rem'};text-align:${a};font-weight:${s<=3?'800':'600'};margin:1.5rem 0 0.8rem;line-height:1.2;color:var(--text-main);">${c}</div>`, false, 'HEADING'); 
+            });
+            
+            /* 👇 ADD THIS NEW ALIGN PARSER RIGHT HERE 👇 */
+            text = text.replace(/<align([^>]*)>([\s\S]*?)<\/align>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
+                const type = ga('type') || 'center';
+                return wrapRm(m, `<div style="text-align:${type}; width:100%; display:block;">${content}</div>`, false, 'ALIGN');
+            });
+            /* 👆 ----------------------------------- 👆 */
+
+
+
+            
+            text = text.replace(/<collapse heading="(.*?)"([^>]*)>([\s\S]*?)<\/collapse>/g,(m,h,attrs,con)=>{ 
+                const ga = (n) => { const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; }; 
+                const color = ga('color') || 'accent'; const bgColor = ga('bg-color'); 
+                const cc = resolveColor(color); 
+                let extraStyle = `border:2px solid ${cc};`;
+                if(!bgColor) extraStyle += `background-color:${resolveColorBg(color, 0.07)};`;
+                return wrapRm(m, `<details ${applyGlobalAttrs(attrs, 'custom-collapse', extraStyle)}><summary style="color:${cc};font-weight:700">${h}</summary><div class="collapse-anim-wrap"><div class="collapse-anim-inner"><div class="collapse-body">${con}</div></div></div></details>`, false, 'COLLAPSE'); 
+            });
+            
+            text = text.replace(/<collapse2 heading="(.*?)" unextendedhr="(.*?)" extendedhr="(.*?)">([\s\S]*?)<\/collapse2>/g,(m,h,uhr,exhr,con)=>{ 
+                return wrapRm(m, `<div class="collapse2-container"><details class="clean-collapse"><summary><span>${h}</span><i class="fas fa-chevron-down" style="font-size:12px;opacity:0.5"></i></summary><div class="clean-anim-wrap"><div class="clean-anim-inner"><div class="clean-body">${con}${exhr==='true'?'<hr class="collapse-hr">':''}</div></div></div></details>${uhr==='true'?'<hr class="collapse-hr">':''}</div>`, false, 'COLLAPSE 2'); 
             });
             
             text = text.replace(/<list type="(.*?)">([\s\S]*?)<\/list>/g,(m,type,content)=>{ 
@@ -1453,20 +2099,56 @@
                 return wrapRm(m, `<${tag} style="margin:15px 0 15px 40px">${content.trim().split('\n').map(i=>`<li>${i.trim()}</li>`).join('')}</${tag}>`, false, 'LIST'); 
             });
             
-            text = text.replace(/<box color="(.*?)"(?: type="(.*?)")?>([\s\S]*?)<\/box>/g,(m,c,t,con)=>{ 
-                const cc = resolveColor(c); const bgc = resolveColorBg(c, 0.1); 
-                return wrapRm(m, `<div class="logic-box" style="border-color:${cc};background:${bgc};border-style:${t==='dotted'?'dotted':'solid'}">${con}</div>`, false, 'BOX'); 
+            text = text.replace(/<box([^>]*)>([\s\S]*?)<\/box>/g,(m,attrs,con)=>{ 
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:''; }; 
+                const t = ga('type'); const c = ga('color'); const bgc = ga('bg-color');
+                let extraStyle = `border-style:${t==='dotted'?'dotted':'solid'};`;
+                if (c && !bgc) extraStyle += `background-color:${resolveColorBg(c, 0.15)};`;
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'logic-box', extraStyle)}>${con}</div>`, false, 'BOX'); 
             });
             
             text = text.replace(/<code>([\s\S]*?)<\/code>/g,(m,code)=>{ 
-                const escaped = code.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
+                const escaped = code.trim().replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>'); 
                 return wrapRm(m, `<div class="code-container"><button class="copy-btn" onclick="copyCodePreview(this)">Copy</button><pre><code>${escaped}</code></pre></div>`, false, 'CODE'); 
             });
             
-            // Injected TRIPLE TAP onto media tags directly here:
-            text = text.replace(/<image>(.*?)<\/image>/g,(m,n)=>wrapRm(m, `<img src="${rawBase}/images/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/images/${n.trim()}'" onclick="if(event.detail===3) emSelectMedia('${btoa(unescape(encodeURIComponent(m)))}')"/>`, false, 'IMAGE'));
-            text = text.replace(/<video>(.*?)<\/video>/g,(m,n)=>wrapRm(m, `<video muted playsinline loop controls onclick="if(event.detail===3) emSelectMedia('${btoa(unescape(encodeURIComponent(m)))}')"><source src="${rawBase}/videos/${subPath}/${n.trim()}" type="video/mp4"></video>`, false, 'VIDEO'));
-            text = text.replace(/<audio>(.*?)<\/audio>/g,(m,n)=>wrapRm(m, `<audio controls src="${rawBase}/audio/${subPath}/${n.trim()}" onerror="this.src='${rawBase}/audio/${n.trim()}'" onclick="if(event.detail===3) emSelectMedia('${btoa(unescape(encodeURIComponent(m)))}')"></audio>`, false, 'AUDIO'));
+            const mediaSwipeScript = (m) => window.isSelectModeEnabled ? '' : `
+                onpointerdown="event.stopPropagation();"
+                onpointerup="
+                    event.stopPropagation();
+                    this.dataset.taps = (parseInt(this.dataset.taps||0)+1);
+                    clearTimeout(this.tapTmr);
+                    if(this.dataset.taps=='3'){
+                        window.toggleSelectItem('${btoa(unescape(encodeURIComponent(m)))}');
+                        this.dataset.taps=0;
+                    } else {
+                        this.tapTmr = setTimeout(()=>{this.dataset.taps=0;}, 400);
+                    }
+                "
+            `.replace(/\n/g, ' ');
+
+            text = text.replace(/<image([^>]*)>([\s\S]*?)<\/image>/g,(m,attrs,content)=>{ const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; }; const url=ga('url'); const github=ga('github'); const name=content.trim(); const finalSrc=url||github||`${rawBase}/images/${subPath}/${name}`; const fallback=url||github?finalSrc:`${rawBase}/images/${name}`; return wrapRm(m, `<img src="${finalSrc}" ${applyGlobalAttrs(attrs)} onerror="this.src='${fallback}'" ${mediaSwipeScript(m)}/>`, false, 'IMAGE'); });
+            text = text.replace(/<video([^>]*)>([\s\S]*?)<\/video>/g,(m,attrs,content)=>{ const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; }; const url=ga('url'); const github=ga('github'); const name=content.trim(); const finalSrc=url||github||`${rawBase}/videos/${subPath}/${name}`; return wrapRm(m, `<video muted playsinline loop controls ${applyGlobalAttrs(attrs)} ${mediaSwipeScript(m)}><source src="${finalSrc}" type="video/mp4"></video>`, false, 'VIDEO'); });
+            text = text.replace(/<audio([^>]*)>([\s\S]*?)<\/audio>/g,(m,attrs,content)=>{ const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; }; const url=ga('url'); const github=ga('github'); const name=content.trim(); const finalSrc=url||github||`${rawBase}/audio/${subPath}/${name}`; const fallback=url||github?finalSrc:`${rawBase}/audio/${name}`; return wrapRm(m, `<audio controls src="${finalSrc}" ${applyGlobalAttrs(attrs)} onerror="this.src='${fallback}'" ${mediaSwipeScript(m)}></audio>`, false, 'AUDIO'); });
+            
+            text = text.replace(/<badge([^>]*)>([\s\S]*?)<\/badge>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; }; 
+                const color = ga('color'); const bgc = ga('bg-color');
+                let extraStyle = ''; 
+                if(color && !bgc) { extraStyle = `background-color:${resolveColorBg(color,0.15)};border-color:${resolveColorBg(color,0.3)};color:${resolveColor(color)};`; }
+                let attrsMod = attrs.replace(/color=".*?"/,''); 
+                return wrapRm(m, `<span ${applyGlobalAttrs(attrsMod, 'custom-badge', extraStyle)}>${content}</span>`, false, 'BADGE', true);
+            });
+
+            text = text.replace(/<alert([^>]*)>([\s\S]*?)<\/alert>/g, (m, attrs, content) => {
+                const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; }; 
+                const type = ga('type') || 'info'; const color = ga('color'); const bgc = ga('bg-color');
+                const icon = type==='success'?'check-circle': type==='warning'?'exclamation-triangle': type==='danger'?'times-circle':'info-circle';
+                let extraStyle = '';
+                if(color && !bgc) { extraStyle = `background-color:${resolveColorBg(color,0.1)};border-left-color:${resolveColor(color)};`; }
+                return wrapRm(m, `<div ${applyGlobalAttrs(attrs, 'custom-alert', extraStyle)} data-type="${type}"><i class="fas fa-${icon}" ${color?`style="color:${resolveColor(color)}"`:''}></i><div>${content}</div></div>`, false, 'ALERT');
+            });
+
 
             if (window.isRawMoveModeEnabled && injectRemovals) {
                 let blocks = text.split(/\n{2,}/);
@@ -1515,8 +2197,9 @@
 
     <script>
         (function initWriter() {
-            const tagNames = ["heading","text","align","list","href","tw","code","box","collapse","image","video","audio","br","hr","collapse2", "sym"];
-            const attrs = ["color","type","heading","bg-color","size","align","state","color-light","color-dark","unextendedhr","extendedhr"];
+            // MASSIVELY EXPANDED TAG AND ATTR SUPPORT FOR CODEMIRROR
+            const tagNames = ["heading","text","align","list","href","tw","code","box","collapse","image","video","audio","br","hr","collapse2","sym", "card", "grid", "col", "hero", "api", "endpoint", "editor", "progress", "carousel", "slide", "btn", "author", "feedback", "stat", "pricing", "terminal", "props", "diff", "compare", "checklist", "quote", "gallery", "search", "tabs", "step", "steps", "tooltip", "key", "kbd", "badge", "alert", "embed", "filetree", "page", "last"];
+            const attrs = ["color","type","heading","bg-color","size","align","state","color-light","color-dark","unextendedhr","extendedhr","columns","bg","overlay","opacity","method","path","file","lang","value","href","icon","avatar","title","label","trend","name","price","recommended","features","user","required","before","after","url","github","text","to"];
 
             const textarea = document.getElementById("editor");
             if (!textarea || !window.CodeMirror) return;
@@ -1544,8 +2227,8 @@
 
             const overlay = {
                 token: function(stream) {
-                    if (stream.match(/<\/?(heading|text|align|list|href|tw|code|box|collapse|image|video|audio|br|hr|collapse2|sym)\b/)) return "tag-" + RegExp.$1;
-                    while (stream.next() != null && !stream.match(/<\/?(heading|text|align|list|href|tw|code|box|collapse|image|video|audio|br|hr|collapse2|sym)\b/, false)) {}
+                    if (stream.match(new RegExp(`<\/?(?:${tagNames.join('|')})\\b`))) return "tag-custom";
+                    while (stream.next() != null && !stream.match(new RegExp(`<\/?(?:${tagNames.join('|')})\\b`), false)) {}
                     return null;
                 }
             };
@@ -1639,7 +2322,6 @@
             window.getEditorSelectionText = () => cm.getSelection(); window.replaceEditorSelection = (insert) => cm.replaceSelection(insert || "", "around");
         })();
 
-        // Auto Br toggle
         window.autoBrEnabled = (localStorage.getItem("admin_auto_br") || "off") === "on";
         function updateAutoBrButton() {
             const btn = document.getElementById("btn-autobr"); if (!btn) return;
@@ -1651,7 +2333,6 @@
             updateAutoBrButton(); if (window.cm) window.cm.focus();
         }
         updateAutoBrButton();
-
         // ---------------------------------------------------------
         // 5. ORGANISE WIZARD LOGIC
         // ---------------------------------------------------------
@@ -2061,26 +2742,38 @@
             fsPhase = phase;
             const ta = document.getElementById('fs-textarea'); const preview = document.getElementById('fs-preview-box');
             const p1 = document.getElementById('fs-phase1-tools'); const ptags = document.getElementById('fs-phase2-tools');
-            const p2act = document.getElementById('fs-phase2-actions'); const sb = document.getElementById('fs-sidebar');
-            const st = document.getElementById('fs-mode-status');
+            const p2act = document.getElementById('fs-phase2-actions'); const p3act = document.getElementById('fs-phase3-actions');
+            const sb = document.getElementById('fs-sidebar'); const st = document.getElementById('fs-mode-status');
             
             if(phase === 1) {
                 ta.classList.remove('hidden'); preview.classList.add('hidden');
                 p1.classList.remove('hidden'); p1.classList.add('flex');
                 ptags.classList.add('hidden'); ptags.classList.remove('flex');
                 p2act.classList.add('hidden'); p2act.classList.remove('flex');
+                if(p3act) { p3act.classList.add('hidden'); p3act.classList.remove('flex'); }
                 sb.classList.add('hidden'); sb.classList.remove('flex');
-                st.innerText = "Drafting Structure..."; ta.focus();
-            } else {
+                st.innerText = "Drafting Structure (Phase 1)"; ta.focus();
+            } else if(phase === 2) {
                 ta.classList.add('hidden'); preview.classList.remove('hidden');
                 p1.classList.add('hidden'); p1.classList.remove('flex');
                 ptags.classList.remove('hidden'); ptags.classList.add('flex');
                 p2act.classList.remove('hidden'); p2act.classList.add('flex');
-                st.innerText = "Formatting Select & Apply";
+                if(p3act) { p3act.classList.add('hidden'); p3act.classList.remove('flex'); }
+                st.innerText = "Layout & Formatting (Phase 2)";
                 document.getElementById('fs-sidebar-content').innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Select text in the preview and click a tag above to format.</div>`;
+                renderPreviewEngine(ta.value, preview, true);
+            } else if(phase === 3) {
+                ta.classList.add('hidden'); preview.classList.remove('hidden');
+                p1.classList.add('hidden'); p1.classList.remove('flex');
+                ptags.classList.remove('hidden'); ptags.classList.add('flex'); // Tags stay available!
+                p2act.classList.add('hidden'); p2act.classList.remove('flex');
+                if(p3act) { p3act.classList.remove('hidden'); p3act.classList.add('flex'); }
+                st.innerText = "Live Text Editing (Phase 3)";
+                document.getElementById('fs-sidebar-content').innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Click the pencil icon on any block to easily rewrite its inner text! Structure tags cannot be deleted here.</div>`;
                 renderPreviewEngine(ta.value, preview, true);
             }
         }
+
 
         let emAutoBrEnabled = false;
         function toggleEmAutoBr() {
@@ -2098,7 +2791,12 @@
 
         let currentVisualSelection = "";
         document.addEventListener('selectionchange', () => {
-            if (fsPhase === 2) { const sel = window.getSelection().toString().trim(); if(sel.length > 0) currentVisualSelection = sel; }
+            if (fsPhase === 2) { 
+                const sel = window.getSelection().toString().trim();
+                if (sel) {
+                    currentVisualSelection = sel; 
+                }
+            }
         });
 
         async function fetchMediaFiles(type) {
@@ -2120,59 +2818,223 @@
             sb.classList.add('hidden'); sb.classList.remove('flex');
             sbc.innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Select text in the preview and click a tag above to format.</div>`;
         };
+        
+        window.emEditVisualTag = function(btn, encodedRaw) {
+            event.stopPropagation();
+            const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
+            
+            // Extract Tag Name, Attributes, and Inner Content safely
+            const match = rawTag.match(/^<([a-zA-Z0-9\-]+)([^>]*)>([\s\S]*?)(?:<\/\1>)?$/);
+            if(!match) { alert("Cannot parse this block for properties editing."); return; }
 
-        async function emInsertTag(tag) {
-            if (fsPhase !== 2) return;
+            const t = match[1].toLowerCase();
+            const attrStr = match[2];
+            let innerContent = match[3] || "";
+            if (['image','video','audio'].includes(t)) innerContent = innerContent.trim();
+
+            if(['br','hr','search','last','symempty'].includes(t)) {
+                alert("This block has no customizable properties."); return;
+            }
+
+            // Extract attributes into an object
+            const attrs = {};
+            const attrRegex = /([a-zA-Z0-9\-]+)="([^"]*)"/g;
+            let aMatch;
+            while((aMatch = attrRegex.exec(attrStr)) !== null) { attrs[aMatch[1]] = aMatch[2]; }
+
+            const existingData = { 'fs-prop-content': innerContent };
+
+            // Global Attributes mapping
+            if(attrs['color'] && !attrs['color-light']) existingData['fs-prop-g-color'] = attrs['color'];
+            if(attrs['bg-color']) existingData['fs-prop-g-bg'] = attrs['bg-color'];
+            if(attrs['format']) existingData['fs-prop-g-format'] = attrs['format'];
+            if(attrs['align']) existingData['fs-prop-g-align'] = attrs['align'];
+
+            // Specific Tag mappings
+            if(t === 'box') { existingData['fs-prop-color'] = attrs['color']; existingData['fs-prop-type'] = attrs['type']; }
+            if(t === 'text') { existingData['fs-prop-color'] = attrs['color']; existingData['fs-prop-color-light'] = attrs['color-light']; existingData['fs-prop-color-dark'] = attrs['color-dark']; existingData['fs-prop-type'] = attrs['type']; delete existingData['fs-prop-g-color']; }
+            if(t === 'heading') { existingData['fs-prop-size'] = attrs['size']; existingData['fs-prop-align'] = attrs['align']; delete existingData['fs-prop-g-align']; }
+            if(t === 'collapse' || t === 'collapse2') { existingData['fs-prop-title'] = attrs['heading']; existingData['fs-prop-color'] = attrs['color']; existingData['fs-prop-uhr'] = attrs['unextendedhr']; existingData['fs-prop-ehr'] = attrs['extendedhr']; delete existingData['fs-prop-g-color']; }
+            if(t === 'align') { existingData['fs-prop-align'] = attrs['type']; delete existingData['fs-prop-g-align']; }
+            if(t === 'tw') { existingData['fs-prop-state'] = attrs['state']; existingData['fs-prop-color'] = attrs['color']; existingData['fs-prop-type'] = attrs['type']; delete existingData['fs-prop-g-color']; }
+            if(t === 'href') { existingData['fs-prop-title'] = attrs['heading']; existingData['fs-prop-url'] = innerContent; }
+            if(t === 'list') { existingData['fs-prop-list-type'] = attrs['type']; }
+            if(['image','video','audio'].includes(t)) { existingData['fs-prop-filename'] = innerContent; }
+            if(t === 'grid') { existingData['fs-prop-columns'] = attrs['columns']; }
+            if(t === 'hero') { existingData['fs-prop-bg'] = attrs['bg']; existingData['fs-prop-overlay'] = attrs['overlay']; existingData['fs-prop-opacity'] = attrs['opacity']; }
+            if(t === 'api') { existingData['fs-prop-method'] = attrs['method']; existingData['fs-prop-path'] = attrs['path']; }
+            if(t === 'editor') { existingData['fs-prop-file'] = attrs['file']; existingData['fs-prop-lang'] = attrs['lang']; }
+            if(t === 'progress') { existingData['fs-prop-val'] = attrs['value']; existingData['fs-prop-color'] = attrs['color']; }
+            if(t === 'btn') { existingData['fs-prop-href'] = attrs['href']; existingData['fs-prop-icon'] = attrs['icon']; existingData['fs-prop-type'] = attrs['type']; }
+            if(t === 'author') { existingData['fs-prop-avatar'] = attrs['avatar']; }
+            if(t === 'feedback') { existingData['fs-prop-title'] = attrs['title']; }
+            if(t === 'stat') { existingData['fs-prop-val'] = attrs['value']; existingData['fs-prop-label'] = attrs['label']; existingData['fs-prop-trend'] = attrs['trend']; }
+            if(t === 'pricing') { existingData['fs-prop-name'] = attrs['name']; existingData['fs-prop-price'] = attrs['price']; existingData['fs-prop-rec'] = attrs['recommended']; existingData['fs-prop-feats'] = attrs['features']; }
+            if(t === 'terminal') { existingData['fs-prop-user'] = attrs['user']; }
+            if(t === 'props') { existingData['fs-prop-name'] = attrs['name']; existingData['fs-prop-type'] = attrs['type']; existingData['fs-prop-req'] = attrs['required']; }
+            if(t === 'compare') { existingData['fs-prop-before'] = attrs['before']; existingData['fs-prop-after'] = attrs['after']; }
+            if(t === 'quote') { existingData['fs-prop-author'] = attrs['author']; existingData['fs-prop-role'] = attrs['role']; existingData['fs-prop-avatar'] = attrs['avatar']; }
+            if(t === 'tooltip') { existingData['fs-prop-text'] = attrs['text']; }
+            if(t === 'filetree') { existingData['fs-prop-type'] = attrs['type']; }
+            if(t === 'page') { existingData['fs-prop-to'] = attrs['to']; existingData['fs-prop-type'] = attrs['type']; }
+            if(t === 'badge') { existingData['fs-prop-color'] = attrs['color']; delete existingData['fs-prop-g-color']; }
+            if(t === 'alert') { existingData['fs-prop-type'] = attrs['type']; existingData['fs-prop-color'] = attrs['color']; delete existingData['fs-prop-g-color']; }
+            if(t === 'embed') { existingData['fs-prop-type'] = attrs['type']; existingData['fs-prop-id'] = attrs['id']; }
+
+            window.editingOriginalRaw = rawTag; // Set global editing flag
+            emInsertTag(t, existingData);
+        };
+
+
+        async function emInsertTag(tag, existingData = null) {
+            if (fsPhase !== 2 && fsPhase !== 3) return;
             if (window.isDraggingTags) { window.isDraggingTags = false; return; }
 
-            const sel = currentVisualSelection || "Content";
+            // If we are opening a fresh tag, reset the editing state
+            if (!existingData) window.editingOriginalRaw = null;
+
+            const isMultiSelect = window.emSelectedItems && window.emSelectedItems.length > 0;
+            const sel = isMultiSelect ? `[${window.emSelectedItems.length} elements selected]` : (currentVisualSelection || "Content");
+            const cleanSel = sel === "Content" ? "" : sel;
+
             const sb = document.getElementById('fs-sidebar'); const sbc = document.getElementById('fs-sidebar-content');
             sb.classList.remove('hidden'); sb.classList.add('flex');
             
             let fields = "";
-            const cp = (id, label, def) => `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">${label}</label><div class="flex items-center gap-2 mb-4"><input type="text" id="${id}" value="${def}" class="flex-1 p-3 rounded-xl border text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><input type="color" id="${id}-picker" class="hidden" onchange="document.getElementById('${id}').value = this.value; this.nextElementSibling.style.backgroundColor = this.value;"><button onclick="document.getElementById('${id}-picker').click()" class="p-3 rounded-xl border shadow-sm w-12 h-12 flex items-center justify-center transition hover:scale-105" style="background: var(--accent); color: white; border-color: rgba(0,0,0,0.1);"><i class="fas fa-palette"></i></button></div>`;
+            const cp = (id, label, def) => `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">${label}</label><div class="flex items-center gap-2 mb-4"><input type="text" id="${id}" value="${def}" placeholder="e.g. #FF0000 or accent" class="flex-1 p-3 rounded-xl border text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><input type="color" id="${id}-picker" class="hidden" onchange="document.getElementById('${id}').value = this.value; this.nextElementSibling.style.backgroundColor = this.value;"><button onclick="document.getElementById('${id}-picker').click()" class="p-3 rounded-xl border shadow-sm w-12 h-12 flex items-center justify-center transition hover:scale-105" style="background: var(--accent); color: white; border-color: rgba(0,0,0,0.1);"><i class="fas fa-palette"></i></button></div>`;
             const ti = (id, label, def, ph="") => `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">${label}</label><input type="text" id="${id}" value="${def}" placeholder="${ph}" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);">`;
+            const taField = (id, label, def, ph="") => `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">${label}</label><textarea id="${id}" placeholder="${ph}" class="w-full p-3 rounded-xl border mb-4 text-sm font-medium shadow-sm min-h-[100px] resize-y" style="background: var(--surface-2); border-color: var(--border);">${def}</textarea>`;
+            const slider = (id, label, min, max, def, step="1") => `
+                <label class="text-[10px] font-black uppercase text-slate-400 block mb-1">${label}: <span id="${id}-val" class="text-accent font-extrabold text-xs ml-1">${def}</span></label>
+                <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${def}" class="w-full mb-4 accent-orange-500 cursor-pointer" oninput="document.getElementById('${id}-val').innerText=this.value;">
+            `;
 
-            if (tag === 'box') { fields = cp('fs-prop-color', 'Color Picker', 'accent') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Border Type</label><select id="fs-prop-type" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="solid">Solid</option><option value="dotted">Dotted</option></select>`; } 
-            else if (tag === 'text') { fields = cp('fs-prop-color', 'Color Picker', 'accent') + styleToggles('fs-prop-type', 'Style Type', ['bold', 'italic', 'underline']); } 
-            else if (tag === 'heading') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Size (1-10)</label><input type="number" id="fs-prop-size" value="1" min="1" max="10" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Align</label><select id="fs-prop-align" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>`; } 
-            else if (tag === 'collapse') { fields = ti('fs-prop-title', 'Heading Title', 'Click to expand') + cp('fs-prop-color', 'Border Color', 'accent'); } 
-            else if (tag === 'collapse2') { fields = ti('fs-prop-title', 'Heading Title', 'Clean Collapse') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Top HR</label><select id="fs-prop-uhr" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="true">True</option><option value="false">False</option></select><label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Bottom HR</label><select id="fs-prop-ehr" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="false">False</option><option value="true">True</option></select>`; } 
-            else if (tag === 'align') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Alignment</label><select id="fs-prop-align" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="center">Center</option><option value="right">Right</option></select>`; } 
-            else if (tag === 'tw') { fields = cp('fs-prop-color', 'Color Picker', 'accent') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">State</label><select id="fs-prop-state" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="active">Active</option><option value="continuous">Continuous</option></select>` + styleToggles('fs-prop-type', 'Style Type', ['bold', 'italic']); } 
-            else if (tag === 'href') { fields = ti('fs-prop-url', 'Link URL', 'https://') + ti('fs-prop-title', 'Link Title', 'Click Here'); } 
+            // === OLD & STRUCTURAL TAGS EXACT MAPPING ===
+            if (tag === 'box') { fields = cp('fs-prop-color', 'Border Color', 'accent') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Border Type</label><select id="fs-prop-type" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="solid">Solid</option><option value="dotted">Dotted</option></select>` + taField('fs-prop-content', 'Box Content', cleanSel || 'Box Content Here'); } 
+            else if (tag === 'text') { 
+                fields = cp('fs-prop-color', 'Color (Default)', 'accent') + 
+                         `<label class="text-[10px] font-black uppercase text-slate-400 flex items-center gap-2 mb-2 mt-4 cursor-pointer select-none">
+                            <input type="checkbox" id="fs-prop-adaptive-toggle" class="w-4 h-4 accent-orange-500 cursor-pointer" onchange="document.getElementById('adaptive-color-fields').style.display = this.checked ? 'block' : 'none'"> Enable Adaptive Colors
+                         </label>
+                         <div id="adaptive-color-fields" style="display:none;" class="pl-3 border-l-2 border-orange-500/30 ml-1 mb-4">
+                            ${cp('fs-prop-color-light', 'Light Mode Color', '')}
+                            ${cp('fs-prop-color-dark', 'Dark Mode Color', '')}
+                         </div>` +
+                         styleToggles('fs-prop-type', 'Style Type', ['bold', 'italic', 'underline']) + taField('fs-prop-content', 'Text Content', cleanSel || 'Styled Text'); 
+            } 
+            else if (tag === 'list') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">List Type</label><select id="fs-prop-list-type" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="bullet">Bullet</option><option value="number">Number</option></select>` + taField('fs-prop-content', 'List Items (One per line)', cleanSel || 'Item 1\nItem 2\nItem 3'); }
+            else if (tag === 'heading') { fields = slider('fs-prop-size', 'Size', 1, 10, 1) + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Align</label><select id="fs-prop-align" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>` + ti('fs-prop-content', 'Heading Text', cleanSel || 'Heading Title'); } 
+            else if (tag === 'collapse') { fields = ti('fs-prop-title', 'Heading Title', 'Click to expand') + cp('fs-prop-color', 'Border Color', 'accent') + taField('fs-prop-content', 'Inner Content', cleanSel || 'Hidden content inside collapse.'); } 
+            else if (tag === 'collapse2') { fields = ti('fs-prop-title', 'Heading Title', 'Clean Collapse') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Top HR</label><select id="fs-prop-uhr" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="true">True</option><option value="false">False</option></select><label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Bottom HR</label><select id="fs-prop-ehr" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="false">False</option><option value="true">True</option></select>` + taField('fs-prop-content', 'Inner Content', cleanSel || 'Hidden content inside collapse.'); } 
+            else if (tag === 'align') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Alignment</label><select id="fs-prop-align" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="center">Center</option><option value="right">Right</option></select>` + taField('fs-prop-content', 'Content to Align', cleanSel || 'Aligned Content'); } 
+            else if (tag === 'tw') { fields = cp('fs-prop-color', 'Color Picker', 'accent') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">State</label><select id="fs-prop-state" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="active">Active</option><option value="continuous">Continuous</option></select>` + styleToggles('fs-prop-type', 'Style Type', ['bold', 'italic', 'underline']) + taField('fs-prop-content', 'Typewriter Text', cleanSel || 'Typing text effect...'); } 
+            else if (tag === 'href') { fields = ti('fs-prop-title', 'Clickable Link Text', cleanSel || 'Click Here') + ti('fs-prop-url', 'Destination URL', 'https://'); } 
             else if (tag === 'image' || tag === 'video' || tag === 'audio') { 
                 sbc.innerHTML = `<div class="p-4 text-center"><i class="fas fa-spinner fa-spin text-2xl mb-2 text-blue-500"></i><p class="text-[10px] font-bold text-slate-400 uppercase">Fetching Media...</p></div>`;
                 const files = await fetchMediaFiles(tag);
                 let optionsHtml = files.length > 0 ? files.map(f => `<option value="${f}">${f}</option>`).join('') : `<option value="">No ${tag}s found in directory</option>`;
-                
                 const sub = getMediaSubPath(); 
                 fields = `<div class="p-3 mb-4 rounded-xl border border-blue-500/30 bg-blue-500/10 text-[10px] font-bold text-blue-500 dark:text-blue-400 leading-relaxed"><i class="fas fa-info-circle mr-1"></i> Path: <br> <span class="font-mono text-[9px] opacity-80">${tag}s/${sub}/</span></div>
                 <label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Select File</label>
-                <select id="fs-prop-filename" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);">
-                    ${optionsHtml}
-                </select>`; 
+                <select id="fs-prop-filename" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);">${optionsHtml}</select>`; 
             } 
+            
+            // === NEW TAGS EXACT MAPPING ===
+            else if (tag === 'card') { fields = taField('fs-prop-content', 'Card Content', cleanSel || 'Card text or components go here.'); }
+            else if (tag === 'grid') { fields = slider('fs-prop-columns', 'Columns', 1, 12, 2) + taField('fs-prop-content', 'Grid Content', cleanSel || '<col>Col 1</col>\n<col>Col 2</col>'); }
+            else if (tag === 'col') { fields = taField('fs-prop-content', 'Column Content', cleanSel || 'Column data here.'); }
+            else if (tag === 'hero') { fields = ti('fs-prop-bg', 'Background Image URL', 'https://example.com/bg.jpg') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Overlay</label><select id="fs-prop-overlay" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="dark">Dark</option><option value="light">Light</option><option value="gradient">Gradient</option></select>` + slider('fs-prop-opacity', 'Overlay Opacity', 0, 1, 0.6, 0.1) + taField('fs-prop-content', 'Hero Content', cleanSel || '<h1>Welcome</h1>'); }
+            else if (tag === 'progress') { fields = slider('fs-prop-val', 'Progress Value %', 0, 100, 75) + cp('fs-prop-color', 'Progress Color', 'accent') + ti('fs-prop-content', 'Progress Label', cleanSel || 'Downloading...'); }
+            else if (tag === 'carousel') { fields = taField('fs-prop-content', 'Carousel Slides (HTML)', cleanSel || '<slide><image>img1.jpg</image></slide>\n<slide><image>img2.jpg</image></slide>'); }
+            else if (tag === 'slide') { fields = taField('fs-prop-content', 'Slide Content', cleanSel || '<image>image.jpg</image>'); }
+            else if (tag === 'btn') { fields = ti('fs-prop-href', 'Link URL', '#') + ti('fs-prop-icon', 'FontAwesome Icon', 'arrow-right') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Type</label><select id="fs-prop-type" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="box">Box</option><option value="default">Default</option><option value="glowing">Glowing</option></select>` + ti('fs-prop-content', 'Button Text', cleanSel || 'Click Me'); }
+            else if (tag === 'author') { fields = ti('fs-prop-avatar', 'Avatar Image URL', 'https://github.com/github.png') + ti('fs-prop-content', 'Author Name/Details', cleanSel || 'John Doe'); }
+            else if (tag === 'stat') { fields = ti('fs-prop-val', 'Stat Value', '10k+') + ti('fs-prop-label', 'Stat Label', 'Downloads') + ti('fs-prop-trend', 'Trend (e.g. +15% or -5%)', '+15%'); } 
+            else if (tag === 'pricing') { fields = ti('fs-prop-name', 'Plan Name', 'Pro') + ti('fs-prop-price', 'Price', '$19') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Recommended Plan?</label><select id="fs-prop-rec" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="true">Yes</option><option value="false">No</option></select>` + ti('fs-prop-feats', 'Features (Comma separated)', 'Feature 1, Feature 2'); } 
+            else if (tag === 'alert') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Alert Type</label><select id="fs-prop-type" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="info">Info</option><option value="success">Success</option><option value="warning">Warning</option><option value="danger">Danger</option></select>` + cp('fs-prop-color', 'Override Accent Color (Optional)', '') + taField('fs-prop-content', 'Alert Message', cleanSel || 'This is an alert message.'); }
+            else if (tag === 'badge') { fields = cp('fs-prop-color', 'Badge Color', 'accent') + ti('fs-prop-content', 'Badge Text', cleanSel || 'New'); }
+            else if (tag === 'embed') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Embed Type</label><select id="fs-prop-type" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="youtube">YouTube</option><option value="spotify">Spotify</option><option value="codepen">CodePen</option></select>` + ti('fs-prop-id', 'Media ID (e.g. dQw4w9WgXcQ)', 'dQw4w9WgXcQ'); } 
+            else if (tag === 'api') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Method</label><select id="fs-prop-method" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="GET">GET</option><option value="POST">POST</option><option value="PUT">PUT</option><option value="DELETE">DELETE</option></select>` + ti('fs-prop-path', 'Endpoint Path', '/users') + taField('fs-prop-content', 'API Description', cleanSel || 'Fetch a list of users.'); }
+            else if (tag === 'editor') { fields = ti('fs-prop-file', 'File Name', 'script.js') + ti('fs-prop-lang', 'Language', 'javascript') + taField('fs-prop-content', 'Code Editor Content', cleanSel || 'console.log("Hello");'); }
+            else if (tag === 'feedback') { fields = ti('fs-prop-title', 'Feedback Title', 'Was this helpful?'); } 
+            else if (tag === 'terminal') { fields = ti('fs-prop-user', 'User/Host String', 'admin@server ~') + taField('fs-prop-content', 'Terminal Commands', cleanSel || 'npm install\nnpm run dev'); }
+            else if (tag === 'props') { fields = ti('fs-prop-name', 'Prop Name', 'id') + ti('fs-prop-type', 'Prop Type', 'string') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Required</label><select id="fs-prop-req" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="true">Yes</option><option value="false">No</option></select>` + taField('fs-prop-content', 'Prop Description', cleanSel || 'Description of the property.'); }
+            else if (tag === 'compare') { fields = ti('fs-prop-before', 'Before Image URL', 'before.jpg') + ti('fs-prop-after', 'After Image URL', 'after.jpg'); } 
+            else if (tag === 'quote') { fields = ti('fs-prop-author', 'Author', 'John Doe') + ti('fs-prop-role', 'Role', 'CEO') + ti('fs-prop-avatar', 'Avatar URL', 'https://github.com/github.png') + taField('fs-prop-content', 'Quote Text', cleanSel || 'This is an inspiring quote.'); }
+            else if (tag === 'tooltip') { fields = ti('fs-prop-text', 'Tooltip Text', 'This is a tooltip') + ti('fs-prop-content', 'Hoverable Text', cleanSel || 'Hover me'); }
+            else if (tag === 'filetree') { fields = `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Tree Type</label><select id="fs-prop-type" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="line">Line</option><option value="dot">Dot</option><option value="only-dot">Only-Dot</option></select>` + taField('fs-prop-content', 'Tree Items (HTML)', cleanSel || '<li>index.html</li>\n<li>style.css</li>'); }
+            else if (tag === 'page') { fields = ti('fs-prop-to', 'Link To', 'filename') + `<label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Style Type</label><select id="fs-prop-type" class="w-full p-3 rounded-xl border mb-4 text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="default">Default</option><option value="box">Box</option><option value="dotted-box">Dotted Box</option><option value="glowing">Glowing</option><option value="floating">Floating</option></select>` + ti('fs-prop-content', 'Page Link Label', cleanSel || 'Next Page'); }
+            else if (tag === 'last') { fields = `<div class="text-[10px] font-black uppercase text-slate-400 mb-4 text-center p-2 rounded border bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10"><i class="fas fa-arrow-right mr-1"></i> Self-closing pagination component.</div>`; }
+
             else if (tag === 'br' || tag === 'hr' || tag === 'symEmpty') { emApplyVisualTag(tag); return; } 
-            else { fields = `<div class="text-xs font-bold text-slate-400 mb-4 text-center">No extra attributes needed.</div>`; }
+            else { fields = `<div class="text-xs font-bold text-slate-400 mb-4 text-center">Tag settings not explicitly mapped.</div>`; }
+            
+            // === UNIVERSAL GLOBAL SETTINGS ===
+            const globalAttrsUI = `
+                <details class="mb-4 rounded-xl border shadow-sm" style="border-color: var(--border); background: var(--surface-1);">
+                    <summary class="p-3 text-[10px] font-black uppercase text-slate-500 cursor-pointer select-none border-b" style="border-color: rgba(0,0,0,0.05);"><i class="fas fa-paint-brush mr-1"></i> Global Styles (Optional)</summary>
+                    <div class="p-3">
+                        ${cp('fs-prop-g-color', 'Override Text Color', '')}
+                        ${cp('fs-prop-g-bg', 'Override Bg Color', '')}
+                        ${styleToggles('fs-prop-g-format', 'Format', ['bold', 'italic', 'underline'])}
+                        <label class="text-[10px] font-black uppercase text-slate-400 block mb-1">Align block</label>
+                        <select id="fs-prop-g-align" class="w-full p-3 rounded-xl border text-sm font-bold shadow-sm" style="background: var(--surface-2); border-color: var(--border);"><option value="">Default</option><option value="left">Left</option><option value="center">Center</option><option value="right">Right</option></select>
+                    </div>
+                </details>
+            `;
+            
+            if (!['br', 'hr', 'symEmpty'].includes(tag)) fields += globalAttrsUI;
             
             sbc.innerHTML = `
                 <div class="p-4 rounded-xl mb-6 shadow-inner" style="background: var(--surface-2); border: 1px solid var(--border);">
-                    <div class="text-[9px] font-black uppercase tracking-[0.2em] mb-2" style="color: var(--accent);">Target Text</div>
-                    <div class="text-sm italic truncate font-medium">${sel}</div>
+                    <div class="text-[9px] font-black uppercase tracking-[0.2em] mb-2" style="color: var(--accent);">${existingData ? 'Editing Element' : 'Target Selection'}</div>
+                    <div class="text-sm italic truncate font-medium">${existingData ? 'Modifying existing properties...' : sel}</div>
                 </div>
                 ${fields}
                 <div class="flex gap-2 mt-2">
-                    <button onclick="emApplyVisualTag('${tag}')" class="flex-1 py-4 rounded-2xl btn-primary shadow-lg tracking-widest text-xs transition hover:scale-[1.02]">APPLY <i class="fas fa-bolt ml-1"></i></button>
+                    <button onclick="emApplyVisualTag('${tag}')" class="flex-1 py-4 rounded-2xl btn-primary shadow-lg tracking-widest text-xs transition hover:scale-[1.02]">${existingData ? 'UPDATE BLOCK' : 'APPLY <i class="fas fa-bolt ml-1"></i>'}</button>
                     <button onclick="cancelEmInsert()" class="px-4 py-4 rounded-2xl shadow-lg tracking-widest text-xs font-bold transition hover:scale-[1.02] border" style="background: var(--surface-2); color: var(--text-dim); border-color: var(--border);">CANCEL</button>
                 </div>
             `;
+
+            // Magic auto-filler block for edits!
+            if (existingData) {
+                setTimeout(() => {
+                    for (const [id, val] of Object.entries(existingData)) {
+                        const el = document.getElementById(id);
+                        if (!el || val === undefined) continue;
+
+                        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)) {
+                            el.value = val;
+                            // Fix color UI boxes
+                            if(el.type === 'text' && el.nextElementSibling && el.nextElementSibling.type === 'color') {
+                                const isHex = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(val.trim());
+                                if(isHex) { el.nextElementSibling.value = val.trim(); el.nextElementSibling.nextElementSibling.style.backgroundColor = val.trim(); }
+                            }
+                            // Fix sliders
+                            if(el.type === 'range') { const valSpan = document.getElementById(id + '-val'); if(valSpan) valSpan.innerText = val; }
+                        }
+                        // Fix style toggle buttons
+                        if (el.tagName === 'DIV' && (id === 'fs-prop-type' || id === 'fs-prop-g-format')) {
+                            const vals = val.split(' ');
+                            el.querySelectorAll('.style-toggle-btn').forEach(btn => {
+                                if (vals.includes(btn.getAttribute('data-val'))) btn.classList.add('active-style');
+                                else btn.classList.remove('active-style');
+                            });
+                        }
+                    }
+                    // Adaptive colors checkbox check
+                    if(existingData['fs-prop-color-light'] || existingData['fs-prop-color-dark']) {
+                        const chk = document.getElementById('fs-prop-adaptive-toggle');
+                        if(chk) { chk.checked = true; document.getElementById('adaptive-color-fields').style.display = 'block'; }
+                    }
+                }, 10);
+            }
         }
 
         function emApplyVisualTag(tag) {
             const ta = document.getElementById('fs-textarea');
-            const sel = currentVisualSelection || "Content";
-            let res = "";
+            let content = ta.value;
 
             const getVal = (id) => { 
                 const el = document.getElementById(id); if(!el) return ''; 
@@ -2180,42 +3042,224 @@
                 return el.value; 
             };
 
-            if(tag === 'box') res = `<box color="${getVal('fs-prop-color')}" type="${getVal('fs-prop-type')}">\n${sel}\n</box>`;
-            else if(tag === 'text') res = `<text color="${getVal('fs-prop-color')}" type="${getVal('fs-prop-type')}">${sel}</text>`;
-            else if(tag === 'heading') res = `<heading size="${getVal('fs-prop-size')}" align="${getVal('fs-prop-align')}">${sel}</heading>`;
-            else if(tag === 'collapse') res = `<collapse heading="${getVal('fs-prop-title')}" color="${getVal('fs-prop-color')}">\n${sel}\n</collapse>`;
-            else if(tag === 'collapse2') res = `<collapse2 heading="${getVal('fs-prop-title')}" unextendedhr="${getVal('fs-prop-uhr')}" extendedhr="${getVal('fs-prop-ehr')}">\n${sel}\n</collapse2>`;
-            else if(tag === 'align') res = `<align type="${getVal('fs-prop-align')}">\n${sel}\n</align>`;
-            else if(tag === 'tw') res = `<tw state="${getVal('fs-prop-state')}" color="${getVal('fs-prop-color')}" type="${getVal('fs-prop-type')}">${sel}</tw>`;
-            else if(tag === 'href') res = `<href heading="${getVal('fs-prop-title')}">${getVal('fs-prop-url')}</href>`;
-            else if(tag === 'list') res = `<list type="bullet">\n${sel}\n</list>`;
-            else if(tag === 'code') res = `<code>\n${sel}\n</code>`;
-            else if(tag === 'image') res = `<image>${getVal('fs-prop-filename')}</image>`;
-            else if(tag === 'video') res = `<video>${getVal('fs-prop-filename')}</video>`;
-            else if(tag === 'audio') res = `<audio>${getVal('fs-prop-filename')}</audio>`;
-            else if(tag === 'br') res = `<br>`;
-            else if(tag === 'hr') res = `<hr>`;
-            else if(tag === 'symEmpty') res = `<sym>\n${sel === 'Content' ? '' : sel}\n</sym>`;
-            else res = `<${tag}>${sel}</${tag}>`;
+            // GRAB THE UNIVERSAL GLOBAL ATTRIBUTES
+            let gAttr = "";
+            if (getVal('fs-prop-g-color')) gAttr += ` color="${getVal('fs-prop-g-color')}"`;
+            if (getVal('fs-prop-g-bg')) gAttr += ` bg-color="${getVal('fs-prop-g-bg')}"`;
+            if (getVal('fs-prop-g-format')) gAttr += ` format="${getVal('fs-prop-g-format')}"`;
+            if (getVal('fs-prop-g-align')) gAttr += ` align="${getVal('fs-prop-g-align')}"`;
 
-            if (sel !== "Content" && ta.value.includes(sel)) { ta.value = ta.value.replace(sel, res); } 
-            else { ta.value += `\n${res}`; }
-            
+            const buildTag = (t, selTxt) => {
+                let finalContent = selTxt;
+                const customContentEl = document.getElementById('fs-prop-content');
+                if (customContentEl) finalContent = customContentEl.value;
+
+                if(t === 'box') return `<box color="${getVal('fs-prop-color')}" type="${getVal('fs-prop-type')}"${gAttr}>\n${finalContent}\n</box>`;
+                if(t === 'text') {
+                    let attrs = `color="${getVal('fs-prop-color')}"`;
+                    const adaptiveToggle = document.getElementById('fs-prop-adaptive-toggle');
+                    if(adaptiveToggle && adaptiveToggle.checked) {
+                        if(getVal('fs-prop-color-light')) attrs += ` color-light="${getVal('fs-prop-color-light')}"`;
+                        if(getVal('fs-prop-color-dark')) attrs += ` color-dark="${getVal('fs-prop-color-dark')}"`;
+                    }
+                    if(getVal('fs-prop-type')) attrs += ` type="${getVal('fs-prop-type')}"`;
+                    return `<text ${attrs}${gAttr}>${finalContent.trim()}</text>`; 
+                }
+                if(t === 'heading') return `<heading size="${getVal('fs-prop-size')}" align="${getVal('fs-prop-align')}"${gAttr}>${finalContent}</heading>`;
+                if(t === 'collapse') return `<collapse heading="${getVal('fs-prop-title')}" color="${getVal('fs-prop-color')}"${gAttr}>\n${finalContent}\n</collapse>`;
+                if(t === 'collapse2') return `<collapse2 heading="${getVal('fs-prop-title')}" unextendedhr="${getVal('fs-prop-uhr')}" extendedhr="${getVal('fs-prop-ehr')}"${gAttr}>\n${finalContent}\n</collapse2>`;
+                if(t === 'align') return `<align type="${getVal('fs-prop-align')}"${gAttr}>\n${finalContent}\n</align>`;
+                if(t === 'tw') return `<tw state="${getVal('fs-prop-state')}" color="${getVal('fs-prop-color')}" type="${getVal('fs-prop-type')}"${gAttr}>${finalContent.trim()}</tw>`; 
+                if(t === 'href') return `<href heading="${getVal('fs-prop-title')}"${gAttr}>${getVal('fs-prop-url')}</href>`;
+                if(t === 'list') return `<list type="${getVal('fs-prop-list-type') || 'bullet'}"${gAttr}>\n${finalContent}\n</list>`;
+                if(t === 'code') return `<code${gAttr}>\n${finalContent}\n</code>`;
+                if(t === 'image') return `<image${gAttr}>${getVal('fs-prop-filename')}</image>`;
+                if(t === 'video') return `<video${gAttr}>${getVal('fs-prop-filename')}</video>`;
+                if(t === 'audio') return `<audio${gAttr}>${getVal('fs-prop-filename')}</audio>`;
+                
+                // === NEW TAGS FULLY MAPPED TO ENGINE LOGIC ===
+                if(t === 'card') return `<card${gAttr}>\n${finalContent}\n</card>`;
+                if(t === 'grid') return `<grid columns="${getVal('fs-prop-columns') || 2}"${gAttr}>\n${finalContent}\n</grid>`;
+                if(t === 'col') return `<col${gAttr}>\n${finalContent}\n</col>`;
+                if(t === 'hero') return `<hero bg="${getVal('fs-prop-bg') || 'https://example.com/bg.jpg'}" overlay="${getVal('fs-prop-overlay') || 'dark'}" opacity="${getVal('fs-prop-opacity') || '0.6'}"${gAttr}>\n${finalContent}\n</hero>`;
+                if(t === 'api') return `<api method="${getVal('fs-prop-method') || 'GET'}" path="${getVal('fs-prop-path') || '/users'}"${gAttr}>\n${finalContent}\n</api>`;
+                if(t === 'editor') return `<editor file="${getVal('fs-prop-file') || 'script.js'}" lang="${getVal('fs-prop-lang') || 'javascript'}"${gAttr}>\n${finalContent}\n</editor>`;
+                if(t === 'progress') return `<progress value="${getVal('fs-prop-val') || 75}" color="${getVal('fs-prop-color') || 'accent'}"${gAttr}>${finalContent}</progress>`;
+                if(t === 'carousel') return `<carousel${gAttr}>\n${finalContent}\n</carousel>`;
+                if(t === 'slide') return `<slide${gAttr}>\n${finalContent}\n</slide>`;
+                if(t === 'btn') return `<btn href="${getVal('fs-prop-href') || '#'}" icon="${getVal('fs-prop-icon') || 'arrow-right'}" type="${getVal('fs-prop-type') || 'box'}"${gAttr}>${finalContent}</btn>`;
+                if(t === 'author') return `<author avatar="${getVal('fs-prop-avatar') || 'https://github.com/github.png'}"${gAttr}>${finalContent}</author>`;
+                if(t === 'feedback') return `<feedback title="${getVal('fs-prop-title') || 'Was this helpful?'}"${gAttr}></feedback>`;
+                if(t === 'stat') return `<stat value="${getVal('fs-prop-val') || '10k+'}" label="${getVal('fs-prop-label') || 'Downloads'}" trend="${getVal('fs-prop-trend') || '+15%'}"${gAttr}></stat>`;
+                if(t === 'pricing') return `<pricing name="${getVal('fs-prop-name') || 'Pro'}" price="${getVal('fs-prop-price') || '$19'}" recommended="${getVal('fs-prop-rec') || 'true'}" features="${getVal('fs-prop-feats') || 'Feature 1'}"${gAttr}></pricing>`;
+                if(t === 'terminal') return `<terminal user="${getVal('fs-prop-user') || 'admin@server ~'}"${gAttr}>\n${finalContent}\n</terminal>`;
+                if(t === 'props') return `<props name="${getVal('fs-prop-name') || 'id'}" type="${getVal('fs-prop-type') || 'string'}" required="${getVal('fs-prop-req') || 'true'}"${gAttr}>\n${finalContent}\n</props>`;
+                if(t === 'diff') return `<diff${gAttr}>\n${finalContent}\n</diff>`;
+                if(t === 'compare') return `<compare before="${getVal('fs-prop-before') || 'before.jpg'}" after="${getVal('fs-prop-after') || 'after.jpg'}"${gAttr}></compare>`;
+                if(t === 'checklist') return `<checklist${gAttr}>\n${finalContent}\n</checklist>`;
+                if(t === 'quote') return `<quote author="${getVal('fs-prop-author') || 'John Doe'}" role="${getVal('fs-prop-role') || 'CEO'}" avatar="${getVal('fs-prop-avatar') || 'https://github.com/github.png'}"${gAttr}>\n${finalContent}\n</quote>`;
+                if(t === 'gallery') return `<gallery${gAttr}>\n${finalContent}\n</gallery>`;
+                if(t === 'search') return `<search${gAttr}></search>`;
+                if(t === 'tabs') return `<tabs${gAttr}>\n${finalContent}\n</tabs>`;
+                if(t === 'steps') return `<steps${gAttr}>\n${finalContent}\n</steps>`;
+                if(t === 'tooltip') return `<tooltip text="${getVal('fs-prop-text') || 'This is a tooltip'}"${gAttr}>\n${finalContent}\n</tooltip>`;
+                if(t === 'key' || t === 'kbd') return `<key${gAttr}>${finalContent}</key>`;
+                if(t === 'badge') return `<badge color="${getVal('fs-prop-color') || 'accent'}"${gAttr}>${finalContent}</badge>`;
+                
+                let alertColor = getVal('fs-prop-color') ? ` color="${getVal('fs-prop-color')}"` : '';
+                if(t === 'alert') return `<alert type="${getVal('fs-prop-type') || 'info'}"${alertColor}${gAttr}>\n${finalContent}\n</alert>`;
+                
+                if(t === 'embed') return `<embed type="${getVal('fs-prop-type') || 'youtube'}" id="${getVal('fs-prop-id') || 'dQw4w9WgXcQ'}"${gAttr}></embed>`;
+                if(t === 'filetree') return `<filetree type="${getVal('fs-prop-type') || 'line'}"${gAttr}>\n${finalContent}\n</filetree>`;
+                if(t === 'page') return `<page to="${getVal('fs-prop-to') || 'filename'}" type="${getVal('fs-prop-type') || 'default'}"${gAttr}>${finalContent}</page>`;
+                if(t === 'last') return `<last${gAttr}></last>`;
+
+                if(t === 'br') return `<br>`;
+                if(t === 'hr') return `<hr>`;
+                if(t === 'symEmpty') return `<sym>${finalContent === 'Content' ? '' : finalContent.trim()}</sym>`;
+                return `<${t}${gAttr}>${finalContent}</${t}>`;
+            };
+
+            // IF WE ARE IN EDIT MODE: REPLACE INSTEAD OF APPEND
+            if (window.editingOriginalRaw) {
+                let res = buildTag(tag, ""); 
+                ta.value = ta.value.replace(window.editingOriginalRaw, res);
+                window.editingOriginalRaw = null; 
+
+                // Reset selection variables just in case
+                window.emSelectedItems = [];
+                currentVisualSelection = "";
+            } else {
+                // NORMAL WRAPPING/INSERTING LOGIC
+                if (window.emSelectedItems && window.emSelectedItems.length > 0) {
+                    let firstIdx = content.length;
+                    window.emSelectedItems.forEach(item => {
+                        let idx = content.indexOf(item);
+                        if (idx !== -1 && idx < firstIdx) firstIdx = idx;
+                    });
+                    
+                    if (firstIdx === content.length) firstIdx = 0; 
+                    window.emSelectedItems.forEach(item => { content = content.replace(item, ""); });
+                    content = content.replace(/\n{3,}/g, '\n\n'); 
+
+                    const isInline = ['text','tw','sym','href','symEmpty','key','kbd','badge'].includes(tag);
+                    const joiner = isInline ? ' ' : '\n\n';
+                    const selStr = window.emSelectedItems.join(joiner);
+                    
+                    let res = buildTag(tag, selStr);
+                    ta.value = content.substring(0, firstIdx) + res + content.substring(firstIdx);
+                    
+                    window.emSelectedItems = [];
+                    currentVisualSelection = "";
+                    
+                } else {
+                    const sel = currentVisualSelection || "Content";
+                    let res = buildTag(tag, sel);
+                    
+                    const standaloneTags = ['image', 'video', 'audio', 'br', 'hr', 'symEmpty'];
+
+                    if (standaloneTags.includes(tag)) {
+                        ta.value = ta.value.trimEnd() + `\n\n${res}`;
+                    } else if (sel !== "Content" && ta.value.includes(sel)) { 
+                        ta.value = ta.value.replace(sel, res); 
+                    } else { 
+                        ta.value += `\n${res}`; 
+                    }
+                }
+            }
+
+            // Close the Sidebar and Render Preview
             document.getElementById('fs-sidebar').classList.add('hidden'); document.getElementById('fs-sidebar').classList.remove('flex');
             document.getElementById('fs-sidebar-content').innerHTML = `<div class="p-4 rounded-xl border border-dashed text-center text-xs font-bold text-slate-400" style="border-color: var(--border);">Select text in the preview and click a tag above to format.</div>`;
             renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
         }
 
-        function removeVisualTag(btn, encodedRaw) {
+
+
+
+
+        window.removeVisualTag = function(btn, encodedRaw) {
             event.stopPropagation();
             const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
             const ta = document.getElementById('fs-textarea');
-            let inner = rawTag.replace(/^<[a-zA-Z0-9]+[^>]*>([\s\S]*?)<\/[a-zA-Z0-9]+>$/, '$1');
-            if (inner === rawTag) { inner = ""; }
-            ta.value = ta.value.replace(rawTag, inner.trim());
+            
+            if (/^<(image|video|audio|br|hr|symEmpty|last|search|feedback|embed)[^>]*>/.test(rawTag)) {
+                ta.value = ta.value.replace(rawTag, "");
+            } else {
+                let inner = rawTag.replace(/^<[a-zA-Z0-9]+[^>]*>([\s\S]*?)<\/[a-zA-Z0-9]+>$/, '$1');
+                if (inner === rawTag) { inner = ""; }
+                ta.value = ta.value.replace(rawTag, inner);
+            }
             renderPreviewEngine(ta.value, document.getElementById('fs-preview-box'), true);
-        }
+        };
+        
+                window.startInlineEdit = function(btnEl, encodedRaw) {
+            event.stopPropagation();
+            const wrapper = btnEl.closest('.preview-removable');
+            const contentWrap = wrapper.querySelector('.p3-content-wrap');
+            if(wrapper.classList.contains('is-editing')) return;
 
+            const rawTag = decodeURIComponent(escape(atob(encodedRaw)));
+
+            let prefix = ""; let innerText = rawTag; let suffix = "";
+
+            // Smart Regex to split outer structural tags from inner text
+            const match = rawTag.match(/^(<[a-zA-Z0-9]+[^>]*>)([\s\S]*?)(<\/[a-zA-Z0-9]+>)$/);
+            if (match) {
+                prefix = match[1]; innerText = match[2]; suffix = match[3];
+            } else if (rawTag.match(/^<[a-zA-Z0-9]+[^>]*>$/)) {
+                alert("Self-closing blocks (like images or embeds) cannot be text-edited here. Modify them in Phase 1 or delete/re-insert in Phase 2.");
+                return;
+            }
+
+            wrapper.classList.add('is-editing');
+            wrapper.dataset.prefix = btoa(unescape(encodeURIComponent(prefix)));
+            wrapper.dataset.suffix = btoa(unescape(encodeURIComponent(suffix)));
+            wrapper.dataset.origHtml = btoa(unescape(encodeURIComponent(contentWrap.innerHTML)));
+
+            const ta = document.createElement('textarea');
+            ta.className = "w-full p-4 rounded-xl border text-sm font-medium outline-none resize-y min-h-[120px] shadow-inner mt-2";
+            ta.style.background = "var(--bg-base)"; ta.style.color = "var(--text-main)"; ta.style.borderColor = "var(--accent)";
+            ta.value = innerText;
+
+            const controls = document.createElement('div');
+            controls.className = "flex gap-2 mt-2 mb-4 justify-end";
+            controls.innerHTML = `
+                <button class="px-5 py-2 rounded-xl text-xs font-bold text-white shadow-md transition-transform hover:scale-105" style="background: var(--accent);" onclick="saveInlineEdit(this, '${encodedRaw}')">Apply Changes</button>
+                <button class="px-5 py-2 rounded-xl text-xs font-bold border transition-colors hover:bg-slate-100 dark:hover:bg-white/5" style="border-color: var(--border); color: var(--text-main);" onclick="cancelInlineEdit(this)">Cancel</button>
+            `;
+
+            contentWrap.innerHTML = "";
+            contentWrap.appendChild(ta);
+            contentWrap.appendChild(controls);
+            ta.focus();
+        };
+
+        window.cancelInlineEdit = function(btnEl) {
+            event.stopPropagation();
+            const wrapper = btnEl.closest('.preview-removable');
+            const contentWrap = wrapper.querySelector('.p3-content-wrap');
+            contentWrap.innerHTML = decodeURIComponent(escape(atob(wrapper.dataset.origHtml)));
+            wrapper.classList.remove('is-editing');
+        };
+
+        window.saveInlineEdit = function(btnEl, encodedRaw) {
+            event.stopPropagation();
+            const wrapper = btnEl.closest('.preview-removable');
+            const newInner = wrapper.querySelector('textarea').value;
+
+            const prefix = decodeURIComponent(escape(atob(wrapper.dataset.prefix)));
+            const suffix = decodeURIComponent(escape(atob(wrapper.dataset.suffix)));
+            const oldRaw = decodeURIComponent(escape(atob(encodedRaw)));
+
+            // Reconstruct perfectly preserving the user's outer tag configuration
+            const newRaw = prefix + newInner + suffix;
+
+            const mainTa = document.getElementById('fs-textarea');
+            mainTa.value = mainTa.value.replace(oldRaw, newRaw);
+
+            renderPreviewEngine(mainTa.value, document.getElementById('fs-preview-box'), true);
+        };
     </script>
 </body>
 </html>
