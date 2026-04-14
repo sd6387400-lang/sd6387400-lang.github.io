@@ -1,0 +1,2 @@
+dropdown="Get started"=1=closed
+dropdown="Dual Boot"=2=closed
