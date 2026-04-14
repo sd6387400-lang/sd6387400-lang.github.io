@@ -1,6 +1,0 @@
-place="Connecting WiFi"=1
-place="Particianing"=2
-place="Test"=3
-place="newfile"=4
-place="newfile.txt"=5
-place="organise"=6
