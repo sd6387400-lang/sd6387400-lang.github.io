@@ -1,3 +1,0 @@
-# Oh my posh
-
-Start typing here...
