@@ -36,9 +36,17 @@
 
 <box color="accent2" type="solid">
   <tabs>
-    <tab name="Hello">
-    
-    </tab>
+    <tab name="Fedora Linux">
+    <terminal user="Fedora Linux"> sudo dnf install gparted
+</terminal></tab>
+      <tab name="Debian Based">
+        <terminal user="Ubantu/Debian Based Linux">
+          sudo apt install gparted
+      </terminal></tab>
+    <tab name="Arch Linux">
+      <terminal user="Arch/Arch Based Linux">
+                sudo pacman -S gparted
+      </terminal></tab>
   </tabs>
 
   <list type="number">
