@@ -1,34 +1,63 @@
-<heading size="1" align="center">Particianing</heading><hr><br>
+<heading size="1" align="center">Disk Partitioning</heading>
+<hr>
+<br>
 
-Particianing is Only importent When You Are Going to use Dual Boot setup OtherWise not needed.
-<box color="#006494" type="solid">
-<heading size="1" align="center">Windows</heading>
-Doing it in Windows is streightforward.
-<list type="bullet">
-Press Win + X button on your keyboard
-Select Disk Management
-Select The Partician Which You wanted to shirink to give it to Arch Linux
-Right Click on Partician > Shink Volume
-Follow the steps to shrink the partician For Arch Linux
-Dont make unallocated space Partician Keep It unallocated
-</list></box><hr>
+<box color="accent" type="dotted">
+  <heading size="5" align="center">⚠️ Single Boot Users, Stop Here!</heading>
+  <align type="center">
+    <text color="dim">If you are planning to wipe your entire drive and <strong>only</strong> use Arch Linux, you can skip this section entirely. We will format the drive from inside the Arch ISO later.</text>
+  </align>
+  <br>
+  <align type="center">
+    <text color="text" type="bold">This section is strictly for making space on a Dual Boot system.</text>
+  </align>
+</box>
+<br><br>
 
+<heading size="2" align="left">Shrinking on Windows</heading>
+<text color="dim">Using the built-in Disk Management tool.</text>
+<br><br>
 
-<box color="#006495" type="solid">
-<heading size="1" align="center">Linux</heading>
+<box color="accent1" type="solid">
+  <list type="number">
+    Press <kbd>Win</kbd> + <kbd>X</kbd> on your keyboard.
+    Select <text color="accent1" type="bold">Disk Management</text>.
+    Locate and select the partition you want to shrink to make room for Arch.
+    Right-click on the partition and choose <text color="bg" bg-color="accent1" type="bold">Shrink Volume</text>.
+    Follow the prompts to shrink the partition.
+    Leave the newly created space as <text color="accent1" type="bold">Unallocated</text> — do not format it!
+  </list>
+</box>
+<br><br>
 
-<collapse heading="Commands According to few distos" color="white" bg-color="#1a1c1e"><text color="white" type="bold">
-Arch Linux - sudo pacman -S gparted<br>
-Fedora Linux - sudo dnf install gparted<br>
-Debian/Ubantu - sudo apt install gparted<br>
-</text></collapse>
+<heading size="2" align="left">Shrinking on Linux</heading>
+<text color="dim">Using the GParted graphical utility.</text>
+<br><br>
 
-<list type="bullets">
-Install GParted Application do according to your linux distro.
-Open GParted app
-select Partician You want to give to Arch Linux
-Right click on it and click Resize 
-Resize accordingly to give space to Arch Linux
-</list>
-</box><hr><br>
-<align type="Center">When you successfully particianed your drive move to next steps.</align>
+<box color="accent2" type="solid">
+  <collapse2 heading="Show Installation Commands" unextendedhr="true" extendedhr="true">
+<code># Arch Linux
+sudo pacman -S gparted
+
+# Fedora Linux
+sudo dnf install gparted
+
+# Debian/Ubuntu
+sudo apt install gparted</code>
+  </collapse2>
+
+  <list type="number">
+    Open the <text color="accent2" type="bold">GParted</text> application.
+    Select the partition you wish to shrink.
+    Right-click it and select <text color="bg" bg-color="accent2" type="bold">Resize/Move</text>.
+    Adjust the size to leave unallocated space for Arch Linux.
+    Click the <text color="accent3" type="bold">Green Checkmark</text> at the top to apply all operations.
+  </list>
+</box>
+<br>
+<hr>
+<br>
+
+<align type="center">
+  <tw state="continuous" color="accent" type="bold">Space created? Awesome. Let's move on to the actual installation!</tw>
+</align>
