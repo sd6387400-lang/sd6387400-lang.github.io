@@ -27,10 +27,9 @@ Arch Linux is built upon five core principles. It emphasizes simplicity, moderni
   </col>
 </grid>
 
-<grid columns="3">
+<grid columns="2">
   <col><stat value="13K+" label="Official Packages" trend="+ Active"></stat></col>
   <col><stat value="85K+" label="AUR Packages" trend="+ Community"></stat></col>
-  <col><stat value="100%" label="Customizable" trend="DIY OS"></stat></col>
 </grid>
 
 <hr>
