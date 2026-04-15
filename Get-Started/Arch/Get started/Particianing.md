@@ -57,10 +57,7 @@
     Click the <text color="accent3" type="bold">Green Checkmark</text> at the top to apply all operations.
   </list>
 </box>
-<br>
 <hr>
-<br>
-
 <align type="center">
-  <tw state="continuous" color="accent" type="bold">Space created? Awesome. Let's move on to the actual installation!</tw>
+  <tw state="active" color="accent" type="bold">Space created? Awesome. Let's move on to the actual installation!</tw>
 </align>
