@@ -35,16 +35,11 @@
 <br><br>
 
 <box color="accent2" type="solid">
-  <collapse2 heading="Show Installation Commands" unextendedhr="true" extendedhr="true">
-<code># Arch Linux
-sudo pacman -S gparted
-
-# Fedora Linux
-sudo dnf install gparted
-
-# Debian/Ubuntu
-sudo apt install gparted</code>
-  </collapse2>
+  <tabs>
+    <tab name="Hello">
+    
+    </tab>
+  </tabs>
 
   <list type="number">
     Open the <text color="accent2" type="bold">GParted</text> application.
