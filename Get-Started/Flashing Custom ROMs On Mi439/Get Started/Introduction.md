@@ -1,3 +1,1 @@
 # Introduction
-
-Start typing here...
