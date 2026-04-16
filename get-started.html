@@ -767,6 +767,53 @@
             -ms-user-select: none;
             user-select: none;
         }
+        
+        /* ── Dynamic Sidebar Title ── */
+        .sidebar-header-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            transition: all 0.5s var(--spring);
+            opacity: 0;
+            transform: translateX(-14px);
+            animation: slideRight 0.6s var(--m3-decel) 0.1s forwards;
+        }
+        
+        .sidebar-header-title .title-accent {
+            color: var(--accent);
+        }
+        
+        /* Shrunk state when inside a folder */
+        body.in-reader .sidebar-header-title {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+            opacity: 0.9;
+        }
+        
+        /* Hide massive home button on main page, animate it in when opening a folder */
+        body:not(.in-reader) .nav-actions {
+            display: none !important;
+        }
+        
+        body.in-reader .nav-actions {
+            animation: cardEntrance 0.5s var(--spring) forwards;
+        }
+        
+        /* 🔥 Fix Dark Mode Search Bar Merging */
+        body.dark-mode .search-input {
+            background: transparent !important; /* Removes the awkward background from the text area */
+        }
+        
+        body.dark-mode .search-input-wrap {
+            background: transparent; /* Makes the whole bar blend into the sidebar */
+            border-color: rgba(255, 255, 255, 0.1); /* Keeps a beautiful, subtle border */
+        }
+
+
 
 
     </style>
@@ -922,6 +969,10 @@
     </div>
 
     <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header-title">
+            Get <span class="title-accent">Started</span>
+        </div>
+        
         <div class="search-container">
             <div class="search-input-wrap">
                 <button class="search-icon-btn disabled" id="search-icon-btn" onclick="toggleSearchPopup(event)"><i data-lucide="search" size="18"></i></button>
@@ -930,10 +981,10 @@
         </div>
 
         <div class="nav-actions">
-            <div class="back-pill" onclick="window.location.hash=''; location.reload();"><i data-lucide="home" size="17"></i> Home</div>
+            <div class="back-pill" onclick="window.location.hash=''; location.reload();"><i data-lucide="arrow-big-left" size="17"></i> Back</div>
         </div>
 
-        <div class="sidebar-link static-link" onclick="window.location.href='index.html'"><i data-lucide="layout-dashboard" size="17"></i> Main</div>
+        <div class="sidebar-link static-link" onclick="window.location.href='index.html'"><i data-lucide="home" size="17"></i> Home</div>
         <div class="sidebar-link static-link" onclick="window.location.href='creations.html'"><i data-lucide="sparkles" size="17"></i> Creations</div>
         <div class="sidebar-link static-link" id="customise-btn" onclick="togglePalettePanel()"><i data-lucide="palette" size="17"></i> Customise</div>
 
@@ -1523,13 +1574,20 @@ function highlightInTextNodes(node, query) {
 
 function runSearch() {
     const q = document.getElementById('node-search').value.toLowerCase().trim();
+    
+    // --- SCENARIO 1: We are on the Main Page ---
     if(document.getElementById('picker-view').style.display !== 'none') {
         document.querySelectorAll('.repo-card').forEach(card => { 
             card.style.display = card.querySelector('.repo-name').innerText.toLowerCase().includes(q) ? '' : 'none'; 
         });
+        document.querySelectorAll('.sidebar-folder-item').forEach(folder => {
+            folder.style.display = folder.innerText.toLowerCase().includes(q) ? '' : 'none';
+        });
         return;
     }
     
+    // --- SCENARIO 2: We are inside a folder (Reading Mode) ---
+    // Reset the sidebar to be fully visible before searching
     document.querySelectorAll('.sidebar-link:not(.static-link)').forEach(l => { l.style.display=''; removeHighlights(l); });
     document.querySelectorAll('.sidebar-dropdown').forEach(d => { d.style.display = ''; d.classList.remove('active'); });
     
@@ -1537,6 +1595,7 @@ function runSearch() {
     if (originalMarkdownContent) { render.innerHTML = originalMarkdownContent; lucide.createIcons(); initTypewriters(); }
     if(!q) return;
 
+    // Filter sidebar ONLY if we are in Dropdowns, Files, or Combined mode
     if (searchMode === 'dropdowns' || searchMode === 'files' || searchMode === 'combined') {
         document.querySelectorAll('.sidebar-dropdown').forEach(dd => {
             const trigText = dd.querySelector('.dropdown-trigger span')?.innerText.toLowerCase() || '';
@@ -1552,14 +1611,14 @@ function runSearch() {
         });
     } 
     
-    if (searchMode === 'text') {
-        document.querySelectorAll('.sidebar-dropdown').forEach(dd => dd.style.display = 'none');
-        document.querySelectorAll('#sidebar-links > .sidebar-link:not(.static-link)').forEach(l => { if(!l.classList.contains('active')) l.style.display = 'none'; });
+    // 🔥 FIX: I completely removed the code block here that was hiding the sidebar when searchMode === 'text'. 
+    // Now, if you are in Text mode, it skips the filtering above and leaves the sidebar alone!
+
+    // Highlight the text inside the document
+    if (searchMode === 'text' || searchMode === 'combined') { 
+        if (originalMarkdownContent) highlightInTextNodes(render, q); 
     }
-
-    if (searchMode === 'text' || searchMode === 'combined') { if (originalMarkdownContent) highlightInTextNodes(render, q); }
 }
-
 function highlightText(el, q) {
     const span = el.querySelector('.link-text'); if(!span) return;
     const text = span.innerText; const idx = text.toLowerCase().indexOf(q); if(idx < 0) return; 
@@ -1646,16 +1705,25 @@ function handleHashNavigation() {
     const searchBtn = document.getElementById('search-icon-btn');
     
     if(!raw) { 
+        // --- WE ARE ON THE MAIN PAGE ---
         document.getElementById('picker-view').style.display = 'block'; 
         document.getElementById('reader-view').style.display = 'none'; 
         document.getElementById('sidebar-folders-home').style.display = 'block'; 
         searchBtn.classList.add('disabled'); 
         currentFolder = null; 
+        
+        // 🔥 NEW: Tells the CSS to make the title BIG and hide the Home button
+        document.body.classList.remove('in-reader'); 
+        
         return; 
     }
     
+    // --- WE ARE INSIDE A FOLDER / READING MODE ---
     document.getElementById('sidebar-folders-home').style.display = 'none'; 
     searchBtn.classList.remove('disabled');
+    
+    // 🔥 NEW: Tells the CSS to shrink the title and animate the Home button in
+    document.body.classList.add('in-reader'); 
     
     const parts = raw.split('~'); 
     const folderName = parts[0]; 
@@ -1670,6 +1738,7 @@ function handleHashNavigation() {
         loadProject(`${BASE}/${folderName}`, targetFile); 
     }
 }
+
 
 window.openFileByKey = function(key) { 
     let e = fileItemMap[key]; 
