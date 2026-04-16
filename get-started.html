@@ -2231,12 +2231,17 @@ async function fetchContent(url, localPath, el, skipHash = false) {
             return `<div ${applyGlobalAttrs(attrs, 'collapse2-container')}><details class="clean-collapse"><summary><span>${h}</span><i data-lucide="chevron-down" size="18" style="opacity:0.5"></i></summary><div class="clean-anim-wrap"><div class="clean-anim-inner"><div class="clean-body">${con}${exhr==='true'?'<hr class="collapse-hr">':''}</div></div></div></details>${uhr==='true'?'<hr class="collapse-hr">':''}</div>`; 
         });
         
-        // 🔥 TW tag setup for scroll detection
+        // 🔥 TW tag setup for scroll detection (Now Markdown/HTML Aware!)
         text = text.replace(/<tw([^>]*)>([\s\S]*?)<\/tw>/g,(m,attrs,con)=>{ 
             const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
             const st = ga('state') || 'continuous';
-            return `<span ${applyGlobalAttrs(attrs, 'tw-text tw-cursor')} data-state="${st}" data-fulltext="${con.replace(/"/g,'&quot;')}"></span>`; 
+            // Parse markdown inline so bold, italic, etc. become actual HTML tags
+            const parsed = marked.parseInline(con.trim());
+            // Store as &quot; so it doesn't break the HTML attribute
+            return `<span ${applyGlobalAttrs(attrs, 'tw-text tw-cursor')} data-state="${st}" data-fulltext="${parsed.replace(/"/g,'&quot;')}"></span>`; 
         });
+
+
         
         text = text.replace(/<href([^>]*)>([\s\S]*?)<\/href>/g,(m,attrs,l)=>{
             const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
@@ -2295,6 +2300,7 @@ function initTypewriters() {
                 if(el.dataset.typed === 'true') return; 
                 el.dataset.typed = 'true';
                 
+                // Read the text and unescape the quotes
                 const fullText = (el.getAttribute('data-fulltext') || '').replace(/&quot;/g, '"');
                 const state = el.dataset.state || 'once';
                 const isTerminal = el.classList.contains('tw-terminal');
@@ -2304,22 +2310,54 @@ function initTypewriters() {
                 
                 function type() {
                     if(i < fullText.length) {
-                        let char = fullText.charAt(i);
-                        if (isTerminal && char === '\n') {
-                            el.innerHTML += '<br><span class="term-prompt">$</span> ';
-                        } else if (char === '<') {
-                            el.innerHTML += '&lt;';
-                        } else if (char === '>') {
-                            el.innerHTML += '&gt;';
+                        if (isTerminal) {
+                            // Terminal Logic
+                            let char = fullText.charAt(i);
+                            if (char === '\n') {
+                                el.innerHTML += '<br><span class="term-prompt">$</span> ';
+                            } else if (char === '<') {
+                                el.innerHTML += '&lt;';
+                            } else if (char === '>') {
+                                el.innerHTML += '&gt;';
+                            } else {
+                                el.innerHTML += char;
+                            }
+                            i++;
+                            setTimeout(type, 25);
                         } else {
-                            el.innerHTML += char;
+                            // HTML-aware Typing Logic (Handles Bold/Italic seamlessly)
+                            if (fullText.charAt(i) === '<') {
+                                let tagEnd = fullText.indexOf('>', i);
+                                if (tagEnd !== -1) i = tagEnd + 1; // Skip the whole HTML tag instantly
+                                else i++;
+                            } else {
+                                i++;
+                            }
+                            el.innerHTML = fullText.substring(0, i);
+                            setTimeout(type, 78);
                         }
-                        i++;
-                        setTimeout(type, isTerminal ? 25 : 78);
                     } else if(state === 'continuous' && !isTerminal) {
-                        setTimeout(() => { el.innerHTML = ''; i = 0; el.dataset.typed = ''; type(); }, 2200);
+                        setTimeout(erase, 2000); // Stay for 2 seconds before deleting
                     }
                 }
+
+                function erase() {
+                    if(i > 0) {
+                        // HTML-aware erasing
+                        if (fullText.charAt(i - 1) === '>') {
+                            let tagStart = fullText.lastIndexOf('<', i - 1);
+                            if (tagStart !== -1) i = tagStart; // Skip the whole HTML tag when going backwards
+                            else i--;
+                        } else {
+                            i--;
+                        }
+                        el.innerHTML = fullText.substring(0, i);
+                        setTimeout(erase, 30); // Fast backspace speed
+                    } else {
+                        setTimeout(type, 500); // 0.5 second delay before re-typing
+                    }
+                }
+
                 type();
             }
         });
@@ -2327,6 +2365,7 @@ function initTypewriters() {
 
     document.querySelectorAll('.tw-text, .tw-terminal').forEach(el => observer.observe(el));
 }
+
 
 function setupVideoAutoPlay() { 
     const obs = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting ? e.target.play() : e.target.pause()), {threshold:0.5}); 
