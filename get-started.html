@@ -652,26 +652,65 @@
         .in-page-search:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.15); outline: none; }
 
         /* Filetree Improvements */
-        .custom-filetree { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 16px; padding: 24px; margin: 24px 0; overflow-x: auto; font-family: var(--font-mono); font-size: 0.9rem; box-shadow: 0 4px 15px rgba(0,0,0,0.03); max-width: 100%; box-sizing: border-box; }
-        .custom-filetree ul { list-style: none; padding-left: 28px; margin: 0; position: relative; }
+        .custom-filetree { 
+            background: var(--surface-2); 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            padding: 20px; 
+            margin: 24px 0; 
+            overflow-x: auto; 
+            font-family: var(--font-mono); 
+            font-size: 0.85rem; 
+            max-width: 100%; 
+            box-sizing: border-box; 
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+            position: relative;
+        }
+        .custom-filetree::before {
+            content: '';
+            display: block;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: #ff5f56;
+            box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+            margin-bottom: 24px;
+            opacity: 0.6;
+        }
+        .custom-filetree ul { list-style: none; padding-left: 24px; margin: 0; position: relative; }
         .custom-filetree > ul { padding-left: 0; }
-        .custom-filetree li { position: relative; margin: 8px 0; display: flex; flex-direction: column; }
+        .custom-filetree li { position: relative; margin: 6px 0; display: flex; flex-direction: column; }
         
-        .ft-item { display: flex; align-items: center; gap: 10px; color: var(--text-dim); transition: opacity 0.2s; }
-        .ft-item.folder { font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
-        .ft-item i { color: var(--accent); flex-shrink: 0; opacity: 0.85; }
+        .ft-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            color: var(--text-dim); 
+            transition: all 0.2s var(--spring); 
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: default;
+        }
+        .ft-item:hover {
+            background: rgba(var(--accent-rgb), 0.08);
+            color: var(--text-main);
+            transform: translateX(4px);
+        }
+        .ft-item.folder { font-weight: 700; color: var(--text-main); }
+        .ft-item i { color: var(--accent); flex-shrink: 0; opacity: 0.85; font-size: 1.1em; }
 
         /* Type: Line */
-        .custom-filetree[data-type="line"] ul ul::before { content: ''; position: absolute; top: 0; bottom: 12px; left: 14px; width: 1.5px; background: rgba(var(--accent-rgb), 0.25); border-radius: 2px; }
-        .custom-filetree[data-type="line"] ul ul > li::before { content: ''; position: absolute; left: -14px; top: 12px; width: 12px; height: 1.5px; background: rgba(var(--accent-rgb), 0.25); border-radius: 2px; }
+        .custom-filetree[data-type="line"] ul ul::before { content: ''; position: absolute; top: 0; bottom: 16px; left: -14px; width: 2px; background: rgba(var(--accent-rgb), 0.15); border-radius: 2px; }
+        .custom-filetree[data-type="line"] ul ul > li::before { content: ''; position: absolute; left: -14px; top: 16px; width: 12px; height: 2px; background: rgba(var(--accent-rgb), 0.15); border-radius: 2px; }
 
         /* Type: Dot */
-        .custom-filetree[data-type="dot"] .ft-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: 0.5; margin-right: 2px; flex-shrink: 0; }
+        .custom-filetree[data-type="dot"] .ft-item::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: 0.3; margin-right: 2px; flex-shrink: 0; transition: opacity 0.2s; }
+        .custom-filetree[data-type="dot"] .ft-item:hover::before { opacity: 0.8; }
         .custom-filetree[data-type="dot"] .ft-item.folder::before { opacity: 1; transform: scale(1.3); }
 
         /* Type: Only-Dot */
         .custom-filetree[data-type="only-dot"] i { display: none !important; }
-        .custom-filetree[data-type="only-dot"] .ft-item::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--border); margin-right: 6px; transition: background 0.2s; flex-shrink: 0; }
+        .custom-filetree[data-type="only-dot"] .ft-item::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--border); margin-right: 6px; transition: all 0.2s; flex-shrink: 0; }
+        .custom-filetree[data-type="only-dot"] .ft-item:hover::before { background: var(--accent); transform: scale(1.2); }
         .custom-filetree[data-type="only-dot"] .ft-item.folder::before { background: var(--accent); }
 
         /* ══════════════════════════════════════════════
@@ -969,7 +1008,7 @@
     </div>
 
     <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header-title">
+        <div class="sidebar-header-title" onclick="triggerFallbackTest()" style="cursor:pointer; user-select:none;">
             Get <span class="title-accent">Started</span>
         </div>
         
@@ -1500,14 +1539,36 @@ function triggerBarAnim() { const bar = document.getElementById('m3-progress'); 
 async function cacheSet(key, val) { try { localStorage.setItem(CACHE_NS + key, JSON.stringify({v:val, t:Date.now()})); } catch(e){} }
 async function cacheGet(key, maxAge) { try { const raw = localStorage.getItem(CACHE_NS + key); if(!raw) return null; const d = JSON.parse(raw); if(maxAge && (Date.now() - d.t) > maxAge) return null; return d.v; } catch(e) { return null; } }
 
-async function smartFetch(url, localPath, cacheKey) {
+function parseManageFallback(text) {
+    if (!text) return [];
+    try { let parsed = JSON.parse(text); if(typeof parsed === 'string') text = parsed; else if (parsed && typeof parsed.content === 'string') text = parsed.content; } catch(e) {}
+    let guides = []; let state = 'guide_name';
+    let currentGuide = { name: '', desc: '', subdirs: [] };
+    let currentSubdir = { name: '', files: [] }; let buffer = '';
+    for(let i=0; i<text.length; i++) {
+        let c = text[i];
+        if (c === '(' && state === 'guide_name') { currentGuide.name = buffer.trim(); buffer = ''; state = 'guide_desc'; }
+        else if (c === ')' && state === 'guide_desc') { currentGuide.desc = buffer.trim(); buffer = ''; }
+        else if (c === '{' && (state === 'guide_name' || state === 'guide_desc')) { if (state === 'guide_name') currentGuide.name = buffer.trim(); buffer = ''; state = 'in_guide'; }
+        else if (c === '{' && state === 'in_guide') { currentSubdir.name = buffer.replace(/^,/, '').trim(); buffer = ''; state = 'in_subdir'; }
+        else if (c === ',' && state === 'in_subdir') { if(buffer.trim()) currentSubdir.files.push(buffer.trim()); buffer = ''; }
+        else if (c === '}' && state === 'in_subdir') { if(buffer.trim()) currentSubdir.files.push(buffer.trim()); currentGuide.subdirs.push({...currentSubdir}); currentSubdir = { name: '', files: [] }; buffer = ''; state = 'in_guide'; }
+        else if (c === '}' && state === 'in_guide') { guides.push({...currentGuide}); currentGuide = { name: '', desc: '', subdirs: [] }; buffer = ''; state = 'guide_name'; }
+        else { buffer += c; }
+    }
+    return guides.filter(g => g.name);
+}
+
+async function smartFetch(url, localPath, cacheKey, bypassCache = false) {
+    if (!bypassCache) { const cached = await cacheGet(cacheKey, 600000); if(cached) return cached; }
     try { const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + Date.now()); if(res.ok) { const text = await res.text(); await cacheSet(cacheKey, text); return text; } } catch(e) {}
     if(localPath) { try { const res2 = await fetch(localPath + '?t=' + Date.now()); if(res2.ok) { const text = await res2.text(); await cacheSet(cacheKey, text); return text; } } catch(e) {} }
-    const cached = await cacheGet(cacheKey); if(cached) return cached;
+    const fallbackCached = await cacheGet(cacheKey); if(fallbackCached) return fallbackCached;
     throw new Error('All fetch methods failed');
 }
 
 async function smartFetchJSON(url, _cacheKey) {
+    const cached = await cacheGet(_cacheKey, 600000); if(cached) return cached; // 10 minutes cache
     try { 
         const res = await fetch(url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now()); 
         if(res.ok) {
@@ -1517,7 +1578,7 @@ async function smartFetchJSON(url, _cacheKey) {
             await cacheSet(_cacheKey, data); return data;
         } else { throw new Error('API limit'); }
     } catch(e) {
-        const cached = await cacheGet(_cacheKey); if(cached) return cached;
+        const fallbackCached = await cacheGet(_cacheKey); if(fallbackCached) return fallbackCached;
         try { const fallbackTree = JSON.parse(localStorage.getItem('tree_fallback') || '{}'); if(fallbackTree[_cacheKey]) return fallbackTree[_cacheKey]; } catch(err) {}
         throw new Error('Fetch failed');
     }
@@ -1665,11 +1726,48 @@ function toggleSidebar() {
     lucide.createIcons(); 
 }
 
+let fallbackClickCount = 0;
+function triggerFallbackTest() {
+    fallbackClickCount++;
+    if (fallbackClickCount >= 5 && !window.__forceFallbackTest) {
+        window.__forceFallbackTest = true;
+        alert("Fallback System Testing Mode: ACTIVATED!\n\nThe site will now bypass GitHub API completely and force reading from manage.json. If manage.json is missing, it will use a mock string so you can test it.");
+        showFullScreenLoader();
+        init();
+    }
+}
+
 async function init() {
     const grid = document.getElementById('grid'); 
     const folderList = document.getElementById('sidebar-folder-list');
     try {
-        const folders = await smartFetchJSON(`https://api.github.com/repos/${USER}/${REPO}/contents/${BASE}`, `folders_root`);
+        let folders = [];
+        try {
+            if (window.__forceFallbackTest) throw new Error("Forced fallback");
+            folders = await smartFetchJSON(`https://api.github.com/repos/${USER}/${REPO}/contents/${BASE}`, `folders_root`);
+            window.__fallbackManage = null;
+        } catch(err) {
+            let manageText = '';
+            let bypass = window.__forceFallbackTest || false;
+            try { manageText = await smartFetch(`${RAW_BASE}/manage.json`, `manage.json`, `manage_json_v1`, bypass); }
+            catch(e) { 
+                try { manageText = await smartFetch(`${RAW_BASE}/${BASE}/manage.json`, `${BASE}/manage.json`, `manage_json_v1`, bypass); }
+                catch(e2) {
+                    if (window.__forceFallbackTest) {
+                        manageText = "Arch(Main Guide Name){Get-Started{Introduction.md,Pre-Requisite.md}}";
+                        alert("No manage.json found on Github! Using a mock string to demonstrate the fallback system works.");
+                    } else {
+                        throw e2;
+                    }
+                }
+            }
+            const parsedGuides = parseManageFallback(manageText);
+            if(parsedGuides.length > 0) {
+                folders = parsedGuides.map(g => ({ type: 'dir', name: g.name, _fallbackDesc: g.desc, _fallbackSubdirs: g.subdirs }));
+                window.__fallbackManage = parsedGuides;
+            } else { throw new Error("Empty manage.json"); }
+        }
+        
         grid.innerHTML = ''; folderList.innerHTML = ''; let cardIndex = 0;
         
         for(const f of folders) {
@@ -1682,7 +1780,12 @@ async function init() {
                 card.innerHTML = `<div class="repo-name">${f.name.replace(/-/g,' ')}</div><div class="card-desc" id="desc-${f.name}">Loading…</div><div class="card-arrow"><i data-lucide="arrow-right" size="13"></i> Open guide</div>`;
                 card.onclick = () => { showFullScreenLoader(); window.location.hash = f.name; }; 
                 grid.appendChild(card); 
-                fetchDescription(f.name);
+                
+                if (f._fallbackDesc) {
+                    document.getElementById(`desc-${f.name}`).innerText = f._fallbackDesc;
+                } else {
+                    fetchDescription(f.name);
+                }
                 
                 const sItem = document.createElement('div'); 
                 sItem.className = 'sidebar-folder-item'; 
@@ -1791,7 +1894,18 @@ async function loadProject(path, targetFile = null) {
     orderedFilesList.length = 0; 
 
     try {
-        let subFolders = await smartFetchJSON(`https://api.github.com/repos/${USER}/${REPO}/contents/${encodeURIComponent(path)}`, `folder_${path}`);
+        let subFolders = [];
+        let fallbackGuide = window.__fallbackManage ? window.__fallbackManage.find(g => `${BASE}/${g.name}` === path) : null;
+        
+        if (window.__forceFallbackTest || fallbackGuide) {
+            if (!fallbackGuide) throw new Error("No fallback guide found for this path");
+            subFolders = fallbackGuide.subdirs.map(sd => ({
+                type: 'dir', name: sd.name, _fallbackFiles: sd.files, url: `${RAW_BASE}/${path}/${sd.name}`
+            }));
+        } else {
+            subFolders = await smartFetchJSON(`https://api.github.com/repos/${USER}/${REPO}/contents/${encodeURIComponent(path)}`, `folder_${path}`);
+        }
+        
         if(loadId !== currentLoadId) return; 
 
         links.innerHTML = ''; 
@@ -1831,7 +1945,13 @@ async function loadProject(path, targetFile = null) {
                 dd.appendChild(contentWrap); 
                 links.appendChild(dd);
 
-                let files = await smartFetchJSON(sub.url + (sub.url.includes('?') ? '&' : '?') + '_t=' + Date.now(), `subdir_${sub.url}`);
+                let files = [];
+                if (sub._fallbackFiles) {
+                    files = sub._fallbackFiles.map(f => ({ name: f, download_url: `${RAW_BASE}/${path}/${sub.name}/${f}` }));
+                } else {
+                    files = await smartFetchJSON(sub.url + (sub.url.includes('?') ? '&' : '?') + '_t=' + Date.now(), `subdir_${sub.url}`);
+                }
+                
                 if(loadId !== currentLoadId) return; 
                 
                 const fileOrg = await fetchOrganise(`${path}/${sub.name}`);
