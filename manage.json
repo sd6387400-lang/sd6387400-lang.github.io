@@ -6,7 +6,6 @@ Arch{
         newfile.md
     }
     Get started{
-        Intro.md,
         Introduction.md,
         Particianing.md,
         Pre Requisite.md,
