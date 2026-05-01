@@ -294,8 +294,6 @@
         #md-render h5 { font-size:0.95rem; font-weight:700; margin:1.2rem 0 0.4rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em; }
         #md-render h6 { font-size:0.85rem; font-weight:700; margin:1rem 0 0.3rem; color:var(--text-dim); }
         #md-render p { margin-bottom:1.25em; }
-        #md-render strong { font-weight:800; color:var(--accent); }
-        #md-render em { font-style:italic; opacity:0.85; }
         #md-render ul, #md-render ol { margin:0.9em 0 0.9em 2em; line-height:1.9; }
         #md-render li { margin-bottom:0.25em; }
         #md-render li::marker { color:var(--accent); }
@@ -315,6 +313,17 @@
         body.dark-mode #md-render :not(pre) > code { background:rgba(var(--accent-rgb),0.15); border-color:rgba(var(--accent-rgb),0.25); }
         
         .html-sym { display:inline-block; font-family:var(--font-main); font-weight:inherit; }
+        
+        /* Adaptive Color & BG (Missing Classes) */
+        .adaptive-color { color: var(--light-c); transition: color 0.3s; }
+        html.dark-mode .adaptive-color { color: var(--dark-c); }
+        .adaptive-bg { background-color: var(--light-bg); padding:2px 8px; border-radius:6px; box-sizing: border-box; display: inline-block; word-break: break-word; transition: background 0.3s; }
+        html.dark-mode .adaptive-bg { background-color: var(--dark-bg); }
+
+        /* More Typography Fallbacks */
+        #md-render b, #md-render strong { font-weight:800; color:var(--accent); }
+        #md-render i, #md-render em { font-style:italic; opacity:0.85; }
+        #md-render u { text-decoration: underline; text-underline-offset: 3px; }
         
         .tw-text { white-space: pre-wrap; word-break: break-word; }
 
@@ -1500,9 +1509,11 @@ function applyGlobalAttrs(attrs, baseClass='', extraStyle='') {
     
     if(color) st += `--tag-color:${resolveColor(color)};`;
     
-    if(format.includes('bold')) st+='font-weight:bold;';
-    if(format.includes('italic')) st+='font-style:italic;';
-    if(format.includes('underline')) st+='text-decoration:underline;';
+    // Check both format and type for bold/italic/underline
+    const fmt = (format + ' ' + (ga('type')||'')).toLowerCase();
+    if(fmt.includes('bold')) st+='font-weight:bold;';
+    if(fmt.includes('italic')) st+='font-style:italic;';
+    if(fmt.includes('underline')) st+='text-decoration:underline;';
     if(align) st+=`text-align:${align};`;
     
     return `${idStr} class="${cls.trim()}" style="${st}"`;
