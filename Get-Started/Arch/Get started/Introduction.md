@@ -103,6 +103,6 @@ A newly installed, minimal Arch environment strictly adheres to the modern Linux
 Arch Linux is the ultimate learning experience. Once you build your system from the ground up, you understand exactly how your OS operates, leaving you in total control.
 </quote>
 <align type="center">
-<btn href="[https://wiki.archlinux.org/](https://wiki.archlinux.org/)" icon="book-open" type="glowing">Explore the Arch Wiki</btn>
+<btn href="[https://wiki.archlinux.org/](https://wiki.archlinux.org/)" icon="book-open" type="dotted">Explore the Arch Wiki</btn>
 </align>
 <feedback title="Did this introduction help you understand the Arch Linux philosophy?"></feedback>
