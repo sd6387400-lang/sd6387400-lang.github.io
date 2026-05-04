@@ -11,9 +11,7 @@
 <col>
 <stat value="Rolling" label="Release Model" trend="+ Bleeding Edge"></stat>
 </col>
-<col>
-<stat value="KISS" label="Design Principle" trend="Keep It Simple"></stat>
-</col>
+
 <col>
 <stat value="AUR" label="Ecosystem" trend="+ 80K+ Packages"></stat>
 </col>
