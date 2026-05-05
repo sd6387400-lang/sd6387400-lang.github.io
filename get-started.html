@@ -294,7 +294,7 @@
         #md-render h5 { font-size:0.95rem; font-weight:700; margin:1.2rem 0 0.4rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em; }
         #md-render h6 { font-size:0.85rem; font-weight:700; margin:1rem 0 0.3rem; color:var(--text-dim); }
         #md-render p { margin-bottom:1.25em; }
-        #md-render ul, #md-render ol { margin:0.9em 0 0.9em 2em; line-height:1.9; }
+        #md-render ul, #md-render ol { margin:0.9em 0 0.9em 1.2em; line-height:1.9; }
         #md-render li { margin-bottom:0.25em; }
         #md-render li::marker { color:var(--accent); }
         #md-render blockquote { border-left:3px solid var(--accent); padding:0.9em 1.3em; margin:1.5em 0; background:rgba(var(--accent-rgb),0.06); border-radius:0 14px 14px 0; color:var(--text-dim); }
@@ -2382,10 +2382,11 @@ async function fetchContent(url, localPath, el, skipHash = false) {
             return `<a href="${l.trim()}" ${applyGlobalAttrs(attrs, 'custom-href')} target="_blank">${h||l.trim()}</a>`
         });
         text = text.replace(/<text([^>]*)>([\s\S]*?)<\/text>/g,(m,attrs,content)=>{ return `<span ${applyGlobalAttrs(attrs)}>${content}</span>`; });
-        text = text.replace(/<list([^>]*)>([\s\S]*?)<\/list>/g,(m,attrs,content)=>{ 
-            const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; };
-            const type = ga('type'); const tag=type==='number'?'ol':'ul'; 
-            return `<${tag} ${applyGlobalAttrs(attrs, '', 'margin:15px 0 15px 40px')}>${content.trim().split('\n').map(i=>`<li>${i.trim()}</li>`).join('')}</${tag}>`; 
+        text = text.replace(/<list([^>]*)>([\s\S]*?)<\/list>/g, (m, attrs, content) => {
+            const ga = (n) => { const match = attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match ? match[1] : null; };
+            const type = ga('type');
+            const tag = type === 'number' ? 'ol' : 'ul';
+            return `<${tag} ${applyGlobalAttrs(attrs, '', 'margin:15px 0 15px 20px')}>${content.trim().split('\n').map(i=>`<li>${i.trim()}</li>`).join('')}</${tag}>`;
         });
         text = text.replace(/<code>([\s\S]*?)<\/code>/g,(m,code)=>{ const escaped = code.trim().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); return `<div class="code-container"><button class="copy-btn" onclick="copyCode(this)">Copy</button><pre><code>${escaped}</code></pre></div>`; });
         text = text.replace(/<image([^>]*)>([\s\S]*?)<\/image>/g,(m,attrs,content)=>{ const ga=(n)=>{ const match=attrs.match(new RegExp(`\\b${n}="([^"]*)"`)); return match?match[1]:null; }; const url=ga('url'); const github=ga('github'); const name=content.trim(); const finalSrc=url||github||`${RAW_BASE}/images/${subPath}/${name}`; const fallback=url||github?finalSrc:`${RAW_BASE}/images/${name}`; return `<img src="${finalSrc}" ${applyGlobalAttrs(attrs)} onerror="this.src='${fallback}'"/>`; });
