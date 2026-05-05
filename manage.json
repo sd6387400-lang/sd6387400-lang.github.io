@@ -6,7 +6,8 @@ Arch{
     Get started{
         Introduction.md,
         Particianing.md,
-        Pre Requisite.md
+        Pre Requisite.md,
+        newfile.md
     }
 }
 Flashing Custom ROMs On Mi439{
