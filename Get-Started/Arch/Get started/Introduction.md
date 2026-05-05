@@ -6,7 +6,7 @@
 <align type="center">
   <badge color="accent">Rolling Release</badge>
   <badge color="accent2">Lightweight</badge>
-  <badge color="accent3">Bleeding Edge</badge>
+  <badge color="accent">Bleeding Edge</badge>
 </align>
 
 <heading size="3">What is Arch Linux?</heading>
@@ -88,7 +88,7 @@ Arch Linux isn't for everyone, and that is completely by design.
 <hr>
 
 <heading size="3">Credits & Community</heading>
-<quote author="The Arch Community" role="Contributors, Maintainers & Users" avatar="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Archlinux-icon-crystal-64.svg/1024px-Archlinux-icon-crystal-64.svg.png">
+<quote author="The Arch Community" role="Contributors, Maintainers & Users" author="archlinux.org">
   Arch Linux survives and thrives because of its dedicated community, the packaging maintainers, and the unparalleled Arch Wiki. Remember: <b>RTFM</b> (Read The Fantastic Manual) is a term of endearment here!
 </quote>
 
