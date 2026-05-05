@@ -7,7 +7,7 @@
 <align type="center">
 <badge color="#1793d1">Linux</badge>  <badge color="#1793d1">x86_64</badge>  <badge color="#1793d1">Rolling Release</badge>
 </align>
-<grid columns="3">
+<grid columns="2">
 <col>
 <stat value="Rolling" label="Release Model" trend="+ Bleeding Edge"></stat>
 </col>
