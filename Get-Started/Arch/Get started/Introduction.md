@@ -39,10 +39,10 @@ Arch Linux isn't for everyone, and that is completely by design.
     <alert type="success">
       <b>You should use Arch if:</b>
       <list>
-        You want to learn how Linux actually works under the hood.
-        You prefer building your system from the ground up.
-        You want bleeding-edge software updates immediately.
-        You enjoy reading documentation and solving puzzles.
+You want to learn how Linux actually works under the hood.
+You prefer building your system from the ground up.
+You want bleeding-edge software updates immediately.
+You enjoy reading documentation and solving puzzles.
       </list>
     </alert>
   </col>
@@ -50,9 +50,9 @@ Arch Linux isn't for everyone, and that is completely by design.
     <alert type="warning">
       <b>You might want to avoid it if:</b>
       <list>
-        You want an OS that configures itself out-of-the-box.
-        You are frustrated by terminal-centric troubleshooting.
-        You prefer rigid, long-term support (LTS) release schedules.
+You want an OS that configures itself out-of-the-box.
+You are frustrated by terminal-centric troubleshooting.
+You prefer rigid, long-term support (LTS) release schedules.
       </list>
     </alert>
   </col>
