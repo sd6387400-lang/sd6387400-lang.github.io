@@ -1,4 +1,4 @@
-<hero overlay="dark" opacity="0.75" bg="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1200">
+<hero overlay="transparent" opacity="0.75" bg="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1200">
   <heading size="1">Arch Linux</heading>
   <tw state="once">Keep It Simple, Stupid. The ultimate DIY Linux experience.</tw>
 </hero>
