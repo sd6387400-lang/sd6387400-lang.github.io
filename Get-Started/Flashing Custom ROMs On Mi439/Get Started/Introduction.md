@@ -40,14 +40,14 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
        <heading size="7" align="left">Performence and stability (9.6/10)</heading> Excellent Stability And Performence with least bug count then most of the ROMs.<hr><align type="center"><text type="bold">Solid 8.2/10</text></align></card>
      </col></grid><card>
        <heading size="4" align="Center">CrDroid</heading><list type="numbers">
-       **CrDroid Custom Rom existence:** <br>CrDroid is widely known because of its intense level of device support, stability and Insane level of customisations without letting lag disturb you.
-       **Is it worth trying for Mi439:** <br>Yes the maintainer provide regular support too and this is one of the most stable custom ROM developer provide and It is worth trying if you are going to try it even ones.
-       **Storage crisis for Mi439:** <br>I know many mi439 device came with only 32 gb storage while in MiUI the device software itself eat almost 75% of the storage but on CrDroid you can obviously expect more. You will get only 20-30% storage filled out of the box for 32gb varient which is quite efficiant.
+       <strong>CrDroid Custom Rom existence:</strong> <br>CrDroid is widely known because of its intense level of device support, stability and Insane level of customisations without letting lag disturb you.
+       <strong>Is it worth trying for Mi439:</strong> <br>Yes the maintainer provide regular support too and this is one of the most stable custom ROM developer provide and It is worth trying if you are going to try it even ones.
+       <strong>Storage crisis for Mi439:</strong> <br>I know many mi439 device came with only 32 gb storage while in MiUI the device software itself eat almost 75% of the storage but on CrDroid you can obviously expect more. You will get only 20-30% storage filled out of the box for 32gb varient which is quite efficiant.
        
        </list>
        <heading size="6" align="Center">Credits</heading>
        <list type="num">
-         **Overall credit** CrDroid team Obviously
-         **Image credit** CrDroid website</list><hr><align type="center">**And Please Consider Checking Out CrDroid official website for more information.**<br>
+         <strong>Overall credit</strong> CrDroid team Obviously
+         <strong>Image credit</strong> CrDroid website</list><hr><align type="center"><strong>And Please Consider Checking Out CrDroid official website for more information.</strong><br>
          <btn href="https://crdroid.net" icon="activity" type="dotted">CrDroid Website</btn></align>
        </card>
