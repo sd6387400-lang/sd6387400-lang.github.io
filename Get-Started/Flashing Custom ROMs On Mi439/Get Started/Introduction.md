@@ -12,8 +12,10 @@ Custom Roms are defined as a special custom software which You can easily flash 
 <li>System</li>
 <li>Vendor</li>
 <li>Boot</li>
+  <li>dtbo</li>
 <li>VBMeta</li>
 <li>Recovery</li>
-</filetree></card>
-   
-   
+</filetree><text type="bold">
+   Where you mainly <strong>don't need</strong> all of them
+   </text>
+   </card>
