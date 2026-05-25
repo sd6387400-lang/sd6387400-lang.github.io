@@ -39,17 +39,3 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
        <heading size="7" align="left">Looks</heading>Pixel Styled
      </card>
      </col></grid>
-     
-     <carousel>
-    <div class="custom-slide" style="flex: 0 0 100%; max-width: 100%;">
-        <image url="https://crdroid.net/img/gallery/gallery-1.webp">First Image</image>
-    </div>
-    
-    <div class="custom-slide" style="flex: 0 0 100%; max-width: 100%;">
-        <image url="https://crdroid.net/img/gallery/gallery-2.webp">Second Image</image>
-    </div>
-    
-    <div class="custom-slide" style="flex: 0 0 100%; max-width: 100%;">
-        <image url="https://crdroid.net/img/gallery/gallery-6.webp">Third Image</image>
-    </div>
-</carousel>
