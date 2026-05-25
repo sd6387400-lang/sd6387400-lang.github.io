@@ -21,5 +21,13 @@ Custom Roms are defined as a special custom software which You can easily flash 
 <li>dtbo.img</li>
 <li>recovery.img</li>
 <li>vbmeta.img</li>
+<li>Rom File.zip</li>
 </filetree>
-   </card>
+   </card><card>
+   
+<text type="bold">
+If You Wonder Wait How does custom Roms even looks and what are there performance ratings, cause there is not a one option to choose from, There are saveral saveral Options.</text></card>
+   <card>
+     So first Let Me Introduce You <strong>CRDroid</strong>.
+     </card>
+   <grid column="2">
