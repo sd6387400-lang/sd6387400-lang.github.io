@@ -35,7 +35,19 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
        <image url="https://crdroid.net/img/gallery/gallery-1.webp">https://crdroid.net/img/gallery/gallery-1.webp</image>
        </col><col>
      <card>
-       <heading size="5" align="left">CrDroid</heading><hr>
-       <heading size="7" align="left">Looks</heading>Pixel Styled
-     </card>
-     </col></grid>
+       <heading size="7" align="left">Looks (8/10)</heading>Pixel Styled With varst amount of customisation options and performence twaeaks<hr>
+       <heading size="7" align="left">UI Experience (7/10)</heading> Polished, Feature rich, Spoofing Options avalable and much more.<hr>
+       <heading size="7" align="left">Performence and stability (9.6/10)</heading> Excellent Stability And Performence with least bug count then most of the ROMs.<hr><align type="center"><text type="bold">Solid 8.2/10</text></align></card>
+     </col></grid><card>
+       <heading size="4" align="Center">CrDroid</heading><list type="numbers">
+       **CrDroid Custom Rom existence:** <br>CrDroid is widely known because of its intense level of device support, stability and Insane level of customisations without letting lag disturb you.
+       **Is it worth trying for Mi439:** <br>Yes the maintainer provide regular support too and this is one of the most stable custom ROM developer provide and It is worth trying if you are going to try it even ones.
+       **Storage crisis for Mi439:** <br>I know many mi439 device came with only 32 gb storage while in MiUI the device software itself eat almost 75% of the storage but on CrDroid you can obviously expect more. You will get only 20-30% storage filled out of the box for 32gb varient which is quite efficiant.
+       
+       </list>
+       <heading size="6" align="Center">Credits</heading>
+       <list type="num">
+         **Overall credit** CrDroid team Obviously
+         **Image credit** CrDroid website</list><hr><align type="center">**And Please Consider Checking Out CrDroid official website for more information.**<br>
+         <btn href="https://crdroid.net" icon="activity" type="dotted">CrDroid Website</btn></align>
+       </card>
