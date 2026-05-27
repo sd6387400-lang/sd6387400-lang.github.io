@@ -51,3 +51,11 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
          <strong>Image credit</strong> CrDroid website</list><hr><align type="center"><strong>And Please Consider Checking Out CrDroid official website for more information.</strong><br>
          <btn href="https://crdroid.net" icon="activity" type="dotted">CrDroid Website</btn></align>
        </card>
+       <grid column="2">
+         <col>
+         <card>
+           
+           </card>
+           </col>
+         <img>infinityX-Preview-image.png<img>
+         </grid>
