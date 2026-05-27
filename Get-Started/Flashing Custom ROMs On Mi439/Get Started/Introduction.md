@@ -54,8 +54,9 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
        <grid column="2">
          <col>
          <card>
-           
+           hello
            </card>
+           </col><col>
+         <img url="infinityX-Preview-image.png">infinityX-Preview-image.png<img>
            </col>
-         <img>infinityX-Preview-image.png<img>
          </grid>
