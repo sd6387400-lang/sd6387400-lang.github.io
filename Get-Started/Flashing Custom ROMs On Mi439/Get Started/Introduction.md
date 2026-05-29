@@ -51,12 +51,13 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
          <strong>Image credit</strong> CrDroid website</list><hr><align type="center"><strong>And Please Consider Checking Out CrDroid official website for more information.</strong><br>
          <btn href="https://crdroid.net" icon="activity" type="dotted">CrDroid Website</btn></align>
        </card>
-       <grid column="2">
-         <col>
-         <card>
-           <heading size="7" align="left">Looks</heading>
-           </card>
-           </col><col>
+       <grid column="2"><col>
 <image>infinityX-Preview-image.png</image><card><strong>Source:</strong> InfinityX Official Website</card>
-           </col>
+           </col><col><card>
+         <heading size="7" align="left">Looks (9/10)</heading>
+         Infinity X ROM is considerd GOLD standard for customisation features This ROM has balance of intence customisation and performence too.<hr>
+         <heading size="7" align="left">UI Experience(8/10)</heading>Out of the box experience is raw, but after customisation it looks amazing and you can try it use it as a daily driver easily.<hr>
+         <heading size="7" align="left">Performance and Stability(7/10)</heading>While as i said it has intense customisation features which comes at a cost of little performence it is still optmised but not that of CrDroid.<hr>
+         <heading size="9" align="center"> Overall Solid (8/10)</heading>
+         </card></col>
          </grid>
