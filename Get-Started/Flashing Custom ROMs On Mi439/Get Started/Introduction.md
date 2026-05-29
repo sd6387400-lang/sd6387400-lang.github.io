@@ -57,6 +57,6 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
            hello
            </card>
            </col><col>
-         
+<image>infinityX-Preview-image.png</image>Source: InfinityX Official Website
            </col>
          </grid>
