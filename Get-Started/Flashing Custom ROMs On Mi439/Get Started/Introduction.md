@@ -32,7 +32,7 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
      </card>
    <grid column="2">
      <col>
-       <image url="https://crdroid.net/img/gallery/gallery-1.webp">https://crdroid.net/img/gallery/gallery-1.webp</image>
+       <image url="https://crdroid.net/img/gallery/gallery-1.webp">https://crdroid.net/img/gallery/gallery-1.webp</image><card><strong>Source:</strong> CrDroid official website</card>
        </col><col>
      <card>
        <heading size="7" align="left">Looks (8/10)</heading>Pixel Styled With varst amount of customisation options and performence twaeaks<hr>
@@ -54,9 +54,9 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
        <grid column="2">
          <col>
          <card>
-           hello
+           <heading size="7" align="left">Looks</heading>
            </card>
            </col><col>
-<image>infinityX-Preview-image.png</image>Source: InfinityX Official Website
+<image>infinityX-Preview-image.png</image><card><strong>Source:</strong> InfinityX Official Website</card>
            </col>
          </grid>
