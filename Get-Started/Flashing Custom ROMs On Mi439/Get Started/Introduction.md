@@ -66,7 +66,8 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
          <heading size="4" align="center">Infinity X</heading><list type="numbers">
          <strong>Fully customisable with balance of Optimisation</strong><br>To be honest with you this ROM is generally laggy then CrDroid because of its customisations on this old device while still this is one of the best ROMs in terms of Balance of customisation and stability, it is one of the best ROMs in terms of stability but you can prefer it.
          <strong>Best is Class customisations</strong><br>Infinity X ROM is one of the best considered ROM in terms of optimised customisations It provides you one of the best in class customisations avalable which are sutable for optimised system.
-         <strong>Same question like CrDroid, Is it worth trying</strong>Yes, of course ones you installed your first ROM making Infinity X your second Custom rom is excellent because of how customksable it is and Level od power you can see in a custom ROM.
+         <strong>Same question like CrDroid, Is it worth trying</strong><br>Yes, of course ones you installed your first ROM making Infinity X your second Custom rom is excellent because of how customksable it is and Level od power you can see in a custom ROM.<br></list>
+         <heading size="6" align="Center">Credits</heading><list type="number">
           <strong>Overall credit</strong>       Infinity X team Obviously
          <strong>Image credit</strong>      Infinity X website</list><hr><align type="center"><strong>And Please Consider Checking Out Infinity X official website for more information.</strong><br>
          <btn href="https://projectinfinity-x.com/" icon="activity" type="dotted">InfinityX Website</btn></align>
@@ -86,4 +87,14 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
                In here sometimes Axion beats stability of CrDroid too, even with those customisations depth wallpaper, Ax PC mode and stuff Axion still focusses on minimalism and provide quite a lovely level of features without throwing unnecessary features too.
                <heading size="7" align="center"> Overall Solid (9/10)</heading>
                </card></col>
-           </grid>
+           </grid><card>
+         <heading size="4" align="center">Axion OS</heading><list type="numbers">
+         <strong>Customisations with Balance</strong><br>To be honest with you this ROM is generally laggy when used Beta version and it randomly reboots too sometimes then but if you use stable version stability related issues are unlikely to be appear most of the times
+         <strong>Stock Assent in Customisations</strong><br>Have you ever wondered or tryed any stock ROM like MiUi or OneUI and kind of stuff if you get any theme and want to apply it it is just a piece of button clicked and done no system UI restart for clock customisation etc but if you used custom ROMs you may have missed that thing fortunately Axion OS is one of the only ROM with almost no system ui restart when customisation is applied.
+         <strong>Same question like CrDroid, and Infinity X, Is it worth trying</strong><br>Yes, of course ones and after CrDroid it is most stable daily driver to be used.<br></list>
+         <heading size="6" align="Center">Credits</heading><list type="number">
+          <strong>Overall credit</strong>       Axion OS for building
+         <strong>Image credit</strong>      Axion OS official website</list><hr><align type="center"><strong>And Please Consider Checking Out Axion OS official website for more information.</strong><br>
+         <btn href="https://www.axionos.org/" icon="activity" type="dotted">Axion OS Website</btn></align>
+         </list>
+         </card>
