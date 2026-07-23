@@ -60,13 +60,22 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
          Infinity X ROM is considerd GOLD standard for customisation features This ROM has balance of intence customisation and performence too.<hr>
          <heading size="7" align="left">UI Experience(8/10)</heading>Out of the box experience is raw, but after customisation it looks amazing and you can try it use it as a daily driver easily.<hr>
          <heading size="7" align="left">Performance and Stability(7/10)</heading>While as i said it has intense customisation features which comes at a cost of little performence it is still optmised but not that of CrDroid.<hr>
-         <heading size="9" align="center"> Overall Solid (8/10)</heading>
+         <heading size="7" align="center"> Overall Solid (8/10)</heading>
          </card></col>
-         </grid>
+         </grid><card>
+         <heading size="4" align="center">Infinity X</heading><list type="numbers">
+         <strong>Fully customisable with balance of Optimisation</strong><br>To be honest with you this ROM is generally laggy then CrDroid because of its customisations on this old device while still this is one of the best ROMs in terms of Balance of customisation and stability, it is one of the best ROMs in terms of stability but you can prefer it.
+         <strong>Best is Class customisations</strong><br>Infinity X ROM is one of the best considered ROM in terms of optimised customisations It provides you one of the best in class customisations avalable which are sutable for optimised system.
+         <strong>Same question like CrDroid, Is it worth trying</strong>Yes, of course ones you installed your first ROM making Infinity X your second Custom rom is excellent because of how customksable it is and Level od power you can see in a custom ROM.
+          <strong>Overall credit</strong>       Infinity X team Obviously
+         <strong>Image credit</strong>      Infinity X website</list><hr><align type="center"><strong>And Please Consider Checking Out Infinity X official website for more information.</strong><br>
+         <btn href="https://projectinfinity-x.com/" icon="activity" type="dotted">InfinityX Website</btn></align>
+         </list>
+         </card>
          <card>This is time to introduce You <strong>Axion OS</strong> formally known as Axion AOSP.</card>
          <grid column="2">
            <col>
-             <image>
+             <image url="https://www.axionos.org/">
              </col>
              <col>
                
