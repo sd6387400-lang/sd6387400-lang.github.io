@@ -75,9 +75,15 @@ If You Wonder Wait How does custom Roms even looks and what are there performanc
          <card>This is time to introduce You <strong>Axion OS</strong> formally known as Axion AOSP.</card>
          <grid column="2">
            <col>
-             <image url="https://www.axionos.org/">
+             <image>depth2.webp</image><card><strong>Source:</strong> Axion OS Official Website</card>
              </col>
-             <col>
-               
-               </col>
+             <col><card>
+               <heading size="7" align="left">Looks (9/10)</heading>
+               Axion OS is one of the best looking custom ROM in Our community and Majorly it focuses on Nothing OS to achive that.
+               <heading size="7" align="left">UI Experience(9/10)</heading>
+               Axion OS UI experience will make you feel little different from other ROMs more polished UI instant customisations apply without restarting system UI and much more.
+               <heading size="7" align="left">Performance and Stability(9/10)</heading>
+               In here sometimes Axion beats stability of CrDroid too, even with those customisations depth wallpaper, Ax PC mode and stuff Axion still focusses on minimalism and provide quite a lovely level of features without throwing unnecessary features too.
+               <heading size="7" align="center"> Overall Solid (9/10)</heading>
+               </card></col>
            </grid>
